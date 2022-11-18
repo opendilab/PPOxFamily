@@ -18,6 +18,12 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 # 课程特点
 
+## 一个算法解决万千应用
+<div align="center">
+    <a href="https://github.com/opendilab/PPOxFamily"><img width="1000px" height="auto" src="https://github.com/opendilab/PPOxFamily/blob/main/assets/ppof_application.png"></a>
+</div>
+
+
 ## 算法理论和代码实现一一对应
 <div align="center">
     <a href="https://github.com/opendilab/PPOxFamily"><img width="1000px" height="auto" src="https://github.com/opendilab/PPOxFamily/blob/main/assets/algo2code_demo.png"></a>
