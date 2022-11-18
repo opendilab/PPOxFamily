@@ -42,6 +42,10 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
     └── chapter1_demo_code.py    --> 课程第一章相关代码实现
 ```
 
+# 课程反馈
+- 小助手微信号：OpenDILab
+- Slack：https://opendilab.slack.com/
+- 邮箱：opendilab@pjlab.org.cn
 
 # License
-DI-sheep is released under the Apache 2.0 license.
+PPOxFamily is released under the Apache 2.0 license.
