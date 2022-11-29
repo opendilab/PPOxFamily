@@ -50,8 +50,8 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 - 小助手微信号：OpenDILab
 - Slack：https://opendilab.slack.com/
 - GitHub Issue区：[链接](https://github.com/opendilab/PPOxFamily/issues)
-- B站账号：OpenDILab
-- 知乎账号：OpenDILab浦策
+- B站账号：[OpenDILab](https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0)
+- 知乎账号：[OpenDILab浦策](https://www.zhihu.com/people/opendilab)
 - 邮箱：opendilab@pjlab.org.cn
 
 # License
