@@ -10,6 +10,10 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 
+# News
+- 2022.12.8 PPO x Family 第一章（开启决策AI探索之旅）将正式上线
+
+
 # 课程大纲
 
 <div align="center">
@@ -35,16 +39,19 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 ├── LICENSE
 ├── assets                       --> 相关图片素材（转载请注明来源）
 └── chapter1_overview            --> 课程第一章相关内容
-    ├── chapter1_lecture.md      --> 课程第一章核心文稿
+    ├── chapter1_manuscript.pdf  --> 课程第一章核心文稿
     ├── chapter1_lecture.pdf     --> 课程第一章PPT
-    ├── chapter1_qa.md           --> 课程第一章答疑文稿
-    ├── chapter1_supplementary_material.md        --> 课程第一章补充材料（算法理论推导等）
+    ├── chapter1_qa.pdf          --> 课程第一章答疑文稿
+    ├── chapter1_supplementary_material.pdf       --> 课程第一章补充材料（算法理论推导等）
     └── chapter1_demo_code.py    --> 课程第一章相关代码实现
 ```
 
 # 课程反馈
 - 小助手微信号：OpenDILab
 - Slack：https://opendilab.slack.com/
+- GitHub Issue区：[链接](https://github.com/opendilab/PPOxFamily/issues)
+- B站账号：OpenDILab
+- 知乎账号：OpenDILab浦策
 - 邮箱：opendilab@pjlab.org.cn
 
 # License
