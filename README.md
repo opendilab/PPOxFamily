@@ -11,7 +11,10 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2022.12.8 PPO x Family 第一章（开启决策AI探索之旅）将正式上线
+- 2022.12.8: PPO x Family 第一章（开启决策AI探索之旅）将正式上线
+- 2022.12.1: [bilibili] [PPO x Family 课程品牌宣传视频](https://www.bilibili.com/video/BV1sK411R7JP/?spm_id_from=333.337.search-card.all.click)
+- 2022.11.30: [机器之心] [集中一点，演化无限：PPO × Family决策智能入门公开课即日开讲](https://mp.weixin.qq.com/s/l_JB3-BgLE2pEBJ2zgRkGQ)
+- 2022.11.30: [中国计算机学会CCF] [【CCF科普群星计划】决策智能入门公开课开课啦](https://mp.weixin.qq.com/s/NkHi7eeUgQkp31R5Qgsbvw)
 
 
 # 课程大纲
@@ -46,7 +49,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
     └── chapter1_demo_code.py    --> 课程第一章相关代码实现
 ```
 
-# 课程反馈
+# 课程答疑和反馈
 - 小助手微信号：OpenDILab
 - Slack：https://opendilab.slack.com/
 - GitHub Issue区：[链接](https://github.com/opendilab/PPOxFamily/issues)
