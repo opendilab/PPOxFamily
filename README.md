@@ -50,6 +50,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 ```
 
 # 课程答疑和反馈
+- 常见问题FAQ：[传送门](https://github.com/opendilab/PPOxFamily/tree/main/common/faq.pdf)
 - 小助手微信号：OpenDILab
 - Slack：https://opendilab.slack.com/
 - GitHub Issue区：[链接](https://github.com/opendilab/PPOxFamily/issues)
