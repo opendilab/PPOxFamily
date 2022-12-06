@@ -11,8 +11,10 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2022.12.8: PPO x Family 第一章（开启决策AI探索之旅）将正式上线
-- 2022.12.1: [bilibili] [PPO x Family 课程品牌宣传视频](https://www.bilibili.com/video/BV1sK411R7JP/?spm_id_from=333.337.search-card.all.click)
+- 2022.12.08: PPO x Family 第一章（开启决策AI探索之旅）将正式上线
+- 2022.12.06: [bilibili] [PPO x Family 第一章微课视频：4分钟带你快速入门强化学习的万能钥匙](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0)
+- 2022.12.05: [PaperWeekly] [给你一个 PPO × Family 课程，撑起整个决策 AI 宇宙](https://mp.weixin.qq.com/s/KCKfH1VnQGnNWW6svVxdXw)
+- 2022.12.01: [bilibili] [PPO x Family 课程品牌宣传视频](https://www.bilibili.com/video/BV1sK411R7JP/?spm_id_from=333.337.search-card.all.click)
 - 2022.11.30: [机器之心] [集中一点，演化无限：PPO × Family决策智能入门公开课即日开讲](https://mp.weixin.qq.com/s/l_JB3-BgLE2pEBJ2zgRkGQ)
 - 2022.11.30: [中国计算机学会CCF] [【CCF科普群星计划】决策智能入门公开课开课啦](https://mp.weixin.qq.com/s/NkHi7eeUgQkp31R5Qgsbvw)
 
