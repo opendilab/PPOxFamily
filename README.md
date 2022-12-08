@@ -11,7 +11,8 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2022.12.08: PPO x Family 第一章（开启决策AI探索之旅）将正式上线
+- 2022.12月下旬：PPO x Family 第二章（解构复杂动作空间）将正式上线
+- 2022.12.08: [bilibili] [PPO x Family 第一章（开启决策AI探索之旅）正式上线](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0)
 - 2022.12.06: [bilibili] [PPO x Family 第一章微课视频：4分钟带你快速入门强化学习的万能钥匙](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0)
 - 2022.12.05: [PaperWeekly] [给你一个 PPO × Family 课程，撑起整个决策 AI 宇宙](https://mp.weixin.qq.com/s/KCKfH1VnQGnNWW6svVxdXw)
 - 2022.12.01: [bilibili] [PPO x Family 课程品牌宣传视频](https://www.bilibili.com/video/BV1sK411R7JP/?spm_id_from=333.337.search-card.all.click)
@@ -44,10 +45,10 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 ├── LICENSE
 ├── assets                       --> 相关图片素材（转载请注明来源）
 └── chapter1_overview            --> 课程第一章相关内容
-    ├── chapter1_manuscript.pdf  --> 课程第一章核心文稿
+    ├── chapter1_manuscript.pdf  --> 课程第一章文字稿（对于PPT的补充说明）
     ├── chapter1_lecture.pdf     --> 课程第一章PPT
     ├── chapter1_qa.pdf          --> 课程第一章答疑文稿
-    ├── chapter1_supplementary_material.pdf       --> 课程第一章补充材料（算法理论推导等）
+    ├── chapter1_supp_trpo.pdf       --> 课程第一章补充材料（算法理论推导等）
     └── chapter1_demo_code.py    --> 课程第一章相关代码实现
 ```
 
