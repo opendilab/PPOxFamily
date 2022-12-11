@@ -20,11 +20,18 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 - 2022.11.30: [中国计算机学会CCF] [【CCF科普群星计划】决策智能入门公开课开课啦](https://mp.weixin.qq.com/s/NkHi7eeUgQkp31R5Qgsbvw)
 
 
+
 # 课程大纲
 
 <div align="center">
     <a href="https://github.com/opendilab/PPOxFamily"><img width="1000px" height="auto" src="https://github.com/opendilab/PPOxFamily/blob/main/assets/outline.png"></a>
 </div>
+
+# 内容导航
+| 章节（视频课） |  算法理论资料 | 补充资料 | 习题 |代码样例 | 应用样例|
+|-------|-----|--------|-------|-----| ---|
+| [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [补充材料：微课视频](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0) <br> [补充材料：策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [补充材料：A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [补充材料：TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf)| <12.12更新> | 概述课不包含代码 | <应用混剪> |
+| 第二章：解构复杂动作空间（12月下旬）| | | | | |
 
 # 课程特点
 
