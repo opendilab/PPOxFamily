@@ -29,8 +29,8 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 # 内容导航
 | 章节（视频课） |  算法理论资料 | 补充资料 | 习题 |代码样例 | 应用样例|
-|-------|-----|--------|-------|-----| ---|
-| [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [微课视频](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0) <br> [策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf)| <12.12更新> | 概述课不包含代码 | <应用混剪> |
+|------|-----|----------|-------|-----| ---|
+| [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [微课视频](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0) <br> [策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf)| 12.12更新 | 概述课不含代码 | 应用混剪 |
 | 第二章：解构复杂动作空间（12月下旬）| | | | | |
 
 # 课程特点
