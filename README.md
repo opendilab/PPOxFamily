@@ -30,7 +30,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 # 内容导航
 | 章节（视频课） |  算法理论资料 | 补充资料 | 习题 |代码样例 | 应用样例|
 |------|-----|----------|-------|-----| ---|
-| [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [微课视频](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0) <br> [策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf)| [习题](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_homework.pdf) | 概述课不含代码 | [应用混剪](https://www.bilibili.com/video/BV1vW4y1M7cH/?spm_id_from=333.337.search-card.all.click) |
+| [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [微课视频](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0) <br> [策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf)| [习题](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_homework.pdf) <br> [习题题解](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_homework_solution.pdf) | 概述课不含代码 | [应用混剪](https://www.bilibili.com/video/BV1vW4y1M7cH/?spm_id_from=333.337.search-card.all.click) |
 | 第二章：解构复杂动作空间 <br>（12.23）| | | | | |
 
 # 课程特点
@@ -54,9 +54,10 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 └── chapter1_overview            --> 课程第一章相关内容
     ├── chapter1_manuscript.pdf  --> 课程第一章文字稿（对于PPT的补充说明）
     ├── chapter1_lecture.pdf     --> 课程第一章PPT
-    ├── chapter1_homework.pdf    --> 课程第一章习题作业
     ├── chapter1_qa.pdf          --> 课程第一章答疑文稿
-    ├── chapter1_supp_trpo.pdf       --> 课程第一章补充材料（算法理论推导等）
+    ├── chapter1_homework.pdf    --> 课程第一章习题作业
+    ├── chapter1_homework_solution.pdf  --> 课程第一章习题作业题解
+    ├── chapter1_supp_trpo.pdf          --> 课程第一章补充材料（算法理论推导等）
     └── chapter1_demo_code.py    --> 课程第一章相关代码实现
 ```
 
