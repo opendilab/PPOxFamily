@@ -11,7 +11,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2022.12月下旬：PPO x Family 第二章（解构复杂动作空间）将正式上线
+- 2022.12.23：PPO x Family 第二章（解构复杂动作空间）将正式上线
 - 2022.12.08: [bilibili] [PPO x Family 第一章（开启决策AI探索之旅）正式上线](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0)
 - 2022.12.06: [bilibili] [PPO x Family 第一章微课视频：4分钟带你快速入门强化学习的万能钥匙](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0)
 - 2022.12.05: [PaperWeekly] [给你一个 PPO × Family 课程，撑起整个决策 AI 宇宙](https://mp.weixin.qq.com/s/KCKfH1VnQGnNWW6svVxdXw)
@@ -31,7 +31,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 | 章节（视频课） |  算法理论资料 | 补充资料 | 习题 |代码样例 | 应用样例|
 |------|-----|----------|-------|-----| ---|
 | [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ/?spm_id_from=333.999.0.0) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [微课视频](https://www.bilibili.com/video/BV1e841157Um/?spm_id_from=333.999.0.0) <br> [策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf)| [习题](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_homework.pdf) | 概述课不含代码 | [应用混剪](https://www.bilibili.com/video/BV1vW4y1M7cH/?spm_id_from=333.337.search-card.all.click) |
-| 第二章：解构复杂动作空间 <br>（12月下旬）| | | | | |
+| 第二章：解构复杂动作空间 <br>（12.23）| | | | | |
 
 # 课程特点
 
