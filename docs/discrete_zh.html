@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter2_action/discrete_tutorial_zh.py" target="_blank">View code on GitHub</a><br><br> <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">Proximal Policy Optimization (PPO)</span>  算法建模离散动作空间的入门示例（PyTorch版）<br><a href="https://arxiv.org/pdf/1707.06347.pdf">Related Link</a><br><br>PPO 是最经典常用的强化学习算法之一（策略梯度类）。它结合了经典的 Actor-Critic 范式和信赖域策略优化方法，并把相关工作整合为一个简洁而有效的算法。和之前传统的策略梯度类强化学习算法相比（例如 REINFORCE 和 A2C），PPO 可以更稳定高效地提升智能体策略，通过如下所示的截断式优化目标不断强化智能体：<br>$$J(\theta) = \min(\frac{\pi_{\theta}(a_{t}|s_{t})}{\pi_{\theta_k}(a_{t}|s_{t})}A^{\theta_k}(s_{t},a_{t}),\text{clip}(\frac{\pi_{\theta}(a_{t}|s_{t})}{\pi_{\theta_k}(a_{t}|s_{t})}, 1-\epsilon,1+\epsilon)A^{\theta_k}(s_{t},a_{t}))$$<br>这个截断式的优化目标是原始未截断版本的一个下界（即一种悲观的约束）。通过公式中的 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">min</span> 操作，忽略掉一些对于策略提升较大的重要性采样系数（IS），但又在策略优化变得糟糕时保留足够的 IS，从而让整个优化过程更稳定。<br>详细的数学符号定义可以在符号表中找到 <a href="https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_notation.pdf">Related Link</a> 。<br><br>离散动作空间是最常见的动作空间之一，例如像超级马里奥，雅达利（Atari）这样的视频游戏就通过这种动作空间来决策。具体来说，它包含一组可选的离散动作选项，每次决策需要从其中选择一个。离散动作空间常常被建模成广义伯努利分布来优化（类似一个分类问题）。<br><br>本文档将主要分为三个部分，读者可以从这些样例代码中一步一步进行学习，也可以将其中一些代码片段用到自己的程序中：<br>  - 策略神经网络架构<br>  - 动作采样函数<br>  - 主函数（测试函数）<br>更多的可视化结果和实际应用样例，可以参考这个链接 <a href="https://github.com/opendilab/PPOxFamily/issues/4">Related Link</a></div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>        <b>DiscretePolicyNetwork 定义概述</b><br>            定义 PPO 中所使用的离散动作策略网络，其主要包含两部分：编码器（encoder）和决策输出头（head）</p></div><div class="code"><pre><code id="code_1" name="py_code">import torch
+import torch.nn as nn
+
+
+class DiscretePolicyNetwork(nn.Module):
+    def __init__(self, obs_shape: int, action_shape: int) -> None:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>        继承 PyTorch 神经网络类所必需的操作，自定义的神经网络必须是 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Module</span> 的子类</p></div><div class="code"><pre><code id="code_3" name="py_code">        super(DiscretePolicyNetwork, self).__init__()</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>        定义编码器模块，将原始的状态映射为特征向量。对于不同的环境，可能状态信息的模态不同，需要根据情况选择适当的编码器神经网络，例如对于图片状态信息就常常使用卷积神经网络<br>        这里我们用一个简单的单层 MLP 作为例子，即:<br>        $$y = max(Wx+b, 0)$$</p></div><div class="code"><pre><code id="code_4" name="py_code">        self.encoder = nn.Sequential(
+            nn.Linear(obs_shape, 32),
+            nn.ReLU(),
+        )</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>        定义离散动作的决策输出头，一般仅仅一层全连接层即可，即:<br>        $$y=Wx+b$$</p></div><div class="code"><pre><code id="code_5" name="py_code">        self.head = nn.Linear(32, action_shape)
+</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>        <b>forward 函数功能概述</b><br>            描述 PPO 中所使用的离散动作策略网络的前向计算图<br>            <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">x -> encoder -> head -> logit</span> .</p></div><div class="code"><pre><code id="code_6" name="py_code">    def forward(self, x: torch.Tensor) -> torch.Tensor:</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>        将原始的状态信息转换为特征向量，维度变化为: $$(B, *) -> (B, N)$$</p></div><div class="code"><pre><code id="code_8" name="py_code">        x = self.encoder(x)</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>        为每个可能的离散动作选项，计算相应的 logit，维度变化为: $$(B, N) -> (B, A)$$</p></div><div class="code"><pre><code id="code_9" name="py_code">        logit = self.head(x)
+        return logit
+
+</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    <b>sample_action 函数功能概述</b><br>        输入 logit 采样获得离散动作，输入维度为 (B, action_shape) 输出维度为 output shape = (B, )<br>        在这个示例中，课程中提到的 distributions 工具库的三个维度分别为<br>        batch_shape = (B, ), event_shape = (), sample_shape = ()</p></div><div class="code"><pre><code id="code_10" name="py_code">def sample_action(logit: torch.Tensor) -> torch.Tensor:</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    将 logit 转化为概率（logit 一般指神经网络的原始输出，不经过激活函数，例如最后一层全连接层的输出）<br>    $$\text{Softmax}(x_{i}) = \frac{\exp(x_i)}{\sum_j \exp(x_j)}$$</p></div><div class="code"><pre><code id="code_12" name="py_code">    prob = torch.softmax(logit, dim=-1)</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    构建广义伯努利分布。它的概率质量函数为: $$f(x=i|\boldsymbol{p})=p_i$$<br>    <a href="https://en.wikipedia.org/wiki/Categorical_distribution">Related Link</a></p></div><div class="code"><pre><code id="code_13" name="py_code">    dist = torch.distributions.Categorical(probs=prob)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    为一个 batch 里的每个样本采样一个离散动作，并返回它</p></div><div class="code"><pre><code id="code_14" name="py_code">    return dist.sample()
+
+</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    <b>test_sample_action 函数功能概述</b><br>        离散动作空间的主函数，构建一个简单的策略网络，执行前向计算过程，并采样得到一组离散动作</p></div><div class="code"><pre><code id="code_15" name="py_code">def test_sample_action():</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>    设置相关参数 batch_size = 4, obs_shape = 10, action_shape = 6.</p></div><div class="code"><pre><code id="code_17" name="py_code">    B, obs_shape, action_shape = 4, 10, 6</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>    从0-1 的均匀分布中生成状态数据</p></div><div class="code"><pre><code id="code_18" name="py_code">    state = torch.rand(B, obs_shape)</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>    定义策略网络</p></div><div class="code"><pre><code id="code_19" name="py_code">    policy_network = DiscretePolicyNetwork(obs_shape, action_shape)</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>    策略网络执行前向计算，即输入状态输出 logit<br>    $$ logit = \pi(a|s)$$</p></div><div class="code"><pre><code id="code_20" name="py_code">    logit = policy_network(state)
+    assert logit.shape == (B, action_shape)</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>    根据 logit 采样得到最终的离散动作</p></div><div class="code"><pre><code id="code_21" name="py_code">    action = sample_action(logit)
+    assert action.shape == (B, )
+
+</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p><i>如果读者关于本文档有任何问题和建议，可以在 GitHub 提 issue 或是直接发邮件给我们 (opendilab@pjlab.org.cn) 。</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
