@@ -7,7 +7,7 @@ $$J(\theta) = \min(\frac{\pi_{\theta}(a_{t}|s_{t})}{\pi_{\theta_k}(a_{t}|s_{t})}
 The final objective is a lower bound (i.e., a pessimistic bound) on the unclipped objective, which only ignore the change in probability ratio when it would make the objective improve, and we include it when it makes the objective worse.
 Detailed notation definition can be found in <link https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_notation.pdf link>.
 
-Hybrid action space, one of the most commonly used action spaces, is often used in practical decision applications such as StarCraftII and Honor of Kings. It contains serveral controllable varaibles and can be formulated into a tree structure. The middle nodes of these trees should be discrete selection and the leaf nodes can be both discrete and continuous actions. Due to this complexity, hybrid action space needs more special algorithm design and code implementation.
+Hybrid action space is often used in practical decision applications such as StarCraftII and Honor of Kings. It contains serveral controllable varaibles and can be formulated into a tree structure. The middle nodes of these trees should be discrete selection and the leaf nodes can be both discrete and continuous actions. Due to this complexity, hybrid action space needs more special algorithm design and code implementation.
 
 This tutorial is mainly composed of the following three parts with utilities including mask and treetensor, you can learn from these demo codes step by step or using them as code segment in your own program:
   - Policy Network Architecture
@@ -15,8 +15,8 @@ This tutorial is mainly composed of the following three parts with utilities inc
   - Main (Test) Function
 More visulization results about PPO in hybrid action space can be found in <link https://github.com/opendilab/PPOxFamily/issues/4 link>.
 
-P.S, It you need to install treetensor, you can use this command
-``pip install DI-treetensor``
+P.S, If you need to install treetensor, you can use this command
+ ``pip install DI-treetensor`` .
 """
 from typing import Dict
 import torch
@@ -100,7 +100,7 @@ def sample_hybrid_action(logit: ttorch.Tensor) -> torch.Tensor:
     # Sample one discrete action type per sample (state input).
     action_type = discrete_dist.sample()
 
-    # Construct gaussian distribution with $$\mu, \sigma$$
+    # Construct gaussian distribution
     # $$X \sim \mathcal{N}(\mu,\,\sigma^{2})$$
     # Its probability density function is: $$f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left( -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{\!2}\,\right)$$
     # <link https://en.wikipedia.org/wiki/Normal_distribution link>
@@ -133,7 +133,7 @@ def test_sample_hybrid_action():
     state = torch.rand(B, obs_shape)
     # Define hybrid action network with encoder, discrete head and continuous head.
     policy_network = HybridPolicyNetwork(obs_shape, action_shape)
-    # Policy network forward procedure, input state and output dict-type logit.
+    # Policy network forward procedure, input state and output treetensor-type logit.
     logit = policy_network(state)
     assert isinstance(logit, ttorch.Tensor)
     assert logit.action_type.shape == (B, action_shape['action_type_shape'])
