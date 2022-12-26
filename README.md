@@ -12,7 +12,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 # News
 - 2022.12.23: PPO x Family 第三章（表征多模态观察空间）将在一月上旬上线
-- 2022.12.23: [bilibili] [PPO x Family 第二章（解构复杂动作空间）正式上限](https://www.bilibili.com/video/BV1wv4y167w2)
+- 2022.12.23: [bilibili] [PPO x Family 第二章（解构复杂动作空间）正式上线](https://www.bilibili.com/video/BV1wv4y167w2)
 - 2022.12.23: PPO x Family ”算法-代码“ 注解文档网站上线 [传送门](https://opendilab.github.io/PPOxFamily/)
 - 2022.12.08: [bilibili] [PPO x Family 第一章（开启决策AI探索之旅）正式上线](https://www.bilibili.com/video/BV1cG4y137dJ)
 - 2022.12.06: [bilibili] [PPO x Family 第一章微课视频：4分钟带你快速入门强化学习的万能钥匙](https://www.bilibili.com/video/BV1e841157Um/)
