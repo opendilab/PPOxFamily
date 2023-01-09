@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter1_overview/a2c.py" target="_blank">View code on GitHub</a><br><br>PyTorch implementation of Advantage Actor-Critic (A2C)<br>REINFORCE method usually suffers from high variance for gradient estimation and Actor-Critic method can only get a biased gradient estimation.<br>To combine these two methods, A2C uses a baseline function for normalization. By substracting the baseline function to the total return, the variance for gradient estimation is reduced.<br>In practical, the baseline function is set to be the value function. The final target function is formulated as:<br>$$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) A^{\pi}(s^n, a^n)$$<br>Also in this way, the estimation is guaranteed to be unbiased.<br>Supplementary material for explaining why baseline function can reduce variance: <a href="https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf">Related Link</a><br>This document mainly includes:<br>- Implementation of A2C error.<br>- Main function (test function)</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Implementation of A2C (Advantage Actor-Critic) <a href="https://arxiv.org/pdf/1602.01783.pdf">Related Link</a></p></div><div class="code"><pre><code id="code_1" name="py_code">from collections import namedtuple
+import torch
+import torch.nn.functional as F
+
+a2c_data = namedtuple('a2c_data', ['logit', 'action', 'value', 'adv', 'return_', 'weight'])
+a2c_loss = namedtuple('a2c_loss', ['policy_loss', 'value_loss', 'entropy_loss'])
+
+
+def a2c_error(data: namedtuple) -> namedtuple:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    Unpack data: $$<\pi(a|s), a, V(s), A^{\pi}(s, a), G_t, w>$$</p></div><div class="code"><pre><code id="code_3" name="py_code">    logit, action, value, adv, return_, weight = data</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    Prepare weight for default cases.</p></div><div class="code"><pre><code id="code_4" name="py_code">    if weight is None:
+        weight = torch.ones_like(value)</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    Prepare policy distribution from logit and get log propability.</p></div><div class="code"><pre><code id="code_5" name="py_code">    dist = torch.distributions.categorical.Categorical(logits=logit)
+    logp = dist.log_prob(action)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \pi(a^n|s^n) log(\pi(a^n|s^n))$$</p></div><div class="code"><pre><code id="code_6" name="py_code">    entropy_loss = (dist.entropy() * weight).mean()</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    Policy loss: $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) A^{\pi}(s^n, a^n)$$</p></div><div class="code"><pre><code id="code_7" name="py_code">    policy_loss = -(logp * adv * weight).mean()</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    Value loss: $$\frac 1 N \sum_{n=1}^{N} (G_t^n - V(s^n))^2$$</p></div><div class="code"><pre><code id="code_8" name="py_code">    value_loss = (F.mse_loss(return_, value, reduction='none') * weight).mean()</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    Return final loss.</p></div><div class="code"><pre><code id="code_9" name="py_code">    return a2c_loss(policy_loss, value_loss, entropy_loss)
+
+
+def test_a2c():</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    Batch_size=4, action=32</p></div><div class="code"><pre><code id="code_10" name="py_code">    B, N = 4, 32</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    Generate logit, action, value, adv, return_.</p></div><div class="code"><pre><code id="code_11" name="py_code">    logit = torch.randn(B, N).requires_grad_(True)
+    action = torch.randint(0, N, size=(B, ))
+    value = torch.randn(B).requires_grad_(True)
+    adv = torch.rand(B)
+    return_ = torch.randn(B) * 2
+    data = a2c_data(logit, action, value, adv, return_, None)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Compute A2C error.</p></div><div class="code"><pre><code id="code_12" name="py_code">    loss = a2c_error(data)</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    Assert the loss is differentiable.</p></div><div class="code"><pre><code id="code_13" name="py_code">    assert logit.grad is None
+    assert value.grad is None
+    total_loss = sum(loss)
+    total_loss.backward()
+    assert isinstance(logit.grad, torch.Tensor)
+    assert isinstance(value.grad, torch.Tensor)
+
+</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>

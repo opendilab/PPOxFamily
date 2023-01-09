@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter1_overview/ppo.py" target="_blank">View code on GitHub</a><br><br>PyTorch implementation of Proximal Policy Optimization (PPO)<br>PPO is one of the most common algorithms in reinforcement learning, which combines Actor-Critic methods and Trust Region Policy Optimization.<br>For the policy part, PPO combines clipped optimization target and pessimistic bound to update policy. For the value function part, PPO usually uses classical temporal difference methods (such as GAE).<br>This final target function is formulated as:<br>$$\min(\frac{\pi_{\theta}(a_{t}|s_{t})}{\pi_{\theta_k}(a_{t}|s_{t})}A^{\theta_k}(s_{t},a_{t}),\text{clip}(\frac{\pi_{\theta}(a_{t}|s_{t})}{\pi_{\theta_k}(a_{t}|s_{t})}, 1-\epsilon,1+\epsilon)A^{\theta_k}(s_{t},a_{t}))$$<br>This document mainly includes:<br>- Implementation of PPO error.<br>- Main function (test function)</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Implementation of Proximal Policy Optimization (PPO) <a href="https://arxiv.org/pdf/1707.06347.pdf">Related Link</a> with entropy bounus, value_clip and dual_clip.</p></div><div class="code"><pre><code id="code_1" name="py_code">from typing import Optional, Tuple
+from collections import namedtuple
+import torch
+import numpy as np
+
+
+ppo_policy_data = namedtuple('ppo_policy_data', ['logit_new', 'logit_old', 'action', 'adv', 'weight'])
+ppo_policy_loss = namedtuple('ppo_policy_loss', ['policy_loss', 'entropy_loss'])
+ppo_info = namedtuple('ppo_info', ['approx_kl', 'clipfrac'])
+
+
+def ppo_policy_error(data: namedtuple,
+                     clip_ratio: float = 0.2,
+                     dual_clip: Optional[float] = None) -> Tuple[namedtuple, namedtuple]:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    Unpack data: $$<\pi_{new}(a|s), \pi_{old}(a|s), a, A^{\pi_{old}}(s, a), w>$$</p></div><div class="code"><pre><code id="code_3" name="py_code">    logit_new, logit_old, action, adv, weight = data</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    Prepare weight for default cases.</p></div><div class="code"><pre><code id="code_4" name="py_code">    if weight is None:
+        weight = torch.ones_like(adv)</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    Prepare policy distribution from logit and get log propability.</p></div><div class="code"><pre><code id="code_5" name="py_code">    dist_new = torch.distributions.categorical.Categorical(logits=logit_new)
+    dist_old = torch.distributions.categorical.Categorical(logits=logit_old)
+    logp_new = dist_new.log_prob(action)
+    logp_old = dist_old.log_prob(action)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \pi_{new}(a^n|s^n) log(\pi_{new}(a^n|s^n))$$</p></div><div class="code"><pre><code id="code_6" name="py_code">    dist_new_entropy = dist_new.entropy()
+    entropy_loss = (dist_new_entropy * weight).mean()</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    Importance sampling weight: $$r(\theta) = \frac{\pi_{new}(a|s)}{\pi_{old}(a|s)}$$</p></div><div class="code"><pre><code id="code_7" name="py_code">    ratio = torch.exp(logp_new - logp_old)</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    Original surrogate objective: $$r(\theta) A^{\pi_{old}}(s, a)$$</p></div><div class="code"><pre><code id="code_8" name="py_code">    surr1 = ratio * adv</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    <b>Clipped surrogate objective:</b> $$clip(r(\theta), 1-\epsilon, 1+\epsilon) A^{\pi_{old}}(s, a)$$</p></div><div class="code"><pre><code id="code_9" name="py_code">    surr2 = ratio.clamp(1 - clip_ratio, 1 + clip_ratio) * adv</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    Dual clip proposed by <a href="https://arxiv.org/abs/1912.09729">Related Link</a> .<br>    Only use dual_clip when adv < 0.</p></div><div class="code"><pre><code id="code_10" name="py_code">    if dual_clip is not None:
+        clip1 = torch.min(surr1, surr2)
+        clip2 = torch.max(clip1, dual_clip * adv)
+        policy_loss = -(torch.where(adv < 0, clip2, clip1) * weight).mean()</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    PPO-Clipped Loss: $$min(r(\theta) A^{\pi_{old}}(s, a), clip(r(\theta), 1-\epsilon, 1+\epsilon) A^{\pi_{old}}(s, a))$$<br>    Multiply sample-wise weight and reduce mean in batch dimension.</p></div><div class="code"><pre><code id="code_11" name="py_code">    else:
+        policy_loss = (-torch.min(surr1, surr2) * weight).mean()</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Add some visualization metrics to monitor optimization status.</p></div><div class="code"><pre><code id="code_12" name="py_code">    with torch.no_grad():
+        approx_kl = (logp_old - logp_new).mean().item()
+        clipped = ratio.gt(1 + clip_ratio) | ratio.lt(1 - clip_ratio)
+        clipfrac = torch.as_tensor(clipped).float().mean().item()</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    Return final loss and information.</p></div><div class="code"><pre><code id="code_13" name="py_code">    return ppo_policy_loss(policy_loss, entropy_loss), ppo_info(approx_kl, clipfrac)
+
+
+def test_ppo(clip_ratio, dual_clip):</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    Batch_size=4, action=32</p></div><div class="code"><pre><code id="code_14" name="py_code">    B, N = 4, 32</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    Generate logit_new, logit_old, action, adv.</p></div><div class="code"><pre><code id="code_15" name="py_code">    logit_new = torch.randn(B, N).requires_grad_(True)
+    logit_old = logit_new + torch.rand_like(logit_new) * 0.1
+    action = torch.randint(0, N, size=(B, ))
+    adv = torch.rand(B)
+    data = ppo_policy_data(logit_new, logit_old, action, adv, None)</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>    Compute PPO error.</p></div><div class="code"><pre><code id="code_16" name="py_code">    loss, info = ppo_policy_error(data, clip_ratio=clip_ratio, dual_clip=dual_clip)</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>    Assert the loss is differentiable.</p></div><div class="code"><pre><code id="code_17" name="py_code">    assert all([np.isscalar(i) for i in info])
+    assert logit_new.grad is None
+    total_loss = sum(loss)
+    total_loss.backward()
+    assert isinstance(logit_new.grad, torch.Tensor)
+
+</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
