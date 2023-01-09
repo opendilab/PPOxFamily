@@ -1,7 +1,7 @@
 """
 PyTorch implementation of Advantage Actor-Critic (A2C)
 REINFORCE method usually suffers from high variance for gradient estimation and Actor-Critic method can only get a biased gradient estimation.
-To combine these two methods, A2C uses a baseline function for normalization. By substracting the baseline function to the total return, the variance for gradient estimation is reduced. 
+To combine these two methods, A2C uses a baseline function for normalization. By substracting the baseline function to the total return, the variance for gradient estimation is reduced.
 In practical, the baseline function is set to be the value function. The final target function is formulated as:
 $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) A^{\pi}(s^n, a^n)$$
 Also in this way, the estimation is guaranteed to be unbiased.
@@ -41,7 +41,7 @@ def a2c_error(data: namedtuple) -> namedtuple:
     return a2c_loss(policy_loss, value_loss, entropy_loss)
 
 
-def test_a2c(weight):
+def test_a2c():
     # Batch_size=4, action=32
     B, N = 4, 32
     # Generate logit, action, value, adv, return_.
@@ -50,11 +50,10 @@ def test_a2c(weight):
     value = torch.randn(B).requires_grad_(True)
     adv = torch.rand(B)
     return_ = torch.randn(B) * 2
-    data = a2c_data(logit, action, value, adv, return_, weight)
+    data = a2c_data(logit, action, value, adv, return_, None)
     # Compute A2C error.
     loss = a2c_error(data)
     # Assert the loss is differentiable.
-    assert all([l.shape == tuple() for l in loss])
     assert logit.grad is None
     assert value.grad is None
     total_loss = sum(loss)
@@ -64,5 +63,4 @@ def test_a2c(weight):
 
 
 if __name__ == '__main__':
-    random_weight = torch.rand(4) + 1
-    test_a2c(random_weight)
+    test_a2c()

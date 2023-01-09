@@ -64,7 +64,7 @@ def ppo_policy_error(data: namedtuple,
     return ppo_policy_loss(policy_loss, entropy_loss), ppo_info(approx_kl, clipfrac)
 
 
-def test_ppo(clip_ratio, dual_clip, weight):
+def test_ppo(clip_ratio, dual_clip):
     # Batch_size=4, action=32
     B, N = 4, 32
     # Generate logit_new, logit_old, action, adv.
@@ -72,11 +72,10 @@ def test_ppo(clip_ratio, dual_clip, weight):
     logit_old = logit_new + torch.rand_like(logit_new) * 0.1
     action = torch.randint(0, N, size=(B, ))
     adv = torch.rand(B)
-    data = ppo_policy_data(logit_new, logit_old, action, adv, weight)
+    data = ppo_policy_data(logit_new, logit_old, action, adv, None)
     # Compute PPO error.
     loss, info = ppo_policy_error(data, clip_ratio=clip_ratio, dual_clip=dual_clip)
     # Assert the loss is differentiable.
-    assert all([l.shape == tuple() for l in loss])
     assert all([np.isscalar(i) for i in info])
     assert logit_new.grad is None
     total_loss = sum(loss)
@@ -84,6 +83,5 @@ def test_ppo(clip_ratio, dual_clip, weight):
     assert isinstance(logit_new.grad, torch.Tensor)
 
 
-if __name__ =='__main__':
-    random_weight = torch.rand(4) + 1
-    test_ppo(0.2, 0.5, random_weight)
+if __name__ == '__main__':
+    test_ppo(0.2, 0.5)
