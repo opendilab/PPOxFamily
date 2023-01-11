@@ -31,18 +31,19 @@ def a2c_error(data: namedtuple) -> namedtuple:
     # Prepare policy distribution from logit and get log propability.
     dist = torch.distributions.categorical.Categorical(logits=logit)
     logp = dist.log_prob(action)
-    # Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \pi(a^n|s^n) log(\pi(a^n|s^n))$$
-    entropy_loss = (dist.entropy() * weight).mean()
     # Policy loss: $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) A^{\pi}(s^n, a^n)$$
     policy_loss = -(logp * adv * weight).mean()
     # Value loss: $$\frac 1 N \sum_{n=1}^{N} (G_t^n - V(s^n))^2$$
     value_loss = (F.mse_loss(return_, value, reduction='none') * weight).mean()
-    # Return final loss.
+    # Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi(a^n|s^n) log(\pi(a^n|s^n))$$
+    # P.S. the final loss is ``policy_loss + value_weight * value_loss - entropy_weight * entropy_loss``
+    entropy_loss = (dist.entropy() * weight).mean()
+    # Return the concrete loss items.
     return a2c_loss(policy_loss, value_loss, entropy_loss)
 
 
 def test_a2c():
-    # Batch_size=4, action=32
+    # batch size=4, action=32
     B, N = 4, 32
     # Generate logit, action, value, adv, return_.
     logit = torch.randn(B, N).requires_grad_(True)

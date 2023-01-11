@@ -1,12 +1,12 @@
 """
 PyTorch implementation of torch.nn.utils.clip_grad_norm
 """
-import warnings
 import torch
 from torch._six import inf
 from typing import Union, Iterable
 
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
+
 
 def clip_grad_norm(
         parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
@@ -41,7 +41,7 @@ def clip_grad_norm(
 
 
 def test_clip_grad_norm():
-    # Batch_size=4, action=32
+    # batch size=4, action=32
     B, N = 4, 32
     # Generate logit and label.
     logit = torch.randn(B, N).requires_grad_(True)
