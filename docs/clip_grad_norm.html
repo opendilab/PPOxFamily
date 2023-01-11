@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter1_overview/clip_grad_norm.py" target="_blank">View code on GitHub</a><br><br>PyTorch implementation of torch.nn.utils.clip_grad_norm</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Implementation of clip_grad_norm <a href="https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_">Related Link</a></p></div><div class="code"><pre><code id="code_1" name="py_code">import torch
+from torch._six import inf
+from typing import Union, Iterable
+
+_tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
+
+
+def clip_grad_norm(
+        parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    Save the non-empty gradient of trainable parameters into a list.</p></div><div class="code"><pre><code id="code_3" name="py_code">    if isinstance(parameters, torch.Tensor):
+        parameters = [parameters]
+    grads = [p.grad for p in parameters if p.grad is not None]</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    Convert max_norm and norm_type to float.</p></div><div class="code"><pre><code id="code_4" name="py_code">    max_norm = float(max_norm)
+    norm_type = float(norm_type)
+    device = grads[0].device</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    The max norm of gradient: $$\mathrm{total\_norm}^{\infty} = \max_{\theta_i\in \Theta} |\mathrm{grad}(\theta_i)|$$</p></div><div class="code"><pre><code id="code_5" name="py_code">    if norm_type == inf:
+        norms = [g.detach().abs().max().to(device) for g in grads]
+        total_norm = norms[0] if len(norms) == 1 else torch.max(torch.stack(norms))</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    The p-norm of gradient: $$\begin{split}\mathrm{total\_norm} &amp;= (\sum_{\theta\in\Theta}((\sum_{\theta_i}\mathrm{grad}(\theta_i)^p)^\frac{1}{p})^p)^\frac{1}{p}\\&amp;=(\sum_{\theta\in\Theta}(\sum_{\theta_i}\mathrm{grad}(\theta_i)^p))^\frac{1}{p}\end{split}$$</p></div><div class="code"><pre><code id="code_6" name="py_code">    else:
+        total_norm = torch.norm(torch.stack([torch.norm(g.detach(), norm_type).to(device) for g in grads]), norm_type)</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    The clip coefficient (the 1e-6 is used to avoid zero in the denominator): $$\mathrm{clip\_coef} = \frac{\mathrm{max\_norm}}{\mathrm{total\_norm}}$$</p></div><div class="code"><pre><code id="code_7" name="py_code">    clip_coef = max_norm / (total_norm + 1e-6)</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    Clamp the coefficient to 1</p></div><div class="code"><pre><code id="code_8" name="py_code">    clip_coef_clamped = torch.clamp(clip_coef, max=1.0)</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    If total_norm < max_norm, clip_coef will be clamped to 1, then the total_norm remains the same.<br>    If total_norm > max_norm, the total_norm is clipped to max_norm: $$\begin{split}\mathrm{total\_norm'}&amp;=(\sum_{\theta\in\Theta}(\sum_{\theta}(\mathrm{grad}(\theta_i)\cdot\frac{\mathrm{max\_norm}}{\mathrm{total\_norm}})^p))^{\frac{1}{p}}\\&amp;=\frac{(\sum_{\theta\in\Theta}(\sum_{\theta}\mathrm{grad}(\theta_i)^p))^{\frac{1}{p}}}{\mathrm{total\_norm}}\cdot\mathrm{max\_norm}\\&amp;=\mathrm{max\_norm}\end{split}$$</p></div><div class="code"><pre><code id="code_9" name="py_code">    for g in grads:
+        g.detach().mul_(clip_coef_clamped.to(g.device))
+    return total_norm
+
+
+def test_clip_grad_norm():</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    batch size=4, action=32</p></div><div class="code"><pre><code id="code_10" name="py_code">    B, N = 4, 32</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    Generate logit and label.</p></div><div class="code"><pre><code id="code_11" name="py_code">    logit = torch.randn(B, N).requires_grad_(True)
+    label = torch.randn(B, N)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Compute loss and gradient</p></div><div class="code"><pre><code id="code_12" name="py_code">    loss = torch.nn.MSELoss()
+    output = loss(logit, label)
+    output.backward()</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    Clip the gradient total_norm</p></div><div class="code"><pre><code id="code_13" name="py_code">    clip_grad_norm(logit, 0.5, 2)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    Assert the total_norm of the clipped gradient</p></div><div class="code"><pre><code id="code_14" name="py_code">    assert isinstance(logit.grad, torch.Tensor)
+    grads = logit.grad
+    total_norm = torch.norm(torch.stack([torch.norm(g.detach(), 2) for g in grads]), 2)
+    assert total_norm < 0.5
+
+</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
