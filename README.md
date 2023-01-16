@@ -11,7 +11,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2022.12.23: PPO x Family 第三章（表征多模态观察空间）将在 1.16 日晚7点上线
+- 2022.12.23: PPO x Family 第三章（表征多模态观察空间）将在 1.16 日晚7点在 bilibili 直播频道（opendilab）上线
 - 2022.12.23: [bilibili] [PPO x Family 第二章（解构复杂动作空间）正式上线](https://www.bilibili.com/video/BV1wv4y167w2)
 - 2022.12.23: PPO x Family ”算法-代码“ 注解文档网站上线 [传送门](https://opendilab.github.io/PPOxFamily/)
 - 2022.12.08: [bilibili] [PPO x Family 第一章（开启决策AI探索之旅）正式上线](https://www.bilibili.com/video/BV1cG4y137dJ)
@@ -34,7 +34,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 |------|-----|----------|-------|-----| ---|
 | [第一章：开启决策AI探索之旅](https://www.bilibili.com/video/BV1cG4y137dJ) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_lecture.pdf) <br> [课程文字稿](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_manuscript.pdf) | [微课视频](https://www.bilibili.com/video/BV1e841157Um) <br> [策略梯度](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_pg.pdf) <br> [A2C](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_a2c.pdf) <br> [TRPO](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_supp_trpo.pdf) <br> [QA总结](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_qa.pdf) | [习题](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_homework.pdf) <br> [习题题解](https://github.com/opendilab/PPOxFamily/blob/main/chapter1_overview/chapter1_homework_solution.pdf) | 概述课不含代码 | [应用混剪](https://www.bilibili.com/video/BV1vW4y1M7cH/?spm_id_from=333.337.search-card.all.click) |
 | [第二章：解构复杂动作空间](https://www.bilibili.com/video/BV1wv4y167w2) | [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/chapter2_lecture.pdf) | [重参数化](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/chapter2_supp_reparameterization.pdf) <br> [PPO&DDPG](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/chapter2_supp_ppovsddpg.pdf) <br> [HyAR](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/chapter2_supp_hyar.pdf) | [习题](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/chapter2_homework.pdf) | [离散动作示例](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/discrete_tutorial_zh.py) <br> [连续动作示例](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/continuous_tutorial_zh.py) <br> [混合动作示例](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/hybrid_tutorial_zh.py) <br> [应用训练代码](https://github.com/opendilab/PPOxFamily/blob/main/chapter2_action/chapter2_application_demo.py) | [火箭回收等](https://github.com/opendilab/PPOxFamily/issues/4) |
-| 第三章：表征多模态动作空间 <br>（1.16）| 课程PPT | PPG <br> 表征学习+RL | 习题 | 应用训练代码 | 软体机器人等 |
+| 第三章：表征多模态动作空间| [课程PPT](https://github.com/opendilab/PPOxFamily/blob/main/chapter3_obs/chapter3_lecture.py) | PPG <br> 表征学习+RL | 习题 | 应用训练代码 | [软体机器人等](https://github.com/opendilab/PPOxFamily/issues/8) |
 
 # 课程特点
 
