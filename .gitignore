@@ -1,2 +1,4 @@
 *.pyc
 *wandb
+*lunarlander_discrete_demo
+.idea
