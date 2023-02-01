@@ -27,14 +27,15 @@ def pg_error(data: namedtuple) -> namedtuple:
     log_prob = dist.log_prob(action)
     # Policy loss: $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) G_t^n$$
     policy_loss = -(log_prob * return_).mean()
-    # Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \pi(a^n|s^n) log(\pi(a^n|s^n))$$
+    # Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi(a^n|s^n) log(\pi(a^n|s^n))$$
+    # P.S. the final loss is ``policy_loss - entropy_weight * entropy_loss``
     entropy_loss = dist.entropy().mean()
-    # Return final loss.
+    # Return the concrete loss items.
     return pg_loss(policy_loss, entropy_loss)
 
 
 def test_pg():
-    # Batch_size=4, action=32
+    # batch size=4, action=32
     B, N = 4, 32
     # Generate logit, action, return_.
     logit = torch.randn(B, N).requires_grad_(True)
