@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter3_obs/mario_wrapper.py" target="_blank">View code on GitHub</a><br><br>Using <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">ding.envs.DingEnvWrapper</span> to manually define the environment with corresponding wrappers.<br>We also include implementation of <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">OpticalFlowWrapper</span> , which can add optical flow into environment observation.<br>Optical flow can extract moving features between two images, which can encode temporal information into the state.</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Calculate optical flow using current frame and last frame. The final output contains one channel for current frame and two channels for optical flow.<br>        <a href="https://en.wikipedia.org/wiki/Optical_flow">Related Link</a></p></div><div class="code"><pre><code id="code_1" name="py_code">import cv2
+import gym
+import numpy as np
+import gym_super_mario_bros
+from nes_py.wrappers import JoypadSpace
+from ding.envs import DingEnvWrapper
+from ding.envs.env_wrappers import MaxAndSkipWrapper, WarpFrameWrapper, ScaledFloatFrameWrapper, FrameStackWrapper, \
+    EvalEpisodeReturnEnv
+
+
+class OpticalFlowWrapper(gym.Wrapper):</code></pre></div></div><div class="section" id="section-2"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Initialize wrapper and related member variable.</p></div><div class="code"><pre><code id="code_2" name="py_code">    def __init__(self, env):</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>        Initialize last frame as None.</p></div><div class="code"><pre><code id="code_4" name="py_code">        self.last_frame = None
+</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Reset environment and process obs.</p></div><div class="code"><pre><code id="code_5" name="py_code">    def reset(self):</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>        Reset environment.</p></div><div class="code"><pre><code id="code_7" name="py_code">        obs = self.env.reset()</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>        Add optical flow channels into obs.</p></div><div class="code"><pre><code id="code_8" name="py_code">        state = self._process_obs(obs)</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>        Update last frame.</p></div><div class="code"><pre><code id="code_9" name="py_code">        self.last_frame = obs
+        return state
+</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Execute one env step, process obs and return interaction result.</p></div><div class="code"><pre><code id="code_10" name="py_code">    def step(self, action):</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>        Add optical flow channels into obs.</p></div><div class="code"><pre><code id="code_12" name="py_code">        state = self._process_obs(obs)</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>        Update last frame.</p></div><div class="code"><pre><code id="code_13" name="py_code">        self.last_frame = obs
+        return state, reward, done, info
+</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Process obs, i.e., add optical flow information to original image.</p></div><div class="code"><pre><code id="code_14" name="py_code">    def _process_obs(self, obs):</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>        If current frame is the first frame, then the optical flow will be set to zeros.</p></div><div class="code"><pre><code id="code_16" name="py_code">        if self.last_frame is None:
+            return np.stack([obs, np.zeros_like(obs), np.zeros_like(obs)])
+</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>        Calculate optical flow using current frame and last frame.</p></div><div class="code"><pre><code id="code_17" name="py_code">        flow = cv2.calcOpticalFlowFarneback(self.last_frame, obs, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+        flow = (flow + 15) * (255.0 / (2 * 15))
+        flow = np.round(flow).astype(np.uint8)</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>        Clip the value into [0, 255).</p></div><div class="code"><pre><code id="code_18" name="py_code">        flow[flow >= 255] = 255
+        flow[flow <= 0] = 0</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>        Reshape optical flow array from [H, W, 2] to [2, H, W]</p></div><div class="code"><pre><code id="code_19" name="py_code">        flow = flow.transpose(2, 0, 1)</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>        Concatenate optical flow with original frame.</p></div><div class="code"><pre><code id="code_20" name="py_code">        return np.concatenate([[obs], flow], axis=0)
+
+</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Wrap mario environment with various wrappers.</p></div><div class="code"><pre><code id="code_21" name="py_code">def wrapped_mario_env():</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>    Original environment declaration.</p></div><div class="code"><pre><code id="code_23" name="py_code">    env = gym_super_mario_bros.make("SuperMarioBros-1-1-v0")
+    return DingEnvWrapper(</code></pre></div></div><div class="section" id="section-24"><div class="docs doc-strings"><p>        Restrict action space to 2 discrete action: right and jump (A).</p></div><div class="code"><pre><code id="code_24" name="py_code">        JoypadSpace(env, [["right"], ["right", "A"]]),
+        cfg={
+            'env_wrapper': [</code></pre></div></div><div class="section" id="section-25"><div class="docs doc-strings"><p>                Return the max value of states in adjacent 4 frames. This works like a max-pooling in temporal dimension.</p></div><div class="code"><pre><code id="code_25" name="py_code">                lambda env: MaxAndSkipWrapper(env, skip=4),</code></pre></div></div><div class="section" id="section-26"><div class="docs doc-strings"><p>                Resize (bilinear interpolation) the image size into 84 x 84 and convert RGB to GREY.</p></div><div class="code"><pre><code id="code_26" name="py_code">                lambda env: WarpFrameWrapper(env, size=84),</code></pre></div></div><div class="section" id="section-27"><div class="docs doc-strings"><p>                Normalize the state value into [0, 1]. $$scaled\_x = \frac {x - \min(x)} {\max(x) - \min (x)} $$</p></div><div class="code"><pre><code id="code_27" name="py_code">                lambda env: ScaledFloatFrameWrapper(env),</code></pre></div></div><div class="section" id="section-28"><div class="docs doc-strings"><p>                Stack adjacent 4 frames together to be one state.</p></div><div class="code"><pre><code id="code_28" name="py_code">                lambda env: FrameStackWrapper(env, n_frames=4),</code></pre></div></div><div class="section" id="section-29"><div class="docs doc-strings"><p>                Calculate episode return for evaluation.</p></div><div class="code"><pre><code id="code_29" name="py_code">                lambda env: EvalEpisodeReturnEnv(env),
+            ]
+        }
+    )
+
+</code></pre></div></div><div class="section" id="section-30"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Wrap mario environment with optical flow wrapper.</p></div><div class="code"><pre><code id="code_30" name="py_code">def wrapped_mario_env_optical():</code></pre></div></div><div class="section" id="section-32"><div class="docs doc-strings"><p>    Original environment declaration.</p></div><div class="code"><pre><code id="code_32" name="py_code">    env = gym_super_mario_bros.make("SuperMarioBros-1-1-v0")
+    return DingEnvWrapper(</code></pre></div></div><div class="section" id="section-33"><div class="docs doc-strings"><p>        Restrict action space to 2 discrete action: right and jump (A).</p></div><div class="code"><pre><code id="code_33" name="py_code">        JoypadSpace(env, [["right"], ["right", "A"]]),
+        cfg={
+            'env_wrapper': [</code></pre></div></div><div class="section" id="section-34"><div class="docs doc-strings"><p>                Return the max value of states in adjacent 4 frames. This works like a max-pooling in temporal dimension.</p></div><div class="code"><pre><code id="code_34" name="py_code">                lambda env: MaxAndSkipWrapper(env, skip=4),</code></pre></div></div><div class="section" id="section-35"><div class="docs doc-strings"><p>                Resize (bilinear interpolation) the image size into 84 x 84 and convert RGB to GREY.</p></div><div class="code"><pre><code id="code_35" name="py_code">                lambda env: WarpFrameWrapper(env, size=84),</code></pre></div></div><div class="section" id="section-36"><div class="docs doc-strings"><p>                Add optical flow information.</p></div><div class="code"><pre><code id="code_36" name="py_code">                lambda env: OpticalFlowWrapper(env),</code></pre></div></div><div class="section" id="section-37"><div class="docs doc-strings"><p>                Normalize the state value into [0, 1]. $$scaled\_x = \frac {x - \min(x)} {\max(x) - \min (x)} $$</p></div><div class="code"><pre><code id="code_37" name="py_code">                lambda env: ScaledFloatFrameWrapper(env),</code></pre></div></div><div class="section" id="section-38"><div class="docs doc-strings"><p>                Calculate episode return for evaluation.</p></div><div class="code"><pre><code id="code_38" name="py_code">                lambda env: EvalEpisodeReturnEnv(env),
+            ]
+        }
+    )
+
+</code></pre></div></div><div class="section" id="section-39"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Test two types wrappers and check output obs shape.</p></div><div class="code"><pre><code id="code_39" name="py_code">def test_wrapper():</code></pre></div></div><div class="section" id="section-41"><div class="docs doc-strings"><p>    Test environment with stacked frames.</p></div><div class="code"><pre><code id="code_41" name="py_code">    env = wrapped_mario_env()
+    obs = env.reset()
+    assert obs.shape == (4, 84, 84)</code></pre></div></div><div class="section" id="section-42"><div class="docs doc-strings"><p>    Test environment with optical flow.</p></div><div class="code"><pre><code id="code_42" name="py_code">    env = wrapped_mario_env_optical()
+    obs = env.reset()
+    assert obs.shape == (3, 84, 84)
+
+</code></pre></div></div><div class="section" id="section-42"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
