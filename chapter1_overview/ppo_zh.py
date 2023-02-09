@@ -30,7 +30,7 @@ def ppo_policy_error(data: namedtuple,
     """
     # 对数据 data 进行解包: $$<\pi_{new}(a|s), \pi_{old}(a|s), a, A^{\pi_{old}}(s, a), w>$$
     logit_new, logit_old, action, adv, weight = data
-    # 为默认类准备权重（weight）。
+    # 准备默认的权重（weight）。
     if weight is None:
         weight = torch.ones_like(adv)
     # 根据 logit 构建策略分布，然后得到对应动作的概率的对数值。

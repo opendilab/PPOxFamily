@@ -24,7 +24,7 @@ def ppo_policy_error(data: namedtuple,
                      dual_clip: Optional[float] = None) -> Tuple[namedtuple, namedtuple]:
     """
     **Overview**:
-        Implementation of Proximal Policy Optimization (PPO) <link https://arxiv.org/pdf/1707.06347.pdf link> with entropy bounus, value_clip and dual_clip.
+        Implementation of Proximal Policy Optimization (PPO) <link https://arxiv.org/pdf/1707.06347.pdf link> with entropy bonus, value_clip and dual_clip.
     """
     # Unpack data: $$<\pi_{new}(a|s), \pi_{old}(a|s), a, A^{\pi_{old}}(s, a), w>$$
     logit_new, logit_old, action, adv, weight = data
