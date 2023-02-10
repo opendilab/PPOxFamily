@@ -1,7 +1,7 @@
 """
 PyTorch implementation of Advantage Actor-Critic (A2C)
 REINFORCE method usually suffers from high variance for gradient estimation and Actor-Critic method can only get a biased gradient estimation.
-To combine these two methods, A2C uses a baseline function for normalization. By substracting the baseline function to the total return, the variance for gradient estimation is reduced.
+To combine these two methods, A2C uses a baseline function for normalization. By subtracting the baseline function to the total return, the variance for gradient estimation is reduced.
 In practical, the baseline function is set to be the value function. The final target function is formulated as:
 $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) A^{\pi}(s^n, a^n)$$
 Also in this way, the estimation is guaranteed to be unbiased.
