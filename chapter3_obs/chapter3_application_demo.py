@@ -1,4 +1,4 @@
-# Please install latest DI-engine>=0.4.6 first
+# Please install latest DI-engine's main branch first
 from ding.bonus import PPOF
 
 
@@ -6,7 +6,7 @@ def bipedalwalker():
     # Please install bipedalwalker env first, `pip3 install box2d`
     # You can refer to the env doc (https://di-engine-docs.readthedocs.io/zh_CN/latest/13_envs/bipedalwalker_zh.html) for more details
     agent = PPOF(env='bipedalwalker', exp_name='./bipedalwalker_demo')
-    agent.train(step=int(5e6))
+    agent.train(step=int(1e6))
     # Classic RL interaction loop and save replay video
     agent.deploy(enable_save_replay=True)
 
@@ -16,7 +16,7 @@ def evogym_carrier():
     # Or you can use our provided docker (opendilab/ding:nightly-evogym)
     # You can refer to the env doc (https://di-engine-docs.readthedocs.io/zh_CN/latest/13_envs/Evogym_zh.html) for more details
     agent = PPOF(env='evogym_carrier', exp_name='./evogym_carrier_demo')
-    agent.train(step=int(1e6), debug=True)
+    agent.train(step=int(1e6))
 
 
 def mario():
