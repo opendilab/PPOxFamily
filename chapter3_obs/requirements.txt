@@ -1,3 +1,3 @@
 torch
 DI-treetensor
-DI-engine>=0.4.6
+DI-engine>=0.4.5
