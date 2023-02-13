@@ -27,16 +27,21 @@ def pg_error(data: namedtuple) -> namedtuple:
     # 根据 logit 构建策略分布，然后得到对应动作的概率的对数值。
     dist = torch.distributions.categorical.Categorical(logits=logit)
     log_prob = dist.log_prob(action)
-    # 策略模型的损失: $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) G_t^n$$
+    # 策略损失函数: $$- \frac 1 N \sum_{n=1}^{N} log(\pi(a^n|s^n)) G_t^n$$
     policy_loss = -(log_prob * return_).mean()
-    # 熵 bonus：$$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi(a^n|s^n) log(\pi(a^n|s^n))$$
-    # 注意：最终的损失是 ``policy_loss - entropy_weight * entropy_loss``
+    # 熵奖赏（bonus）损失函数：$$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi(a^n|s^n) log(\pi(a^n|s^n))$$
+    # 注意：最终的损失是 ``policy_loss - entropy_weight * entropy_loss`` .
     entropy_loss = dist.entropy().mean()
-    # 返回最终的各项损失信息：包含策略模型的损失和熵损失。
+    # 返回最终的各项损失函数：包含策略损失和熵损失。
     return pg_loss(policy_loss, entropy_loss)
 
 
+# delimiter
 def test_pg():
+    """
+    **概述**:
+        策略梯度算法的测试函数，包括前向和反向传播测试。
+    """
     # 设置相关参数：batch size=4, action=32
     B, N = 4, 32
     # 从随机分布中生成测试数据：logit, action, return_.
@@ -46,7 +51,7 @@ def test_pg():
     # 计算 PG error。
     data = pg_data(logit, action, return_)
     loss = pg_error(data)
-    # 测试 loss 是否是可微分的
+    # 测试 loss 是否是可微分的，是否能正确产生梯度
     assert all([l.shape == tuple() for l in loss])
     assert logit.grad is None
     total_loss = sum(loss)

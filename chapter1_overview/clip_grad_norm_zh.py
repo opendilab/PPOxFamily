@@ -40,7 +40,12 @@ def clip_grad_norm(
     return total_norm
 
 
+# delimiter
 def test_clip_grad_norm():
+    """
+    **概述**:
+        梯度正则化的测试函数。
+    """
     # 设置相关参数：batch size=4, action=32
     B, N = 4, 32
     # 从随机分布中生成测试数据：logit，label。
