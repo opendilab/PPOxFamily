@@ -18,16 +18,15 @@ def clip_grad_norm(
         g.detach().mul_(clip_coef_clamped.to(g.device))
     return total_norm
 
-
-def test_clip_grad_norm():</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    batch size=4, action=32</p></div><div class="code"><pre><code id="code_10" name="py_code">    B, N = 4, 32</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    Generate logit and label.</p></div><div class="code"><pre><code id="code_11" name="py_code">    logit = torch.randn(B, N).requires_grad_(True)
-    label = torch.randn(B, N)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Compute loss and gradient</p></div><div class="code"><pre><code id="code_12" name="py_code">    loss = torch.nn.MSELoss()
+</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    batch size=4, action=32</p></div><div class="code"><pre><code id="code_11" name="py_code">    B, N = 4, 32</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Generate logit and label.</p></div><div class="code"><pre><code id="code_12" name="py_code">    logit = torch.randn(B, N).requires_grad_(True)
+    label = torch.randn(B, N)</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    Compute loss and gradient</p></div><div class="code"><pre><code id="code_13" name="py_code">    loss = torch.nn.MSELoss()
     output = loss(logit, label)
-    output.backward()</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    Clip the gradient total_norm</p></div><div class="code"><pre><code id="code_13" name="py_code">    clip_grad_norm(logit, 0.5, 2)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    Assert the total_norm of the clipped gradient</p></div><div class="code"><pre><code id="code_14" name="py_code">    assert isinstance(logit.grad, torch.Tensor)
+    output.backward()</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    Clip the gradient total_norm</p></div><div class="code"><pre><code id="code_14" name="py_code">    clip_grad_norm(logit, 0.5, 2)</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    Assert the total_norm of the clipped gradient</p></div><div class="code"><pre><code id="code_15" name="py_code">    assert isinstance(logit.grad, torch.Tensor)
     grads = logit.grad
     total_norm = torch.norm(torch.stack([torch.norm(g.detach(), 2) for g in grads]), 2)
     assert total_norm < 0.5
 
-</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
 window.onload = function(){
     var codeElement = document.getElementsByName('py_code');
     var lineCount = 1;
