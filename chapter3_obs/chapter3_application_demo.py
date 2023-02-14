@@ -54,8 +54,8 @@ def procgen_bigfish():
 
 if __name__ == "__main__":
     # You can select and run your favorite demo
-    bipedalwalker()
+    # bipedalwalker()
     # evogym_carrier()
-    # mario()
+    mario()
     # di_sheep()
     # procgen_bigfish()
