@@ -17,6 +17,8 @@ def evogym_carrier():
     # You can refer to the env doc (https://di-engine-docs.readthedocs.io/zh_CN/latest/13_envs/Evogym_zh.html) for more details
     agent = PPOF(env='evogym_carrier', exp_name='./evogym_carrier_demo')
     agent.train(step=int(1e6))
+    # Classic RL interaction loop and save replay video
+    agent.deploy(enable_save_replay=True)
 
 
 def mario():
@@ -24,6 +26,8 @@ def mario():
     # You can refer to the env doc (https://di-engine-docs.readthedocs.io/zh_CN/latest/13_envs/gym_super_mario_bros_zh.html) for more details
     agent = PPOF(env='mario', exp_name='./mario_demo')
     agent.train(step=int(3e6))
+    # Classic RL interaction loop and save replay video
+    agent.deploy(enable_save_replay=True)
 
 
 def di_sheep():
@@ -43,6 +47,8 @@ def di_sheep():
     )
     agent = PPOF(env='di_sheep', exp_name='./di_sheep_demo', model=model)
     agent.train(step=int(1e6))
+    # Classic RL interaction loop and save replay video
+    agent.deploy(enable_save_replay=True)
 
 
 def procgen_bigfish():
@@ -50,12 +56,14 @@ def procgen_bigfish():
     # You can refer to the env doc (https://di-engine-docs.readthedocs.io/zh_CN/latest/13_envs/procgen_zh.html) for more details
     agent = PPOF(env='procgen_bigfish', exp_name='./procgen_bigfish_demo')
     agent.train(step=int(1e7))
+    # Classic RL interaction loop and save replay video
+    agent.deploy(enable_save_replay=True)
 
 
 if __name__ == "__main__":
     # You can select and run your favorite demo
-    # bipedalwalker()
+    bipedalwalker()
     # evogym_carrier()
-    mario()
+    # mario()
     # di_sheep()
     # procgen_bigfish()
