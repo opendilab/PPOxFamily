@@ -40,7 +40,12 @@ def clip_grad_norm(
     return total_norm
 
 
+# delimiter
 def test_clip_grad_norm():
+    """
+    **Overview**:
+        Test function of grad norm.
+    """
     # batch size=4, action=32
     B, N = 4, 32
     # Generate logit and label.
