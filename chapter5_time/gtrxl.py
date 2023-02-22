@@ -9,14 +9,86 @@ import warnings
 import numpy as np
 import torch
 import torch.nn as nn
+import treetensor
+from ding.torch_utils import GRUGatingUnit, build_normalization
+
 from ding.torch_utils.network.nn_module import fc_block
-from ding.torch_utils.network.gtrxl import PositionalEmbedding, GatedTransformerXLLayer, Memory
+from ding.torch_utils.network.gtrxl import PositionalEmbedding, Memory, AttentionXL
+
+
+class GatedTransformerXLLayer(torch.nn.Module):
+    """
+    **Overview:**
+        Attention layer of GTrXL
+    """
+    def __init__(
+            self,
+            input_dim: int,
+            head_dim: int,
+            hidden_dim: int,
+            head_num: int,
+            mlp_num: int,
+            dropout: nn.Module,
+            activation: nn.Module,
+            gru_gating: bool = True,
+            gru_bias: float = 2.
+    ) -> None:
+        super(GatedTransformerXLLayer, self).__init__()
+        self.dropout = dropout
+        # Decide whether to use GRU-gating.
+        self.gating = gru_gating
+        if self.gating is True:
+            self.gate1 = GRUGatingUnit(input_dim, gru_bias)
+            self.gate2 = GRUGatingUnit(input_dim, gru_bias)
+        # Build attention block.
+        self.attention = AttentionXL(
+            input_dim,
+            head_dim,
+            head_num,
+            dropout,
+        )
+        # Build Feed-Forward-Network.
+        layers = []
+        dims = [input_dim] + [hidden_dim] * (mlp_num - 1) + [input_dim]
+        for i in range(mlp_num):
+            layers.append(fc_block(dims[i], dims[i + 1], activation=activation))
+            if i != mlp_num - 1:
+                layers.append(self.dropout)
+        layers.append(self.dropout)
+        self.mlp = nn.Sequential(*layers)
+        # Build layer norm.
+        self.layernorm1 = build_normalization('LN')(input_dim)
+        self.layernorm2 = build_normalization('LN')(input_dim)
+        self.activation = activation
+
+    def forward(
+            self,
+            inputs: torch.Tensor,
+            pos_embedding: torch.Tensor,
+            u: torch.nn.Parameter,
+            v: torch.nn.Parameter,
+            memory: torch.Tensor,
+            mask: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        # Concat memory with input across sequence dimension. The shape is: [full_sequence, batch_size, input_dim]
+        full_input = torch.cat([memory, inputs], dim=0)
+        # Forward calculation for GTrXL layer.
+        x1 = self.layernorm1(full_input)
+        # Attention module.
+        a1 = self.dropout(self.attention(inputs, pos_embedding, x1, u, v, mask=mask))
+        a1 = self.activation(a1)
+        o1 = self.gate1(inputs, a1) if self.gating else inputs + a1
+        x2 = self.layernorm2(o1)
+        # Feed Forward Network.
+        m2 = self.dropout(self.mlp(x2))
+        o2 = self.gate2(o1, m2) if self.gating else o1 + m2
+        return o2
 
 
 class GTrXL(nn.Module):
     """
     **Overview:**
-        Pytorch implementation for GTrXL.
+        PyTorch implementation for GTrXL.
     """
     def __init__(
         self,
@@ -122,10 +194,11 @@ class GTrXL(nn.Module):
             attn_mask = self.att_mask[cur_seq]
         # Otherwise, create a new attention mask and store it into self.att_mask.
         else:
+            # For example, if cur_seq = 3, full_seq = 7, then the mask is: $$ \begin{matrix} 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 \end{matrix}$$
             attn_mask = (
                 torch.triu(
                     torch.ones((cur_seq, full_seq)),
-                    diagonal=1 + prev_seq,  # fixed in train, eval, collect
+                    diagonal=1 + prev_seq,
                 ).bool().unsqueeze(-1).to(x.device)
             )
             self.att_mask[cur_seq] = attn_mask
@@ -161,13 +234,13 @@ class GTrXL(nn.Module):
             out = torch.transpose(out, 1, 0)
         # Return memory is needed.
         if return_mem:
-            output = {"logit": out, "memory": memory}
+            output = treetensor.Object({"logit": out, "memory": memory})
         else:
-            output = {"logit": out}
+            output = treetensor.Object({"logit": out})
         return output
 
 
-if __name__ == '__main__':
+def test_gtrxl() -> None:
     # Generate data for testing.
     input_dim = 128
     seq_len = 64
@@ -206,3 +279,7 @@ if __name__ == '__main__':
         memory_out = output['memory']
         if m is not None:
             assert torch.all(torch.eq(memory_out, m))
+
+
+if __name__ == '__main__':
+    test_gtrxl()

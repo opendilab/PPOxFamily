@@ -24,7 +24,7 @@ class LSTM(nn.Module):
             input_size: int,
             hidden_size: int,
             num_layers: int,
-            norm_type: Optional[str] = None,
+            norm_type: Optional[str] = 'LN',
             dropout: float = 0.
     ) -> None:
         # Initialize arguments.
@@ -51,8 +51,6 @@ class LSTM(nn.Module):
 
     # Dealing with different types of input and return preprocessed prev_state.
     def _before_forward(self, inputs: torch.Tensor, prev_state: Union[None, List[Dict]]) -> torch.Tensor:
-        assert hasattr(self, 'num_layers')
-        assert hasattr(self, 'hidden_size')
         seq_len, batch_size = inputs.shape[:2]
         # If prev_state is None, it indicates that this is the beginning of a sequence. In this case, prev_state will be initialized as zero.
         if prev_state is None:
@@ -65,18 +63,16 @@ class LSTM(nn.Module):
             )
             prev_state = (zeros, zeros)
         # If prev_state is not None, then preprocess it into one batch.
-        elif is_sequence(prev_state):
+        else:
             assert len(prev_state) == batch_size
-            state = []
-            for prev in prev_state:
-                state.append([v for v in prev.values()])
+            state = [[v for v in prev.values()] for prev in prev_state]
             state = list(zip(*state))
             prev_state = [torch.cat(t, dim=1) for t in state]
 
         return prev_state
 
     def _init(self):
-        # Initialize parameters.
+        # Initialize parameters. Each parameter is initialized using a uniform distribution of: $$U(-\sqrt {\frac 1 {HiddenSize}}, -\sqrt {\frac 1 {HiddenSize}})$$
         gain = math.sqrt(1. / self.hidden_size)
         for l in range(self.num_layers):
             torch.nn.init.uniform_(self.wx[l], -gain, gain)
@@ -87,7 +83,7 @@ class LSTM(nn.Module):
     def forward(self,
                 inputs: torch.Tensor,
                 prev_state: torch.Tensor,
-                list_next_state: bool = True) -> Tuple[torch.Tensor, Union[torch.Tensor, list]]:
+                ) -> Tuple[torch.Tensor, Union[torch.Tensor, list]]:
         # The shape of input is: [sequence length, batch size, input size]
         seq_len, batch_size = inputs.shape[:2]
         prev_state = self._before_forward(inputs, prev_state)
@@ -125,27 +121,16 @@ class LSTM(nn.Module):
             if self.use_dropout and l != self.num_layers - 1:
                 x = self.dropout(x)
         next_state = [torch.stack(t, dim=0) for t in zip(*next_state)]
-        next_state = self._after_forward(next_state, list_next_state)
+        # Return list type, split the next_state .
+        h, c = next_state
+        batch_size = h.shape[1]
+        next_state = [torch.chunk(h, batch_size, dim=1), torch.chunk(c, batch_size, dim=1)]
+        next_state = list(zip(*next_state))
+        next_state = [{k: v for k, v in zip(['h', 'c'], item)} for item in next_state]
         return x, next_state
 
-    # Post-process the next_state, return list or tensor type next_states
-    def _after_forward(self,
-                       next_state: Tuple[torch.Tensor],
-                       list_next_state: bool = False) -> Union[List[Dict], Dict[str, torch.Tensor]]:
-        # Return list type, split the next_state .
-        if list_next_state:
-            h, c = next_state
-            batch_size = h.shape[1]
-            next_state = [torch.chunk(h, batch_size, dim=1), torch.chunk(c, batch_size, dim=1)]
-            next_state = list(zip(*next_state))
-            next_state = [{k: v for k, v in zip(['h', 'c'], item)} for item in next_state]
-        # Return tensor type.
-        else:
-            next_state = {k: v for k, v in zip(['h', 'c'], next_state)}
-        return next_state
 
-
-if __name__ == '__main__':
+def test_lstm():
     # Randomly generate test data.
     seq_len = 2
     num_layers = 3
@@ -161,7 +146,7 @@ if __name__ == '__main__':
     prev_state = None
     for s in range(seq_len):
         input_step = input[s:s + 1]
-        output, prev_state = lstm(input_step, prev_state, list_next_state=True)
+        output, prev_state = lstm(input_step, prev_state)
 
     # Check whether the output is correct.
     assert output.shape == (1, batch_size, hidden_size)
@@ -169,3 +154,7 @@ if __name__ == '__main__':
     assert prev_state[0]['h'].shape == (num_layers, 1, hidden_size)
     torch.mean(output).backward()
     assert isinstance(input.grad, torch.Tensor)
+
+
+if __name__ == '__main__':
+    test_lstm()
