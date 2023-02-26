@@ -11,7 +11,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2023.01.17: PPO x Family 第四章（解密稀疏奖励空间）将在 2.23 上线
+- 2023.02.23: [bilibili] [PPO x Family 第四章（解密稀疏奖励空间）正式上线](https://www.bilibili.com/video/BV15j411F7ni)
 - 2023.01.16: [bilibili] [PPO x Family 第三章（表征多模态观察空间）正式上线](https://www.bilibili.com/video/BV1rK411r7Kg)
 - 2022.12.23: [bilibili] [PPO x Family 第二章（解构复杂动作空间）正式上线](https://www.bilibili.com/video/BV1wv4y167w2)
 - 2022.12.23: PPO x Family ”算法-代码“ 注解文档网站上线 [传送门](https://opendilab.github.io/PPOxFamily/)
