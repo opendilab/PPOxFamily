@@ -5,12 +5,14 @@ Implementation of ``POPART`` algorithm for reward rescale.
 POPART is an adaptive normalization algorithm to normalized the targets used in the learning updates. The two main components in POPART are:
 **ART**: to update scale and shift such that the return is appropriately normalized
 **POP**: to preserve the outputs of the unnormalized function when we change the scale and shift.
-
 """
-from typing import Optional, Union
+from typing import Dict, Optional, Union
+import pickle
 import math
 import torch
 import torch.nn as nn
+from torch.optim import AdamW
+from torch.utils.data import DataLoader
 
 
 class PopArt(nn.Module):
@@ -62,7 +64,7 @@ class PopArt(nn.Module):
         """
         normalized_output = x.mm(self.weight.t())
         normalized_output += self.bias.unsqueeze(0).expand_as(normalized_output)
-        # The unnormalization of output
+        # Unnormalize the output.
         with torch.no_grad():
             output = normalized_output * self.sigma + self.mu
 
@@ -111,3 +113,81 @@ class PopArt(nn.Module):
         self.bias.data = (old_std * self.bias + old_mu - self.mu) / self.sigma
 
         return {'new_mean': batch_mean, 'new_std': batch_std}
+
+
+class MLP(nn.Module):
+
+    def __init__(self, obs_shape: int, action_shape: int) -> None:
+        """
+        **Overview**:
+            A MLP network with popart as the final layer.
+            Input: observations and actions
+            Output: Estimated Q value
+            ``cat(obs,actions) -> encoder -> popart`` .
+        """
+        super(MLP, self).__init__()
+        # Define the encoder and popart layer.
+        # Here we use MLP with two layer and ReLU as activate function.
+        # The final layer is popart.
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_shape+action_shape, 16),
+            nn.ReLU(),
+            nn.Linear(16, 32),
+            nn.ReLU(),
+        )
+        self.popart = PopArt(32, 1)
+
+    def forward(self, obs: torch.Tensor, actions: torch.Tensor) -> torch.Tensor:
+        # The encoder first concatenate the observation vectors and actions,
+        # then map the input to an embedding vector.
+        x = torch.cat((obs, actions),1)
+        x = self.encoder(x)
+        # The popart layer maps the embedding vector to a normalized value.
+        normalized_output  = self.popart(x)
+        return normalized_output 
+
+
+def train(obs_shape: int, action_shape: int, NUM_EPOCH: int, train_data):
+    model = MLP(obs_shape, action_shape)
+    optimizer = AdamW(model.parameters(), lr=0.0001, weight_decay=0.0001)
+    MSEloss = nn.MSELoss()
+    # Read the preprocessed data of trained agent on lunarlander.
+    # Each sample in the datasets should be a dict with following format:
+    # $$key\quad dim$$
+    # $$observations\quad (*,8)$$
+    # $$actions\quad (*,)$$
+    # $$rewards\quad (*,)$$
+    # where the rewards is the discounted return from the current state. 
+    train_data = DataLoader(train_data, batch_size = 64, shuffle = True)
+
+    running_loss = 0.0
+    for epoch in range(NUM_EPOCH):
+        for idx, data in enumerate(train_data):
+            optimizer.zero_grad()
+            # Compute the original output and the normalized output.
+            output, normalized_output = model(data['observations'], data['actions'])
+            mu = model.popart.mu
+            sigma = model.popart.sigma
+            # Normalize the target return to align with the normalized Q value.
+            with torch.no_grad():
+                normalized_reward = (data['rewards'] - mu)/sigma
+            # The loss is calculated as the MSE loss between normalized Q value and normalized target return.
+            loss = MSEloss(normalized_output, normalized_reward)
+            loss.backward()
+            optimizer.step()
+            # After the model parameters are updated with the gradient, the weights and bias should be updated to preserve unnormalised outputs.
+            model.popart.update_parameters(data['rewards'])
+
+            running_loss += loss.item()
+
+        if epoch % 100 == 99:    
+            print('Epoch [%d] loss: %.6f' % (epoch + 1, running_loss / 100))
+            running_loss = 0.0
+            
+if __name__ == '__main__':
+    # The preprocessed data can be downloaded from: <link https://opendilab.net/download/PPOxFamily/ link>
+    with open('ppof_ch4_data_lunarlander.pkl', 'rb') as f:
+        dataset = pickle.load(f)
+        train(obs_shape=8, action_shape=1, NUM_EPOCH = 2000, train_data=dataset)
+
+    
