@@ -2,7 +2,9 @@
 Implementation of ``POPART`` algorithm for reward rescale.
 <link https://arxiv.org/abs/1602.07714 link>
 
-POPART is an adaptive normalization algorithm to normalized the targets used in the learning updates. The two main components in POPART are:
+POPART is an adaptive normalization algorithm to normalized the targets used in the learning updates.
+
+The two main components in POPART are:
 **ART**: to update scale and shift such that the return is appropriately normalized
 **POP**: to preserve the outputs of the unnormalized function when we change the scale and shift.
 """
@@ -30,7 +32,7 @@ class PopArt(nn.Module):
     ) -> None:
         # PyTorch necessary requirements for extending ``nn.Module`` . Our network should also subclass this class.
         super(PopArt, self).__init__()
-        
+
         self.beta = beta
         self.input_features = input_features
         self.output_features = output_features
@@ -46,11 +48,14 @@ class PopArt(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
-        # In Kaiming Initialization, the mean of weights increment slowly and the std is close to 1, which avoid the vanishing gradient problem and exploding gradient problem of deep models.
+        # In Kaiming Initialization, the mean of weights increment slowly and the std is close to 1,
+        # which avoid the vanishing gradient problem and exploding gradient problem of deep models.
         # Specifically, the Kaiming Initialization funciton is as follows:
         # $$std = \sqrt{\frac{2}{(1+a^2)\times fan\_in}}$$
-        # where a is the the negative slope of the rectifier used after this layer (0 for ReLU by default), and fan_in is the number of input dimension.
-        # For more kaiming intialization info, you can refer to the paper <link https://arxiv.org/pdf/1502.01852.pdf link>
+        # where a is the the negative slope of the rectifier used after this layer (0 for ReLU by default),
+        # and fan_in is the number of input dimension.
+        # For more kaiming intialization info, you can refer to the paper:
+        # <link https://arxiv.org/pdf/1502.01852.pdf link>
         nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
         if self.bias is not None:
             fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.weight)
@@ -130,7 +135,7 @@ class MLP(nn.Module):
         # Here we use MLP with two layer and ReLU as activate function.
         # The final layer is popart.
         self.encoder = nn.Sequential(
-            nn.Linear(obs_shape+action_shape, 16),
+            nn.Linear(obs_shape + action_shape, 16),
             nn.ReLU(),
             nn.Linear(16, 32),
             nn.ReLU(),
@@ -140,11 +145,11 @@ class MLP(nn.Module):
     def forward(self, obs: torch.Tensor, actions: torch.Tensor) -> torch.Tensor:
         # The encoder first concatenate the observation vectors and actions,
         # then map the input to an embedding vector.
-        x = torch.cat((obs, actions),1)
+        x = torch.cat((obs, actions), 1)
         x = self.encoder(x)
         # The popart layer maps the embedding vector to a normalized value.
-        normalized_output  = self.popart(x)
-        return normalized_output 
+        normalized_output = self.popart(x)
+        return normalized_output
 
 
 def train(obs_shape: int, action_shape: int, NUM_EPOCH: int, train_data):
@@ -157,8 +162,8 @@ def train(obs_shape: int, action_shape: int, NUM_EPOCH: int, train_data):
     # $$observations\quad (*,8)$$
     # $$actions\quad (*,)$$
     # $$rewards\quad (*,)$$
-    # where the rewards is the discounted return from the current state. 
-    train_data = DataLoader(train_data, batch_size = 64, shuffle = True)
+    # where the rewards is the discounted return from the current state.
+    train_data = DataLoader(train_data, batch_size=64, shuffle=True)
 
     running_loss = 0.0
     for epoch in range(NUM_EPOCH):
@@ -170,24 +175,25 @@ def train(obs_shape: int, action_shape: int, NUM_EPOCH: int, train_data):
             sigma = model.popart.sigma
             # Normalize the target return to align with the normalized Q value.
             with torch.no_grad():
-                normalized_reward = (data['rewards'] - mu)/sigma
+                normalized_reward = (data['rewards'] - mu) / sigma
             # The loss is calculated as the MSE loss between normalized Q value and normalized target return.
             loss = MSEloss(normalized_output, normalized_reward)
             loss.backward()
             optimizer.step()
-            # After the model parameters are updated with the gradient, the weights and bias should be updated to preserve unnormalised outputs.
+            # After the model parameters are updated with the gradient,
+            # the weights and bias should be updated to preserve unnormalised outputs.
             model.popart.update_parameters(data['rewards'])
 
             running_loss += loss.item()
 
-        if epoch % 100 == 99:    
+        if epoch % 100 == 99:
             print('Epoch [%d] loss: %.6f' % (epoch + 1, running_loss / 100))
             running_loss = 0.0
-            
+
+
 if __name__ == '__main__':
-    # The preprocessed data can be downloaded from: <link https://opendilab.net/download/PPOxFamily/ link>
+    # The preprocessed data can be downloaded from:
+    # <link https://opendilab.net/download/PPOxFamily/ link>
     with open('ppof_ch4_data_lunarlander.pkl', 'rb') as f:
         dataset = pickle.load(f)
-        train(obs_shape=8, action_shape=1, NUM_EPOCH = 2000, train_data=dataset)
-
-    
+        train(obs_shape=8, action_shape=1, NUM_EPOCH=2000, train_data=dataset)
