@@ -19,6 +19,7 @@ class OpticalFlowWrapper(gym.Wrapper):
         Calculate optical flow using current frame and last frame. The final output contains one channel for current frame and two channels for optical flow.
         <link https://en.wikipedia.org/wiki/Optical_flow link>
     """
+
     def __init__(self, env):
         """
         **Overview**:
