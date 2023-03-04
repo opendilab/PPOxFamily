@@ -194,7 +194,7 @@ class GTrXL(nn.Module):
             attn_mask = self.att_mask[cur_seq]
         # Otherwise, create a new attention mask and store it into self.att_mask.
         else:
-            # For example, if cur_seq = 3, full_seq = 7, then the mask is: $$ \begin{matrix} 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 \end{matrix}$$
+            # For example, if cur_seq = 3, full_seq = 7, then the mask is: $$ \begin{matrix} 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 \end{matrix}$$ This forces that the hidden state of current token is only associated with previous tokens.
             attn_mask = (
                 torch.triu(
                     torch.ones((cur_seq, full_seq)),

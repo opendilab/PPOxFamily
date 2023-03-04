@@ -124,6 +124,7 @@ class LSTM(nn.Module):
         # Return list type, split the next_state .
         h, c = next_state
         batch_size = h.shape[1]
+        # Split h with shape [num_layers, batch_size, hidden_size] to a list with length batch_size and each element is a tensor with shape [num_layers, 1, hidden_size]. The same operation is performed on c.
         next_state = [torch.chunk(h, batch_size, dim=1), torch.chunk(c, batch_size, dim=1)]
         next_state = list(zip(*next_state))
         next_state = [{k: v for k, v in zip(['h', 'c'], item)} for item in next_state]
@@ -146,6 +147,7 @@ def test_lstm():
     prev_state = None
     for s in range(seq_len):
         input_step = input[s:s + 1]
+        # The prev_state is None if the input_step is the first step of the sequence. Otherwise, the prev_state contains a list of dictions with key 'h', 'c', and the corresponding values are tensors with shape [num_layers, 1, hidden_size]. The length of the list equuals to the batch_size.
         output, prev_state = lstm(input_step, prev_state)
 
     # Check whether the output is correct.
