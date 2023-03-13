@@ -13,7 +13,6 @@ from collections import namedtuple
 import torch
 import numpy as np
 
-
 ppo_policy_data = namedtuple('ppo_policy_data', ['logit_new', 'logit_old', 'action', 'adv', 'weight'])
 ppo_policy_loss = namedtuple('ppo_policy_loss', ['policy_loss', 'entropy_loss'])
 ppo_info = namedtuple('ppo_info', ['approx_kl', 'clipfrac'])
@@ -37,7 +36,7 @@ def ppo_policy_error(data: namedtuple,
     logp_new = dist_new.log_prob(action)
     logp_old = dist_old.log_prob(action)
     # Entropy bonus: $$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi_{new}(a^n|s^n) log(\pi_{new}(a^n|s^n))$$
-    # P.S. the final loss is ``policy_loss - entropy_weight * entropy_loss``
+    # P.S. the final loss is ``policy_loss - entropy_weight * entropy_loss`` .
     dist_new_entropy = dist_new.entropy()
     entropy_loss = (dist_new_entropy * weight).mean()
     # Importance sampling weight: $$r(\theta) = \frac{\pi_{new}(a|s)}{\pi_{old}(a|s)}$$
@@ -65,7 +64,12 @@ def ppo_policy_error(data: namedtuple,
     return ppo_policy_loss(policy_loss, entropy_loss), ppo_info(approx_kl, clipfrac)
 
 
+# delimiter
 def test_ppo(clip_ratio, dual_clip):
+    """
+    **Overview**:
+        Test function of PPO, for both forward and backward operations.
+    """
     # batch size=4, action=32
     B, N = 4, 32
     # Generate logit_new, logit_old, action, adv.

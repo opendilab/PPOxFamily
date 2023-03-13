@@ -22,6 +22,7 @@ from torch.distributions import Normal, Independent
 
 
 class ContinuousPolicyNetwork(nn.Module):
+
     def __init__(self, obs_shape: int, action_shape: int) -> None:
         """
         **Overview**:

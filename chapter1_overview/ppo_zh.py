@@ -15,7 +15,6 @@ from collections import namedtuple
 import torch
 import numpy as np
 
-
 ppo_policy_data = namedtuple('ppo_policy_data', ['logit_new', 'logit_old', 'action', 'adv', 'weight'])
 ppo_policy_loss = namedtuple('ppo_policy_loss', ['policy_loss', 'entropy_loss'])
 ppo_info = namedtuple('ppo_info', ['approx_kl', 'clipfrac'])
@@ -38,8 +37,8 @@ def ppo_policy_error(data: namedtuple,
     dist_old = torch.distributions.categorical.Categorical(logits=logit_old)
     logp_new = dist_new.log_prob(action)
     logp_old = dist_old.log_prob(action)
-    # 熵 bonus: $$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi_{new}(a^n|s^n) log(\pi_{new}(a^n|s^n))$$
-    # 注意：最终的损失是 ``policy_loss - entropy_weight * entropy_loss``
+    # 熵奖赏（bonus）损失函数: $$\frac 1 N \sum_{n=1}^{N} \sum_{a^n}\pi_{new}(a^n|s^n) log(\pi_{new}(a^n|s^n))$$
+    # 注意：最终的损失函数是 ``policy_loss - entropy_weight * entropy_loss`` .
     dist_new_entropy = dist_new.entropy()
     entropy_loss = (dist_new_entropy * weight).mean()
     # 重要性采样的权重: $$r(\theta) = \frac{\pi_{new}(a|s)}{\pi_{old}(a|s)}$$
@@ -58,16 +57,21 @@ def ppo_policy_error(data: namedtuple,
     # 在样本的维度乘以权重，然后在 batch 的维度执行求均值操作。
     else:
         policy_loss = (-torch.min(surr1, surr2) * weight).mean()
-    # 添加一些可视化指标来监控优化状态。
+    # 添加一些可视化指标来监控优化状态，故使用关闭梯度计算的上下文。
     with torch.no_grad():
         approx_kl = (logp_old - logp_new).mean().item()
         clipped = ratio.gt(1 + clip_ratio) | ratio.lt(1 - clip_ratio)
         clipfrac = torch.as_tensor(clipped).float().mean().item()
-    # 返回最终的损失和相关统计信息。
+    # 返回最终的损失函数和相关统计信息。
     return ppo_policy_loss(policy_loss, entropy_loss), ppo_info(approx_kl, clipfrac)
 
 
+# delimiter
 def test_ppo(clip_ratio, dual_clip):
+    """
+    **概述**:
+        PPO 算法的测试函数，包括前向和反向传播过程。
+    """
     # 设置相关参数：batch size=4, action=32
     B, N = 4, 32
     # 从随机分布中生成测试数据：logit_new, logit_old, action, adv.
@@ -78,7 +82,7 @@ def test_ppo(clip_ratio, dual_clip):
     data = ppo_policy_data(logit_new, logit_old, action, adv, None)
     # 计算 PPO error。
     loss, info = ppo_policy_error(data, clip_ratio=clip_ratio, dual_clip=dual_clip)
-    # 测试 loss 是否是可微分的
+    # 测试 loss 是否是可微分的，是否能正确产生梯度
     assert all([np.isscalar(i) for i in info])
     assert logit_new.grad is None
     total_loss = sum(loss)

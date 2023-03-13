@@ -8,8 +8,7 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_norm(
-        parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **Overview**:
         Implementation of clip_grad_norm <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>
@@ -40,7 +39,12 @@ def clip_grad_norm(
     return total_norm
 
 
+# delimiter
 def test_clip_grad_norm():
+    """
+    **Overview**:
+        Test function of grad norm.
+    """
     # batch size=4, action=32
     B, N = 4, 32
     # Generate logit and label.

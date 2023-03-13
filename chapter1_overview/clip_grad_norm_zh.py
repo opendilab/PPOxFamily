@@ -8,8 +8,7 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_norm(
-        parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **概述**:
         torch.nn.utils.clip_grad_norm 的 PyTorch 版实现。<link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>
@@ -40,7 +39,12 @@ def clip_grad_norm(
     return total_norm
 
 
+# delimiter
 def test_clip_grad_norm():
+    """
+    **概述**:
+        梯度正则化的测试函数。
+    """
     # 设置相关参数：batch size=4, action=32
     B, N = 4, 32
     # 从随机分布中生成测试数据：logit，label。
