@@ -20,6 +20,7 @@ import torch.nn as nn
 
 
 class DiscretePolicyNetwork(nn.Module):
+
     def __init__(self, obs_shape: int, action_shape: int) -> None:
         """
         **Overview**:

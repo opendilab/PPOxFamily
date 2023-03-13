@@ -22,6 +22,7 @@ class LinearFunction(Function):
     **Overview**:
         Implementation of linear (Fully Connected) layer.
     """
+
     @staticmethod
     def forward(ctx, input_, weight, bias):
         """

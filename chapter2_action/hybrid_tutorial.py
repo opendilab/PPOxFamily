@@ -26,6 +26,7 @@ from torch.distributions import Normal, Independent
 
 
 class HybridPolicyNetwork(nn.Module):
+
     def __init__(self, obs_shape: int, action_shape: Dict[str, int]) -> None:
         """
         **Overview**:
@@ -76,13 +77,7 @@ class HybridPolicyNetwork(nn.Module):
         # $$\sigma = e^w$$
         sigma = torch.exp(log_sigma)
         # Return treetensor-type output.
-        return ttorch.as_tensor({
-            'action_type': logit,
-            'action_args': {
-                'mu': mu,
-                'sigma': sigma
-            }
-        })
+        return ttorch.as_tensor({'action_type': logit, 'action_args': {'mu': mu, 'sigma': sigma}})
 
 
 # delimiter
