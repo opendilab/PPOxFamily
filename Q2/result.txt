@@ -1,0 +1,289 @@
+[03-15 20:39:58] INFO     Env Space Information:                                                                                                     base_env_manager.py:236
+[03-15 20:39:58] INFO             Observation Space: Box(0.0, 255.0, (2835,), float32)                                                               base_env_manager.py:237
+[03-15 20:39:58] INFO             Action Space: Discrete(7)                                                                                          base_env_manager.py:238
+[03-15 20:39:58] INFO             Reward Space: Box(0.0, 1.0, (1,), float32)                                                                         base_env_manager.py:239
+[03-15 20:39:59] INFO     Evaluation: Train Iter(0)       Env Step(0)     Mean Episode Return(0.000)                                                        evaluator.py:370
+[03-15 20:40:14] INFO     Training: Train Iter(500)       Env Step(19200) Loss(0.100)                                                                          trainer.py:83
+[03-15 20:40:25] INFO     Evaluation: Train Iter(1000)    Env Step(32000) Mean Episode Return(0.000)                                                        evaluator.py:370
+[03-15 20:40:28] INFO     Training: Train Iter(1000)      Env Step(35200) Loss(0.119)                                                                          trainer.py:83
+[03-15 20:40:41] INFO     Training: Train Iter(1500)      Env Step(51200) Loss(-0.028)                                                                         trainer.py:83
+[03-15 20:40:52] INFO     Evaluation: Train Iter(2000)    Env Step(64000) Mean Episode Return(0.000)                                                        evaluator.py:370
+[03-15 20:40:53] DEBUG    Starting new HTTPS connection (1): o151352.ingest.sentry.io:443                                                             connectionpool.py:1003
+[03-15 20:40:55] INFO     Training: Train Iter(2000)      Env Step(67200) Loss(-0.028)                                                                         trainer.py:83
+[03-15 20:40:56] DEBUG    https://o151352.ingest.sentry.io:443 "POST /api/5288891/envelope/ HTTP/1.1" 200 2                                            connectionpool.py:456
+[03-15 20:41:08] INFO     Training: Train Iter(2500)      Env Step(83200) Loss(-0.026)                                                                         trainer.py:83
+[03-15 20:41:19] INFO     Evaluation: Train Iter(3000)    Env Step(96000) Mean Episode Return(0.000)                                                        evaluator.py:370
+[03-15 20:41:22] INFO     Training: Train Iter(3000)      Env Step(99200) Loss(0.168)                                                                          trainer.py:83
+[03-15 20:41:35] INFO     Training: Train Iter(3500)      Env Step(115200)        Loss(-0.028)                                                                 trainer.py:83
+[03-15 20:41:46] INFO     Evaluation: Train Iter(4000)    Env Step(128000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:41:48] INFO     Training: Train Iter(4000)      Env Step(131200)        Loss(0.738)                                                                  trainer.py:83
+[03-15 20:42:02] INFO     Training: Train Iter(4500)      Env Step(147200)        Loss(-0.026)                                                                 trainer.py:83
+[03-15 20:42:13] INFO     Evaluation: Train Iter(5000)    Env Step(160000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:42:15] INFO     Training: Train Iter(5000)      Env Step(163200)        Loss(0.612)                                                                  trainer.py:83
+[03-15 20:42:28] INFO     Training: Train Iter(5500)      Env Step(179200)        Loss(0.461)                                                                  trainer.py:83
+[03-15 20:42:39] INFO     Evaluation: Train Iter(6000)    Env Step(192000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:42:42] INFO     Training: Train Iter(6000)      Env Step(195200)        Loss(-0.022)                                                                 trainer.py:83
+[03-15 20:42:55] INFO     Training: Train Iter(6500)      Env Step(211200)        Loss(-0.028)                                                                 trainer.py:83
+[03-15 20:43:06] INFO     Evaluation: Train Iter(7000)    Env Step(224000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:43:09] INFO     Training: Train Iter(7000)      Env Step(227200)        Loss(0.067)                                                                  trainer.py:83
+[03-15 20:43:22] INFO     Training: Train Iter(7500)      Env Step(243200)        Loss(0.414)                                                                  trainer.py:83
+[03-15 20:43:33] INFO     Evaluation: Train Iter(8000)    Env Step(256000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:43:36] INFO     Training: Train Iter(8000)      Env Step(259200)        Loss(-0.025)                                                                 trainer.py:83
+[03-15 20:43:49] INFO     Training: Train Iter(8500)      Env Step(275200)        Loss(0.563)                                                                  trainer.py:83
+[03-15 20:44:00] INFO     Evaluation: Train Iter(9000)    Env Step(288000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:44:02] INFO     Training: Train Iter(9000)      Env Step(291200)        Loss(-0.028)                                                                 trainer.py:83
+[03-15 20:44:15] INFO     Training: Train Iter(9500)      Env Step(307200)        Loss(1.446)                                                                  trainer.py:83
+[03-15 20:44:27] INFO     Evaluation: Train Iter(10000)   Env Step(320000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:44:29] INFO     Training: Train Iter(10000)     Env Step(323200)        Loss(-0.017)                                                                 trainer.py:83
+[03-15 20:44:43] INFO     Training: Train Iter(10500)     Env Step(339200)        Loss(0.046)                                                                  trainer.py:83
+[03-15 20:44:54] INFO     Evaluation: Train Iter(11000)   Env Step(352000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:44:57] INFO     Training: Train Iter(11000)     Env Step(355200)        Loss(-0.026)                                                                 trainer.py:83
+[03-15 20:45:10] INFO     Training: Train Iter(11500)     Env Step(371200)        Loss(-0.027)                                                                 trainer.py:83
+[03-15 20:45:21] INFO     Evaluation: Train Iter(12000)   Env Step(384000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:45:24] INFO     Training: Train Iter(12000)     Env Step(387200)        Loss(-0.024)                                                                 trainer.py:83
+[03-15 20:45:37] INFO     Training: Train Iter(12500)     Env Step(403200)        Loss(0.588)                                                                  trainer.py:83
+[03-15 20:45:49] INFO     Evaluation: Train Iter(13000)   Env Step(416000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:45:52] INFO     Training: Train Iter(13000)     Env Step(419200)        Loss(-0.029)                                                                 trainer.py:83
+[03-15 20:46:06] INFO     Training: Train Iter(13500)     Env Step(435200)        Loss(-0.029)                                                                 trainer.py:83
+[03-15 20:46:17] INFO     Evaluation: Train Iter(14000)   Env Step(448000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:46:20] INFO     Training: Train Iter(14000)     Env Step(451200)        Loss(-0.026)                                                                 trainer.py:83
+[03-15 20:46:34] INFO     Training: Train Iter(14500)     Env Step(467200)        Loss(-0.026)                                                                 trainer.py:83
+[03-15 20:46:45] INFO     Evaluation: Train Iter(15000)   Env Step(480000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:46:48] INFO     Training: Train Iter(15000)     Env Step(483200)        Loss(-0.025)                                                                 trainer.py:83
+[03-15 20:47:01] INFO     Training: Train Iter(15500)     Env Step(499200)        Loss(0.709)                                                                  trainer.py:83
+[03-15 20:47:13] INFO     Evaluation: Train Iter(16000)   Env Step(512000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:47:16] INFO     Training: Train Iter(16000)     Env Step(515200)        Loss(0.106)                                                                  trainer.py:83
+[03-15 20:47:29] INFO     Training: Train Iter(16500)     Env Step(531200)        Loss(-0.029)                                                                 trainer.py:83
+[03-15 20:47:40] INFO     Evaluation: Train Iter(17000)   Env Step(544000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:47:43] INFO     Training: Train Iter(17000)     Env Step(547200)        Loss(0.122)                                                                  trainer.py:83
+[03-15 20:47:56] INFO     Training: Train Iter(17500)     Env Step(563200)        Loss(0.337)                                                                  trainer.py:83
+[03-15 20:48:08] INFO     Evaluation: Train Iter(18000)   Env Step(576000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:48:11] INFO     Training: Train Iter(18000)     Env Step(579200)        Loss(0.227)                                                                  trainer.py:83
+[03-15 20:48:24] INFO     Training: Train Iter(18500)     Env Step(595200)        Loss(0.243)                                                                  trainer.py:83
+[03-15 20:48:35] INFO     Evaluation: Train Iter(19000)   Env Step(608000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:48:38] INFO     Training: Train Iter(19000)     Env Step(611200)        Loss(0.254)                                                                  trainer.py:83
+[03-15 20:48:51] INFO     Training: Train Iter(19500)     Env Step(627200)        Loss(0.400)                                                                  trainer.py:83
+[03-15 20:49:03] INFO     Evaluation: Train Iter(20000)   Env Step(640000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:49:05] INFO     Training: Train Iter(20000)     Env Step(643200)        Loss(-0.027)                                                                 trainer.py:83
+[03-15 20:49:19] INFO     Training: Train Iter(20500)     Env Step(659200)        Loss(0.151)                                                                  trainer.py:83
+[03-15 20:49:30] INFO     Evaluation: Train Iter(21000)   Env Step(672000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:49:33] INFO     Training: Train Iter(21000)     Env Step(675200)        Loss(-0.032)                                                                 trainer.py:83
+[03-15 20:49:47] INFO     Training: Train Iter(21500)     Env Step(691200)        Loss(0.114)                                                                  trainer.py:83
+[03-15 20:49:58] INFO     Evaluation: Train Iter(22000)   Env Step(704000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:50:01] INFO     Training: Train Iter(22000)     Env Step(707200)        Loss(0.014)                                                                  trainer.py:83
+[03-15 20:50:15] INFO     Training: Train Iter(22500)     Env Step(723200)        Loss(0.201)                                                                  trainer.py:83
+[03-15 20:50:26] INFO     Evaluation: Train Iter(23000)   Env Step(736000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:50:29] INFO     Training: Train Iter(23000)     Env Step(739200)        Loss(-0.025)                                                                 trainer.py:83
+[03-15 20:50:43] INFO     Training: Train Iter(23500)     Env Step(755200)        Loss(-0.025)                                                                 trainer.py:83
+[03-15 20:50:54] INFO     Evaluation: Train Iter(24000)   Env Step(768000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:50:56] INFO     Training: Train Iter(24000)     Env Step(771200)        Loss(-0.034)                                                                 trainer.py:83
+[03-15 20:51:09] INFO     Training: Train Iter(24500)     Env Step(787200)        Loss(-0.019)                                                                 trainer.py:83
+[03-15 20:51:20] INFO     Evaluation: Train Iter(25000)   Env Step(800000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:51:23] INFO     Training: Train Iter(25000)     Env Step(803200)        Loss(-0.036)                                                                 trainer.py:83
+[03-15 20:51:36] INFO     Training: Train Iter(25500)     Env Step(819200)        Loss(-0.035)                                                                 trainer.py:83
+[03-15 20:51:47] INFO     Evaluation: Train Iter(26000)   Env Step(832000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:51:50] INFO     Training: Train Iter(26000)     Env Step(835200)        Loss(-0.031)                                                                 trainer.py:83
+[03-15 20:52:03] INFO     Training: Train Iter(26500)     Env Step(851200)        Loss(0.148)                                                                  trainer.py:83
+[03-15 20:52:14] INFO     Evaluation: Train Iter(27000)   Env Step(864000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:52:16] INFO     Training: Train Iter(27000)     Env Step(867200)        Loss(-0.030)                                                                 trainer.py:83
+[03-15 20:52:29] INFO     Training: Train Iter(27500)     Env Step(883200)        Loss(-0.031)                                                                 trainer.py:83
+[03-15 20:52:41] INFO     Evaluation: Train Iter(28000)   Env Step(896000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:52:43] INFO     Training: Train Iter(28000)     Env Step(899200)        Loss(0.683)                                                                  trainer.py:83
+[03-15 20:52:56] INFO     Training: Train Iter(28500)     Env Step(915200)        Loss(0.086)                                                                  trainer.py:83
+[03-15 20:53:08] INFO     Evaluation: Train Iter(29000)   Env Step(928000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:53:10] INFO     Training: Train Iter(29000)     Env Step(931200)        Loss(0.314)                                                                  trainer.py:83
+[03-15 20:53:23] INFO     Training: Train Iter(29500)     Env Step(947200)        Loss(0.187)                                                                  trainer.py:83
+[03-15 20:53:35] INFO     Evaluation: Train Iter(30000)   Env Step(960000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:53:37] INFO     Training: Train Iter(30000)     Env Step(963200)        Loss(0.061)                                                                  trainer.py:83
+[03-15 20:53:50] INFO     Training: Train Iter(30500)     Env Step(979200)        Loss(0.264)                                                                  trainer.py:83
+[03-15 20:54:02] INFO     Evaluation: Train Iter(31000)   Env Step(992000)        Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:54:04] INFO     Training: Train Iter(31000)     Env Step(995200)        Loss(-0.027)                                                                 trainer.py:83
+[03-15 20:54:18] INFO     Training: Train Iter(31500)     Env Step(1011200)       Loss(0.783)                                                                  trainer.py:83
+[03-15 20:54:30] INFO     Evaluation: Train Iter(32000)   Env Step(1024000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:54:32] INFO     Training: Train Iter(32000)     Env Step(1027200)       Loss(0.707)                                                                  trainer.py:83
+[03-15 20:54:46] INFO     Training: Train Iter(32500)     Env Step(1043200)       Loss(0.650)                                                                  trainer.py:83
+[03-15 20:54:57] INFO     Evaluation: Train Iter(33000)   Env Step(1056000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:55:00] INFO     Training: Train Iter(33000)     Env Step(1059200)       Loss(-0.029)                                                                 trainer.py:83
+[03-15 20:55:13] INFO     Training: Train Iter(33500)     Env Step(1075200)       Loss(0.615)                                                                  trainer.py:83
+[03-15 20:55:24] INFO     Evaluation: Train Iter(34000)   Env Step(1088000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:55:27] INFO     Training: Train Iter(34000)     Env Step(1091200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 20:55:40] INFO     Training: Train Iter(34500)     Env Step(1107200)       Loss(-0.029)                                                                 trainer.py:83
+[03-15 20:55:51] INFO     Evaluation: Train Iter(35000)   Env Step(1120000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:55:54] INFO     Training: Train Iter(35000)     Env Step(1123200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 20:56:07] INFO     Training: Train Iter(35500)     Env Step(1139200)       Loss(0.996)                                                                  trainer.py:83
+[03-15 20:56:18] INFO     Evaluation: Train Iter(36000)   Env Step(1152000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:56:21] INFO     Training: Train Iter(36000)     Env Step(1155200)       Loss(-0.025)                                                                 trainer.py:83
+[03-15 20:56:34] INFO     Training: Train Iter(36500)     Env Step(1171200)       Loss(-0.032)                                                                 trainer.py:83
+[03-15 20:56:45] INFO     Evaluation: Train Iter(37000)   Env Step(1184000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:56:48] INFO     Training: Train Iter(37000)     Env Step(1187200)       Loss(1.350)                                                                  trainer.py:83
+[03-15 20:57:01] INFO     Training: Train Iter(37500)     Env Step(1203200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 20:57:12] INFO     Evaluation: Train Iter(38000)   Env Step(1216000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:57:15] INFO     Training: Train Iter(38000)     Env Step(1219200)       Loss(0.369)                                                                  trainer.py:83
+[03-15 20:57:28] INFO     Training: Train Iter(38500)     Env Step(1235200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 20:57:40] INFO     Evaluation: Train Iter(39000)   Env Step(1248000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:57:42] INFO     Training: Train Iter(39000)     Env Step(1251200)       Loss(0.144)                                                                  trainer.py:83
+[03-15 20:57:56] INFO     Training: Train Iter(39500)     Env Step(1267200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 20:58:07] INFO     Evaluation: Train Iter(40000)   Env Step(1280000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:58:10] INFO     Training: Train Iter(40000)     Env Step(1283200)       Loss(-0.030)                                                                 trainer.py:83
+[03-15 20:58:23] INFO     Training: Train Iter(40500)     Env Step(1299200)       Loss(-0.021)                                                                 trainer.py:83
+[03-15 20:58:34] INFO     Evaluation: Train Iter(41000)   Env Step(1312000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:58:37] INFO     Training: Train Iter(41000)     Env Step(1315200)       Loss(0.751)                                                                  trainer.py:83
+[03-15 20:58:50] INFO     Training: Train Iter(41500)     Env Step(1331200)       Loss(0.555)                                                                  trainer.py:83
+[03-15 20:59:01] INFO     Evaluation: Train Iter(42000)   Env Step(1344000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:59:04] INFO     Training: Train Iter(42000)     Env Step(1347200)       Loss(0.180)                                                                  trainer.py:83
+[03-15 20:59:17] INFO     Training: Train Iter(42500)     Env Step(1363200)       Loss(0.568)                                                                  trainer.py:83
+[03-15 20:59:28] INFO     Evaluation: Train Iter(43000)   Env Step(1376000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:59:30] INFO     Training: Train Iter(43000)     Env Step(1379200)       Loss(-0.027)                                                                 trainer.py:83
+[03-15 20:59:43] INFO     Training: Train Iter(43500)     Env Step(1395200)       Loss(0.712)                                                                  trainer.py:83
+[03-15 20:59:54] INFO     Evaluation: Train Iter(44000)   Env Step(1408000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 20:59:57] INFO     Training: Train Iter(44000)     Env Step(1411200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 21:00:10] INFO     Training: Train Iter(44500)     Env Step(1427200)       Loss(1.448)                                                                  trainer.py:83
+[03-15 21:00:21] INFO     Evaluation: Train Iter(45000)   Env Step(1440000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:00:24] INFO     Training: Train Iter(45000)     Env Step(1443200)       Loss(0.185)                                                                  trainer.py:83
+[03-15 21:00:37] INFO     Training: Train Iter(45500)     Env Step(1459200)       Loss(0.205)                                                                  trainer.py:83
+[03-15 21:00:48] INFO     Evaluation: Train Iter(46000)   Env Step(1472000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:00:50] INFO     Training: Train Iter(46000)     Env Step(1475200)       Loss(-0.032)                                                                 trainer.py:83
+[03-15 21:01:04] INFO     Training: Train Iter(46500)     Env Step(1491200)       Loss(0.123)                                                                  trainer.py:83
+[03-15 21:01:15] INFO     Evaluation: Train Iter(47000)   Env Step(1504000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:01:18] INFO     Training: Train Iter(47000)     Env Step(1507200)       Loss(-0.030)                                                                 trainer.py:83
+[03-15 21:01:31] INFO     Training: Train Iter(47500)     Env Step(1523200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:01:42] INFO     Evaluation: Train Iter(48000)   Env Step(1536000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:01:45] INFO     Training: Train Iter(48000)     Env Step(1539200)       Loss(-0.026)                                                                 trainer.py:83
+[03-15 21:01:58] INFO     Training: Train Iter(48500)     Env Step(1555200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:02:09] INFO     Evaluation: Train Iter(49000)   Env Step(1568000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:02:11] INFO     Training: Train Iter(49000)     Env Step(1571200)       Loss(0.130)                                                                  trainer.py:83
+[03-15 21:02:25] INFO     Training: Train Iter(49500)     Env Step(1587200)       Loss(-0.032)                                                                 trainer.py:83
+[03-15 21:02:36] INFO     Evaluation: Train Iter(50000)   Env Step(1600000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:02:38] INFO     Training: Train Iter(50000)     Env Step(1603200)       Loss(0.656)                                                                  trainer.py:83
+[03-15 21:02:51] INFO     Training: Train Iter(50500)     Env Step(1619200)       Loss(0.736)                                                                  trainer.py:83
+[03-15 21:03:02] INFO     Evaluation: Train Iter(51000)   Env Step(1632000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:03:05] INFO     Training: Train Iter(51000)     Env Step(1635200)       Loss(1.129)                                                                  trainer.py:83
+[03-15 21:03:18] INFO     Training: Train Iter(51500)     Env Step(1651200)       Loss(1.871)                                                                  trainer.py:83
+[03-15 21:03:29] INFO     Evaluation: Train Iter(52000)   Env Step(1664000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:03:32] INFO     Training: Train Iter(52000)     Env Step(1667200)       Loss(-0.030)                                                                 trainer.py:83
+[03-15 21:03:45] INFO     Training: Train Iter(52500)     Env Step(1683200)       Loss(0.370)                                                                  trainer.py:83
+[03-15 21:03:56] INFO     Evaluation: Train Iter(53000)   Env Step(1696000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:03:58] INFO     Training: Train Iter(53000)     Env Step(1699200)       Loss(0.862)                                                                  trainer.py:83
+[03-15 21:04:12] INFO     Training: Train Iter(53500)     Env Step(1715200)       Loss(-0.034)                                                                 trainer.py:83
+[03-15 21:04:23] INFO     Evaluation: Train Iter(54000)   Env Step(1728000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:04:26] INFO     Training: Train Iter(54000)     Env Step(1731200)       Loss(0.718)                                                                  trainer.py:83
+[03-15 21:04:39] INFO     Training: Train Iter(54500)     Env Step(1747200)       Loss(-0.032)                                                                 trainer.py:83
+[03-15 21:04:51] INFO     Evaluation: Train Iter(55000)   Env Step(1760000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:04:53] INFO     Training: Train Iter(55000)     Env Step(1763200)       Loss(-0.027)                                                                 trainer.py:83
+[03-15 21:05:07] INFO     Training: Train Iter(55500)     Env Step(1779200)       Loss(-0.023)                                                                 trainer.py:83
+[03-15 21:05:18] INFO     Evaluation: Train Iter(56000)   Env Step(1792000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:05:21] INFO     Training: Train Iter(56000)     Env Step(1795200)       Loss(1.193)                                                                  trainer.py:83
+[03-15 21:05:34] INFO     Training: Train Iter(56500)     Env Step(1811200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:05:45] INFO     Evaluation: Train Iter(57000)   Env Step(1824000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:05:48] INFO     Training: Train Iter(57000)     Env Step(1827200)       Loss(0.471)                                                                  trainer.py:83
+[03-15 21:06:01] INFO     Training: Train Iter(57500)     Env Step(1843200)       Loss(-0.022)                                                                 trainer.py:83
+[03-15 21:06:12] INFO     Evaluation: Train Iter(58000)   Env Step(1856000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:06:15] INFO     Training: Train Iter(58000)     Env Step(1859200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 21:06:28] INFO     Training: Train Iter(58500)     Env Step(1875200)       Loss(0.620)                                                                  trainer.py:83
+[03-15 21:06:39] INFO     Evaluation: Train Iter(59000)   Env Step(1888000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:06:42] INFO     Training: Train Iter(59000)     Env Step(1891200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 21:06:55] INFO     Training: Train Iter(59500)     Env Step(1907200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 21:07:07] INFO     Evaluation: Train Iter(60000)   Env Step(1920000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:07:09] INFO     Training: Train Iter(60000)     Env Step(1923200)       Loss(0.060)                                                                  trainer.py:83
+[03-15 21:07:22] INFO     Training: Train Iter(60500)     Env Step(1939200)       Loss(0.255)                                                                  trainer.py:83
+[03-15 21:07:33] INFO     Evaluation: Train Iter(61000)   Env Step(1952000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:07:36] INFO     Training: Train Iter(61000)     Env Step(1955200)       Loss(0.331)                                                                  trainer.py:83
+[03-15 21:07:49] INFO     Training: Train Iter(61500)     Env Step(1971200)       Loss(-0.035)                                                                 trainer.py:83
+[03-15 21:08:00] INFO     Evaluation: Train Iter(62000)   Env Step(1984000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:08:03] INFO     Training: Train Iter(62000)     Env Step(1987200)       Loss(0.998)                                                                  trainer.py:83
+[03-15 21:08:16] INFO     Training: Train Iter(62500)     Env Step(2003200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:08:27] INFO     Evaluation: Train Iter(63000)   Env Step(2016000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:08:29] INFO     Training: Train Iter(63000)     Env Step(2019200)       Loss(1.038)                                                                  trainer.py:83
+[03-15 21:08:42] INFO     Training: Train Iter(63500)     Env Step(2035200)       Loss(0.337)                                                                  trainer.py:83
+[03-15 21:08:53] INFO     Evaluation: Train Iter(64000)   Env Step(2048000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:08:56] INFO     Training: Train Iter(64000)     Env Step(2051200)       Loss(-0.026)                                                                 trainer.py:83
+[03-15 21:09:09] INFO     Training: Train Iter(64500)     Env Step(2067200)       Loss(0.674)                                                                  trainer.py:83
+[03-15 21:09:20] INFO     Evaluation: Train Iter(65000)   Env Step(2080000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:09:22] INFO     Training: Train Iter(65000)     Env Step(2083200)       Loss(-0.016)                                                                 trainer.py:83
+[03-15 21:09:35] INFO     Training: Train Iter(65500)     Env Step(2099200)       Loss(0.513)                                                                  trainer.py:83
+[03-15 21:09:47] INFO     Evaluation: Train Iter(66000)   Env Step(2112000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:09:49] INFO     Training: Train Iter(66000)     Env Step(2115200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:10:02] INFO     Training: Train Iter(66500)     Env Step(2131200)       Loss(1.023)                                                                  trainer.py:83
+[03-15 21:10:13] INFO     Evaluation: Train Iter(67000)   Env Step(2144000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:10:16] INFO     Training: Train Iter(67000)     Env Step(2147200)       Loss(0.244)                                                                  trainer.py:83
+[03-15 21:10:29] INFO     Training: Train Iter(67500)     Env Step(2163200)       Loss(0.385)                                                                  trainer.py:83
+[03-15 21:10:40] INFO     Evaluation: Train Iter(68000)   Env Step(2176000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:10:42] INFO     Training: Train Iter(68000)     Env Step(2179200)       Loss(0.066)                                                                  trainer.py:83
+[03-15 21:10:56] INFO     Training: Train Iter(68500)     Env Step(2195200)       Loss(-0.025)                                                                 trainer.py:83
+[03-15 21:11:07] INFO     Evaluation: Train Iter(69000)   Env Step(2208000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:11:09] INFO     Training: Train Iter(69000)     Env Step(2211200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:11:23] INFO     Training: Train Iter(69500)     Env Step(2227200)       Loss(0.721)                                                                  trainer.py:83
+[03-15 21:11:34] INFO     Evaluation: Train Iter(70000)   Env Step(2240000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:11:37] INFO     Training: Train Iter(70000)     Env Step(2243200)       Loss(-0.027)                                                                 trainer.py:83
+[03-15 21:11:50] INFO     Training: Train Iter(70500)     Env Step(2259200)       Loss(-0.021)                                                                 trainer.py:83
+[03-15 21:12:01] INFO     Evaluation: Train Iter(71000)   Env Step(2272000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:12:04] INFO     Training: Train Iter(71000)     Env Step(2275200)       Loss(0.229)                                                                  trainer.py:83
+[03-15 21:12:17] INFO     Training: Train Iter(71500)     Env Step(2291200)       Loss(0.603)                                                                  trainer.py:83
+[03-15 21:12:28] INFO     Evaluation: Train Iter(72000)   Env Step(2304000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:12:30] INFO     Training: Train Iter(72000)     Env Step(2307200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:12:43] INFO     Training: Train Iter(72500)     Env Step(2323200)       Loss(-0.029)                                                                 trainer.py:83
+[03-15 21:12:55] INFO     Evaluation: Train Iter(73000)   Env Step(2336000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:12:57] INFO     Training: Train Iter(73000)     Env Step(2339200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:13:10] INFO     Training: Train Iter(73500)     Env Step(2355200)       Loss(0.242)                                                                  trainer.py:83
+[03-15 21:13:21] INFO     Evaluation: Train Iter(74000)   Env Step(2368000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:13:24] INFO     Training: Train Iter(74000)     Env Step(2371200)       Loss(0.393)                                                                  trainer.py:83
+[03-15 21:13:37] INFO     Training: Train Iter(74500)     Env Step(2387200)       Loss(-0.027)                                                                 trainer.py:83
+[03-15 21:13:48] INFO     Evaluation: Train Iter(75000)   Env Step(2400000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:13:50] INFO     Training: Train Iter(75000)     Env Step(2403200)       Loss(0.508)                                                                  trainer.py:83
+[03-15 21:14:03] INFO     Training: Train Iter(75500)     Env Step(2419200)       Loss(-0.015)                                                                 trainer.py:83
+[03-15 21:14:14] INFO     Evaluation: Train Iter(76000)   Env Step(2432000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:14:17] INFO     Training: Train Iter(76000)     Env Step(2435200)       Loss(-0.029)                                                                 trainer.py:83
+[03-15 21:14:30] INFO     Training: Train Iter(76500)     Env Step(2451200)       Loss(0.061)                                                                  trainer.py:83
+[03-15 21:14:41] INFO     Evaluation: Train Iter(77000)   Env Step(2464000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:14:44] INFO     Training: Train Iter(77000)     Env Step(2467200)       Loss(1.216)                                                                  trainer.py:83
+[03-15 21:14:57] INFO     Training: Train Iter(77500)     Env Step(2483200)       Loss(0.223)                                                                  trainer.py:83
+[03-15 21:15:09] INFO     Evaluation: Train Iter(78000)   Env Step(2496000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:15:11] INFO     Training: Train Iter(78000)     Env Step(2499200)       Loss(-0.031)                                                                 trainer.py:83
+[03-15 21:15:25] INFO     Training: Train Iter(78500)     Env Step(2515200)       Loss(1.010)                                                                  trainer.py:83
+[03-15 21:15:36] INFO     Evaluation: Train Iter(79000)   Env Step(2528000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:15:39] INFO     Training: Train Iter(79000)     Env Step(2531200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:15:52] INFO     Training: Train Iter(79500)     Env Step(2547200)       Loss(-0.014)                                                                 trainer.py:83
+[03-15 21:16:04] INFO     Evaluation: Train Iter(80000)   Env Step(2560000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:16:07] INFO     Training: Train Iter(80000)     Env Step(2563200)       Loss(-0.029)                                                                 trainer.py:83
+[03-15 21:16:20] INFO     Training: Train Iter(80500)     Env Step(2579200)       Loss(0.163)                                                                  trainer.py:83
+[03-15 21:16:32] INFO     Evaluation: Train Iter(81000)   Env Step(2592000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:16:35] INFO     Training: Train Iter(81000)     Env Step(2595200)       Loss(0.135)                                                                  trainer.py:83
+[03-15 21:16:48] INFO     Training: Train Iter(81500)     Env Step(2611200)       Loss(-0.035)                                                                 trainer.py:83
+[03-15 21:17:00] INFO     Evaluation: Train Iter(82000)   Env Step(2624000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:17:03] INFO     Training: Train Iter(82000)     Env Step(2627200)       Loss(-0.034)                                                                 trainer.py:83
+[03-15 21:17:16] INFO     Training: Train Iter(82500)     Env Step(2643200)       Loss(-0.030)                                                                 trainer.py:83
+[03-15 21:17:28] INFO     Evaluation: Train Iter(83000)   Env Step(2656000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:17:30] INFO     Training: Train Iter(83000)     Env Step(2659200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:17:44] INFO     Training: Train Iter(83500)     Env Step(2675200)       Loss(0.129)                                                                  trainer.py:83
+[03-15 21:17:55] INFO     Evaluation: Train Iter(84000)   Env Step(2688000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:17:58] INFO     Training: Train Iter(84000)     Env Step(2691200)       Loss(-0.035)                                                                 trainer.py:83
+[03-15 21:18:11] INFO     Training: Train Iter(84500)     Env Step(2707200)       Loss(-0.027)                                                                 trainer.py:83
+[03-15 21:18:23] INFO     Evaluation: Train Iter(85000)   Env Step(2720000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:18:25] INFO     Training: Train Iter(85000)     Env Step(2723200)       Loss(-0.018)                                                                 trainer.py:83
+[03-15 21:18:38] INFO     Training: Train Iter(85500)     Env Step(2739200)       Loss(-0.022)                                                                 trainer.py:83
+[03-15 21:18:50] INFO     Evaluation: Train Iter(86000)   Env Step(2752000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:18:53] INFO     Training: Train Iter(86000)     Env Step(2755200)       Loss(0.185)                                                                  trainer.py:83
+[03-15 21:19:06] INFO     Training: Train Iter(86500)     Env Step(2771200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:19:18] INFO     Evaluation: Train Iter(87000)   Env Step(2784000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:19:20] INFO     Training: Train Iter(87000)     Env Step(2787200)       Loss(-0.022)                                                                 trainer.py:83
+[03-15 21:19:34] INFO     Training: Train Iter(87500)     Env Step(2803200)       Loss(-0.019)                                                                 trainer.py:83
+[03-15 21:19:45] INFO     Evaluation: Train Iter(88000)   Env Step(2816000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:19:47] INFO     Training: Train Iter(88000)     Env Step(2819200)       Loss(0.240)                                                                  trainer.py:83
+[03-15 21:20:01] INFO     Training: Train Iter(88500)     Env Step(2835200)       Loss(0.653)                                                                  trainer.py:83
+[03-15 21:20:12] INFO     Evaluation: Train Iter(89000)   Env Step(2848000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:20:15] INFO     Training: Train Iter(89000)     Env Step(2851200)       Loss(-0.028)                                                                 trainer.py:83
+[03-15 21:20:28] INFO     Training: Train Iter(89500)     Env Step(2867200)       Loss(0.955)                                                                  trainer.py:83
+[03-15 21:20:39] INFO     Evaluation: Train Iter(90000)   Env Step(2880000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:20:42] INFO     Training: Train Iter(90000)     Env Step(2883200)       Loss(-0.030)                                                                 trainer.py:83
+[03-15 21:20:55] INFO     Training: Train Iter(90500)     Env Step(2899200)       Loss(0.662)                                                                  trainer.py:83
+[03-15 21:21:06] INFO     Evaluation: Train Iter(91000)   Env Step(2912000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:21:08] INFO     Training: Train Iter(91000)     Env Step(2915200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:21:21] INFO     Training: Train Iter(91500)     Env Step(2931200)       Loss(-0.021)                                                                 trainer.py:83
+[03-15 21:21:33] INFO     Evaluation: Train Iter(92000)   Env Step(2944000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:21:35] INFO     Training: Train Iter(92000)     Env Step(2947200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:21:49] INFO     Training: Train Iter(92500)     Env Step(2963200)       Loss(-0.030)                                                                 trainer.py:83
+[03-15 21:22:00] INFO     Evaluation: Train Iter(93000)   Env Step(2976000)       Mean Episode Return(0.000)                                                evaluator.py:370
+[03-15 21:22:02] INFO     Training: Train Iter(93000)     Env Step(2979200)       Loss(1.239)                                                                  trainer.py:83
+[03-15 21:22:16] INFO     Training: Train Iter(93500)     Env Step(2995200)       Loss(-0.024)                                                                 trainer.py:83
+[03-15 21:22:21] INFO     Exceeded maximum number of env_step(3001600), program is terminated                                                      termination_checker.py:22
+wandb: Waiting for W&B process to finish... (success).
