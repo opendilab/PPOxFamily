@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter3_obs/encoding_zh.py" target="_blank">View code on GitHub</a><br><br>在本示例中，我们提供了一种利用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.Tensor._scatter</span> ，将张量转化为 one-hot 编码形式的方案。<br>同时，我们还提供了代码例子，通过使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.Embedding</span> ， 将张量转化为 one-hot 编码形式和二进制编码形式。<br>具体到 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.Embedding</span> 的工作机制，这个模块的权重是一个 M x N 的矩阵，其中 M 是所有可能输入的数量（即单词表的长度），N 是 embedding 之后输出向量的维度。<br>它的工作方式就是，输入一个序号 i（此序号小于单词表的长度），输出权重矩阵的第 i 行（维度为 N 的向量）。<br>本文档主要由以下三部分组成：<br>- 使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.Tensor._scatter</span> 实现 one-hot 编码<br>- 使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.Embedding</span> 实现 one-hot 编码<br>- 使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.Embedding</span> 实现二进制编码</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>one_hot 函数功能概述</b><br>        将类型为 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.LongTensor</span> 的张量转化为其 one-hot 编码的形式。<br>        此实现的执行效率略高于 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.functional.one_hot</span> 。</p></div><div class="code"><pre><code id="code_1" name="py_code">import torch
+import torch.nn as nn
+
+
+def one_hot(val: torch.LongTensor, num: int) -> torch.FloatTensor:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    保存原始 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">val</span> 的形状。</p></div><div class="code"><pre><code id="code_3" name="py_code">    old_shape = val.shape</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    将 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">val</span> 改变形状至二维张量。</p></div><div class="code"><pre><code id="code_4" name="py_code">    val_reshape = val.reshape(-1, 1)</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    初始化结果张量，确定其形状，并设置和 val 在相同的 device 上。</p></div><div class="code"><pre><code id="code_5" name="py_code">    ret = torch.zeros(val_reshape.shape[0], num, device=val.device)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    根据 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">val_reshape</span> 中的值，将若干 1 填入结果张量中。注意，这一步是 in-place 操作（即直接原地改变结果张量的值）。</p></div><div class="code"><pre><code id="code_6" name="py_code">    ret.scatter_(1, val_reshape, 1)</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    恢复原始形状，并将结果张量返回。</p></div><div class="code"><pre><code id="code_7" name="py_code">    return ret.reshape(*old_shape, num)
+
+</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    <b>get_one_hot_encoding 函数功能概述</b><br>        使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.Embedding</span> 实现 one-hot 编码。</p></div><div class="code"><pre><code id="code_8" name="py_code">def get_one_hot_encoding(num: int):</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    权重矩阵应当设置为大小为 num x num 的单位矩阵。这样对于第 i 行，其内容是只有第 i 维是 1，其它维度都是 0 的向量，恰好就是 one-hot 编码。同时冻结参数，确保权重矩阵不可改变。</p></div><div class="code"><pre><code id="code_10" name="py_code">    return nn.Embedding.from_pretrained(torch.eye(num), freeze=True, padding_idx=None)
+
+</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    <b>get_binary_encoding 函数功能概述</b><br>        使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.Embedding</span> 实现二进制编码。</p></div><div class="code"><pre><code id="code_11" name="py_code">def get_binary_encoding(bit_num: int):</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    生成形状为 $$2^{B} \times B $$ 的矩阵，其中 B 是比特数。<br>    矩阵的第 i 行代表了数字 i 的二进制表达，是一个维度为 B 的向量。</p></div><div class="code"><pre><code id="code_13" name="py_code">    location_embedding = []
+    for n in range(2 ** bit_num):
+        s = '0' * (bit_num - len(bin(n)[2:])) + bin(n)[2:]
+        location_embedding.append(list(int(i) for i in s))
+    mat = torch.FloatTensor(location_embedding)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    使用生成的矩阵作为 embedding 的权重，同时冻结参数确保权重矩阵不可改变。</p></div><div class="code"><pre><code id="code_14" name="py_code">    return torch.nn.Embedding.from_pretrained(mat, freeze=True, padding_idx=None)
+
+</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    <b>test_encoding 函数功能概述</b><br>        编码函数的主函数。对上述的若干种编码函数进行测试，检查输出的正确性。</p></div><div class="code"><pre><code id="code_15" name="py_code">def test_encoding():</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>    测试上述两种 one-hot 编码方法，判断它们的输出结果是否一致。</p></div><div class="code"><pre><code id="code_17" name="py_code">    x = torch.LongTensor([9, 0, 1, 2, 1, 3, 5])
+    one_hot_enc = get_one_hot_encoding(10)
+    y = one_hot_enc(x)
+    y_ = one_hot(x, num=10)
+    assert torch.sum(torch.abs(y - y_)) < 1e-6</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>    测试二进制编码，判断其输出是否等于期望的结果。</p></div><div class="code"><pre><code id="code_18" name="py_code">    bin_enc = get_binary_encoding(2)
+    x = torch.arange(4)
+    y = bin_enc(x)
+    ground_truth = torch.LongTensor([[0, 0], [0, 1], [1, 0], [1, 1]])
+    assert torch.eq(y, ground_truth).all()
+
+</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p><i>如果读者关于本文档有任何问题和建议，可以在 GitHub 提 issue 或是直接发邮件给我们 (opendilab@pjlab.org.cn) 。</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>

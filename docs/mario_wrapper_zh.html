@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter3_obs/mario_wrapper_zh.py" target="_blank">View code on GitHub</a><br><br>使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">ding.envs.DingEnvWrapper</span> 来手动定义环境以及使用的包裹器（wrapper）。<br>本示例中还包括了光流包裹器的具体实现。光流的作用是提取视频相邻两帧之间的运动信息，可以建模环境的时序信息。光流包裹器的作用就是将光流信息加入到环境的 obs 中。</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>        <b>OpticalFlowWrapper 定义概述</b><br>            对于相邻的两帧之间计算光流。最终的输出包括当前帧（一个通道），以及光流信息（两个通道）。具体关于光流的信息，可以参考： <a href="https://en.wikipedia.org/wiki/Optical_flow">Related Link</a></p></div><div class="code"><pre><code id="code_1" name="py_code">import cv2
+import gym
+import numpy as np
+import gym_super_mario_bros
+from nes_py.wrappers import JoypadSpace
+from ding.envs import DingEnvWrapper
+from ding.envs.env_wrappers import MaxAndSkipWrapper, WarpFrameWrapper, ScaledFloatFrameWrapper, FrameStackWrapper, \
+    EvalEpisodeReturnEnv
+
+
+class OpticalFlowWrapper(gym.Wrapper):
+
+
+    def __init__(self, env):</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>        初始化前一帧为 None。</p></div><div class="code"><pre><code id="code_3" name="py_code">        self.last_frame = None
+</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>        <b>reset 函数功能概述</b><br>            重置环境，返回重置后的第一个 obs。</p></div><div class="code"><pre><code id="code_4" name="py_code">    def reset(self):</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>        重置环境</p></div><div class="code"><pre><code id="code_6" name="py_code">        obs = self.env.reset()
+        self.last_frame = None</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>        将光流信息添加到 obs 中。</p></div><div class="code"><pre><code id="code_7" name="py_code">        state = self._process_obs(obs)</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>        更新上一帧</p></div><div class="code"><pre><code id="code_8" name="py_code">        self.last_frame = obs
+        return state
+</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>        <b>step 函数功能概述</b><br>            执行动作，返回经过光流信息添加后的下一个 obs。</p></div><div class="code"><pre><code id="code_9" name="py_code">    def step(self, action):</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>        对 obs 添加光流信息</p></div><div class="code"><pre><code id="code_11" name="py_code">        state = self._process_obs(obs)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>        更新上一帧。</p></div><div class="code"><pre><code id="code_12" name="py_code">        self.last_frame = obs
+        return state, reward, done, info
+</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>        <b>_process_obs 函数功能概述</b><br>            向 obs 中添加光流信息。</p></div><div class="code"><pre><code id="code_13" name="py_code">    def _process_obs(self, obs):</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>        如果当前帧是第一帧，即上一帧为 None，则直接返回，让光流通道全部等于 0。</p></div><div class="code"><pre><code id="code_15" name="py_code">        if self.last_frame is None:
+            return np.stack([obs, np.zeros_like(obs), np.zeros_like(obs)])
+</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>        计算光流</p></div><div class="code"><pre><code id="code_16" name="py_code">        flow = cv2.calcOpticalFlowFarneback(self.last_frame, obs, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+        flow = (flow + 15) * (255.0 / (2 * 15))
+        flow = np.round(flow).astype(np.uint8)</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>        将所有的光流值截断到 [0, 255).</p></div><div class="code"><pre><code id="code_17" name="py_code">        flow[flow >= 255] = 255
+        flow[flow <= 0] = 0</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>        对输出的通道维度进行调整，从 [H, W, 2] 到 [2, H, W]</p></div><div class="code"><pre><code id="code_18" name="py_code">        flow = flow.transpose(2, 0, 1)</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>        将光流信息与原始图像拼接在一起。</p></div><div class="code"><pre><code id="code_19" name="py_code">        return np.concatenate([[obs], flow], axis=0)
+
+</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>    <b>wrapped_mario_env 函数功能概述</b><br>        使用叠帧包裹器，以及多种其它包裹器，对马里奥环境进行包裹。</p></div><div class="code"><pre><code id="code_20" name="py_code">def wrapped_mario_env():</code></pre></div></div><div class="section" id="section-22"><div class="docs doc-strings"><p>    基础马里奥环境初始化。</p></div><div class="code"><pre><code id="code_22" name="py_code">    env = gym_super_mario_bros.make("SuperMarioBros-1-1-v0")
+    return DingEnvWrapper(</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>        限制动作空间为“向右”、“向右且起跳”。</p></div><div class="code"><pre><code id="code_23" name="py_code">        JoypadSpace(env, [["right"], ["right", "A"]]),
+        cfg={
+            'env_wrapper': [</code></pre></div></div><div class="section" id="section-24"><div class="docs doc-strings"><p>                返回相邻四帧的最大值。这个包裹器的作用类似于在时间维度上进行了一次最大池化。</p></div><div class="code"><pre><code id="code_24" name="py_code">                lambda env: MaxAndSkipWrapper(env, skip=4),</code></pre></div></div><div class="section" id="section-25"><div class="docs doc-strings"><p>                使用双线性插值对图像的尺寸进行修改，变成 84 x 84 并且从三通道的 RGB 转变为单通道的灰度图像。</p></div><div class="code"><pre><code id="code_25" name="py_code">                lambda env: WarpFrameWrapper(env, size=84),</code></pre></div></div><div class="section" id="section-26"><div class="docs doc-strings"><p>                将值归一化，具体使用的公式是： $$scaled\_x = \frac {x - \min(x)} {\max(x) - \min (x)} $$</p></div><div class="code"><pre><code id="code_26" name="py_code">                lambda env: ScaledFloatFrameWrapper(env),</code></pre></div></div><div class="section" id="section-27"><div class="docs doc-strings"><p>                将相邻四帧叠在一起形成一个 obs。</p></div><div class="code"><pre><code id="code_27" name="py_code">                lambda env: FrameStackWrapper(env, n_frames=4),</code></pre></div></div><div class="section" id="section-28"><div class="docs doc-strings"><p>                在 evaluate 的时候计算最终的累计回报。</p></div><div class="code"><pre><code id="code_28" name="py_code">                lambda env: EvalEpisodeReturnEnv(env),
+            ]
+        }
+    )
+
+</code></pre></div></div><div class="section" id="section-29"><div class="docs doc-strings"><p>    <b>wrapped_mario_env_optical 函数功能概述</b><br>        使用光流包裹器，以及多种其它包裹器，对马里奥环境进行包裹。</p></div><div class="code"><pre><code id="code_29" name="py_code">def wrapped_mario_env_optical():</code></pre></div></div><div class="section" id="section-31"><div class="docs doc-strings"><p>    基础马里奥环境初始化。</p></div><div class="code"><pre><code id="code_31" name="py_code">    env = gym_super_mario_bros.make("SuperMarioBros-1-1-v0")
+    return DingEnvWrapper(</code></pre></div></div><div class="section" id="section-32"><div class="docs doc-strings"><p>        限制动作空间为“向右”、“向右且起跳”。</p></div><div class="code"><pre><code id="code_32" name="py_code">        JoypadSpace(env, [["right"], ["right", "A"]]),
+        cfg={
+            'env_wrapper': [</code></pre></div></div><div class="section" id="section-33"><div class="docs doc-strings"><p>                返回相邻四帧的最大值。这个包裹器的作用类似于在时间维度上进行了一次最大池化。</p></div><div class="code"><pre><code id="code_33" name="py_code">                lambda env: MaxAndSkipWrapper(env, skip=4),</code></pre></div></div><div class="section" id="section-34"><div class="docs doc-strings"><p>                使用双线性插值对图像的尺寸进行修改，变成 84 x 84 并且从三通道的 RGB 转变为单通道的灰度图像。</p></div><div class="code"><pre><code id="code_34" name="py_code">                lambda env: WarpFrameWrapper(env, size=84),</code></pre></div></div><div class="section" id="section-35"><div class="docs doc-strings"><p>                添加光流信息。</p></div><div class="code"><pre><code id="code_35" name="py_code">                lambda env: OpticalFlowWrapper(env),</code></pre></div></div><div class="section" id="section-36"><div class="docs doc-strings"><p>                将值归一化，具体使用的公式是： $$scaled\_x = \frac {x - \min(x)} {\max(x) - \min (x)} $$</p></div><div class="code"><pre><code id="code_36" name="py_code">                lambda env: ScaledFloatFrameWrapper(env),</code></pre></div></div><div class="section" id="section-37"><div class="docs doc-strings"><p>                在 evaluate 的时候计算最终的累计回报。</p></div><div class="code"><pre><code id="code_37" name="py_code">                lambda env: EvalEpisodeReturnEnv(env),
+            ]
+        }
+    )
+
+</code></pre></div></div><div class="section" id="section-38"><div class="docs doc-strings"><p>    <b>test_wrapper 函数功能概述</b><br>        测试两种类型的包裹器，分别确认它们输出的 obs 维度。</p></div><div class="code"><pre><code id="code_38" name="py_code">def test_wrapper():</code></pre></div></div><div class="section" id="section-40"><div class="docs doc-strings"><p>    测试使用了叠帧方案的包裹器。</p></div><div class="code"><pre><code id="code_40" name="py_code">    env = wrapped_mario_env()
+    obs = env.reset()
+    assert obs.shape == (4, 84, 84)</code></pre></div></div><div class="section" id="section-41"><div class="docs doc-strings"><p>    测试使用了光流方案的包裹器。</p></div><div class="code"><pre><code id="code_41" name="py_code">    env = wrapped_mario_env_optical()
+    obs = env.reset()
+    assert obs.shape == (3, 84, 84)
+
+</code></pre></div></div><div class="section" id="section-41"><div class="docs doc-strings"><p><i>如果读者关于本文档有任何问题和建议，可以在 GitHub 提 issue 或是直接发邮件给我们 (opendilab@pjlab.org.cn) 。</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
