@@ -6,7 +6,7 @@
 本文档用于求导的函数示例是：
 $$ c = \sum x * y + z $$
 本文档还将介绍利用在 PyTorch 中自定义可导函数的方法。
-通过继承 `torch.autograd.Function` <link https://pytorch.org/docs/stable/autograd.html?highlight=autograd+function#torch.autograd.Function link>，用户可以通过重写其中的前向传播、反向传播函数，自定义一个可导的函数
+通过继承 ``torch.autograd.Function`` <link https://pytorch.org/docs/stable/autograd.html?highlight=autograd+function#torch.autograd.Function link>，用户可以通过重写其中的前向传播、反向传播函数，自定义一个可导的函数
 我们将以一个标准的线性函数为例进行介绍：
 $$output = input \cdot weight^T + bias$$
 """

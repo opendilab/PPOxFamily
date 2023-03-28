@@ -1,6 +1,6 @@
 """
-在本示例中，我们提供了一种利用 ``torch.Tensor._scatter``，将张量转化为 one-hot 编码形式的方案。
-同时，我们还提供了代码例子，通过使用 ``torch.nn.Embedding``， 将张量转化为 one-hot 编码形式和二进制编码形式。
+在本示例中，我们提供了一种利用 ``torch.Tensor._scatter`` ，将张量转化为 one-hot 编码形式的方案。
+同时，我们还提供了代码例子，通过使用 ``torch.nn.Embedding`` ， 将张量转化为 one-hot 编码形式和二进制编码形式。
 具体到 ``torch.nn.Embedding`` 的工作机制，这个模块的权重是一个 M x N 的矩阵，其中 M 是所有可能输入的数量（即单词表的长度），N 是 embedding 之后输出向量的维度。
 它的工作方式就是，输入一个序号 i（此序号小于单词表的长度），输出权重矩阵的第 i 行（维度为 N 的向量）。
 本文档主要由以下三部分组成：
@@ -16,15 +16,15 @@ def one_hot(val: torch.LongTensor, num: int) -> torch.FloatTensor:
     """
     **one_hot 函数功能概述**:
         将类型为 ``torch.LongTensor`` 的张量转化为其 one-hot 编码的形式。
-        此实现的执行效率略高于 ``torch.nn.functional.one_hot``。
+        此实现的执行效率略高于 ``torch.nn.functional.one_hot`` 。
     """
-    # 保存原始 val 的形状。
+    # 保存原始 ``val`` 的形状。
     old_shape = val.shape
-    # 将 val 改变形状至二维张量。
+    # 将 ``val`` 改变形状至二维张量。
     val_reshape = val.reshape(-1, 1)
     # 初始化结果张量，确定其形状，并设置和 val 在相同的 device 上。
     ret = torch.zeros(val_reshape.shape[0], num, device=val.device)
-    # 根据 ``val_reshape`` 中的值，将若干 1 填入结果张量中。注意，这一步是 in-place 操作（即直接改变结果张量的值）。
+    # 根据 ``val_reshape`` 中的值，将若干 1 填入结果张量中。注意，这一步是 in-place 操作（即直接原地改变结果张量的值）。
     ret.scatter_(1, val_reshape, 1)
     # 恢复原始形状，并将结果张量返回。
     return ret.reshape(*old_shape, num)
