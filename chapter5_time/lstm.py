@@ -150,14 +150,19 @@ def test_lstm():
     prev_state = None
     for s in range(seq_len):
         input_step = input[s:s + 1]
-        # The prev_state is None if the input_step is the first step of the sequence. Otherwise, the prev_state contains a list of dictions with key 'h', 'c', and the corresponding values are tensors with shape [num_layers, 1, hidden_size]. The length of the list equuals to the batch_size.
+        # The prev_state is None if the input_step is the first step of the sequence. Otherwise,
+        # the prev_state contains a list of dictions with key 'h', 'c',
+        # and the corresponding values are tensors with shape [num_layers, 1, hidden_size].
+        # The length of the list equuals to the batch_size.
         output, prev_state = lstm(input_step, prev_state)
 
-    # Check whether the output is correct.
+    # Check the shape of output and prev_state.
     assert output.shape == (1, batch_size, hidden_size)
     assert len(prev_state) == batch_size
     assert prev_state[0]['h'].shape == (num_layers, 1, hidden_size)
+    assert prev_state[0]['c'].shape == (num_layers, 1, hidden_size)
     torch.mean(output).backward()
+    # Check the grad of input.
     assert isinstance(input.grad, torch.Tensor)
 
 

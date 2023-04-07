@@ -40,7 +40,8 @@ class GatedTransformerXLLayer(torch.nn.Module):
         if self.gating is True:
             self.gate1 = GRUGatingUnit(input_dim, gru_bias)
             self.gate2 = GRUGatingUnit(input_dim, gru_bias)
-        # Build attention block.
+        # Build attention block using the AttentionXL class,
+        # a feed-forward network with optional dropout, and two layer normalization layers.
         self.attention = AttentionXL(
             input_dim,
             head_dim,
@@ -73,11 +74,15 @@ class GatedTransformerXLLayer(torch.nn.Module):
         # Concat memory with input across sequence dimension. The shape is: [full_sequence, batch_size, input_dim]
         full_input = torch.cat([memory, inputs], dim=0)
         # Forward calculation for GTrXL layer.
+        # In GTrXL, the layer normalization is put before the attention layer.
         x1 = self.layernorm1(full_input)
         # Attention module.
         a1 = self.dropout(self.attention(inputs, pos_embedding, x1, u, v, mask=mask))
         a1 = self.activation(a1)
+        # In GTrXL, gating layer replace the resnet layer in TrXL.
         o1 = self.gate1(inputs, a1) if self.gating else inputs + a1
+
+
         x2 = self.layernorm2(o1)
         # Feed Forward Network.
         m2 = self.dropout(self.mlp(x2))
@@ -115,7 +120,7 @@ class GTrXL(nn.Module):
             input_dim = np.prod(input_dim)
         # Initialize embedding layer.
         self.use_embedding_layer = use_embedding_layer
-        if use_embedding_layer:
+        if self.use_embedding_layer:
             self.embedding = fc_block(input_dim, embedding_dim, activation=activation)
         # Initialize activate function.
         self.activation = activation
@@ -126,12 +131,14 @@ class GTrXL(nn.Module):
         self.memory_len = memory_len
         # Initialize GTrXL layers.
         layers = []
+        # Put all the embedding_dims into a list.
+        # For the i-th layer, the input embedding is dims[i], while the output embedding is dims[i+1]
         dims = [embedding_dim] + [embedding_dim] * layer_num
         self.dropout = nn.Dropout(dropout_ratio) if dropout_ratio > 0 else nn.Identity()
         for i in range(layer_num):
             layers.append(
                 GatedTransformerXLLayer(
-                    dims[i], head_dim, embedding_dim, head_num, mlp_num, self.dropout, self.activation, gru_gating,
+                    dims[i], head_dim, dims[i+1], head_num, mlp_num, self.dropout, self.activation, gru_gating,
                     gru_bias
                 )
             )
@@ -164,7 +171,8 @@ class GTrXL(nn.Module):
             return self.memory.get()
 
     def forward(self, x: torch.Tensor, batch_first: bool = False, return_mem: bool = True) -> Dict[str, torch.Tensor]:
-        # If the first dimension of input x is batch_size, then reshape x from  [batch_size ,sequence_length ,input_dim] to [sequence_length, batch_size, input_dim]
+        # If the first dimension of input x is batch_size,
+        # then reshape x from  [batch_size ,sequence_length ,input_dim] to [sequence_length, batch_size, input_dim]
         if batch_first:
             x = torch.transpose(x, 1, 0)
         cur_seq, bs = x.shape[:2]
@@ -194,7 +202,9 @@ class GTrXL(nn.Module):
             attn_mask = self.att_mask[cur_seq]
         # Otherwise, create a new attention mask and store it into self.att_mask.
         else:
-            # For example, if cur_seq = 3, full_seq = 7, then the mask is: $$ \begin{matrix} 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 \end{matrix}$$ This forces that the hidden state of current token is only associated with previous tokens.
+            # For example, if cur_seq = 3, full_seq = 7, then the mask is:
+            # $$ \begin{matrix} 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 \end{matrix}$$
+            # This forces that the hidden state of current token is only associated with previous tokens.
             attn_mask = (
                 torch.triu(
                     torch.ones((cur_seq, full_seq)),
@@ -270,10 +280,11 @@ def test_gtrxl() -> None:
         else:
             model.reset_memory(state=m)
         output = model(input)
-        # Check the calculation results.
+        # Check the shape of output.
         assert output['logit'].shape == (seq_len, bs, embedding_dim)
         assert output['memory'].shape == (layer_num + 1, mem_len, bs, embedding_dim)
         torch.sum(output['logit']).backward()
+        # Check the gradient.
         assert isinstance(input.grad, torch.Tensor)
         # Check memory.
         memory_out = output['memory']
