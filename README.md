@@ -11,7 +11,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2023.04.07: PPO x Family 第七章（挖掘黑科技）将在四月下旬上限
+- 2023.04.07: PPO x Family 第七章（挖掘黑科技）将在四月下旬上线
 - 2023.04.06: [bilibili] [PPO x Family 第六章（统筹多智能体）正式上线](https://www.bilibili.com/video/BV1dg4y1g7BC)
 - 2023.03.09: [bilibili] [PPO x Family 第五章（探索时序建模）正式上线](https://www.bilibili.com/video/BV1Uj411u7GA)
 - 2023.02.23: [bilibili] [PPO x Family 第四章（解密稀疏奖励空间）正式上线](https://www.bilibili.com/video/BV15j411F7ni)
