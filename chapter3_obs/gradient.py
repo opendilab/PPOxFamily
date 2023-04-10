@@ -6,7 +6,7 @@ This document mainly includes:
 The example function to calculate gradient is formulated as:
 $$ c = \sum x * y + z $$
 It also includes the method to manually define a differentiable function.
-By inheriting `torch.autograd.Function` <link https://pytorch.org/docs/stable/autograd.html?highlight=autograd+function#torch.autograd.Function link>, users can overwrite corresponding forward and backward methods to manually define a differentiable function.
+By inheriting ``torch.autograd.Function`` <link https://pytorch.org/docs/stable/autograd.html?highlight=autograd+function#torch.autograd.Function link>, users can overwrite corresponding forward and backward methods to manually define a differentiable function.
 We take a linear function as example, which is formulated as:
 $$output = input \cdot weight^T + bias$$
 """

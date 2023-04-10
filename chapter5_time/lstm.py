@@ -33,52 +33,30 @@ class LSTM(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         # Initialize normalization functions.
+        # Layer normalization normalizes the activations of a layer across the feature dimension.
+        # In general, layer normalization is applied to the inputs to the LSTM gate activations.
+        # Because layer normalization reduces the internal covariate shift of the LSTM gates,
+        # making LSTM more consistent across time steps.
         norm_func = build_normalization(norm_type)
         self.norm = nn.ModuleList([norm_func(hidden_size * 4) for _ in range(2 * num_layers)])
-        # Initialize LSTM parameters.
+        # Initialize LSTM parameters with orthogonal initialization.
+        # Orthogonal Initialization can significantly improve the performance of LSTM.
         self.wx = nn.ParameterList()
         self.wh = nn.ParameterList()
         dims = [input_size] + [hidden_size] * num_layers
         for l in range(num_layers):
-            self.wx.append(nn.Parameter(torch.zeros(dims[l], dims[l + 1] * 4)))
-            self.wh.append(nn.Parameter(torch.zeros(hidden_size, hidden_size * 4)))
-        self.bias = nn.Parameter(torch.zeros(num_layers, hidden_size * 4))
+            # wx is the weights for input, while hx is the weights for the hidden state.
+            # Each LSTM cell has 4 gates (input, forget, output, and candidate gates),
+            # and the weights transform the input and hidden state into concatenated vectors,
+            # of which the shape is [num_layers, hidden_size * 4].
+            self.wx.append(nn.init.orthogonal_(nn.Parameter(torch.zeros(dims[l], dims[l + 1] * 4))))
+            self.wh.append(nn.init.orthogonal_(nn.Parameter(torch.zeros(hidden_size, hidden_size * 4))))
+        # Similarly, the bias is the bias of concatenated vectors, so the shape is: [num_layers, hidden_size * 4]
+        self.bias = nn.init.orthogonal_(nn.Parameter(torch.zeros(num_layers, hidden_size * 4)))
         # Initialize the Dropout Layer.
         self.use_dropout = dropout > 0.
         if self.use_dropout:
             self.dropout = nn.Dropout(dropout)
-        self._init()
-
-    # Dealing with different types of input and return preprocessed prev_state.
-    def _before_forward(self, inputs: torch.Tensor, prev_state: Union[None, List[Dict]]) -> torch.Tensor:
-        seq_len, batch_size = inputs.shape[:2]
-        # If prev_state is None, it indicates that this is the beginning of a sequence. In this case, prev_state will be initialized as zero.
-        if prev_state is None:
-            zeros = torch.zeros(
-                self.num_layers,
-                batch_size,
-                self.hidden_size,
-                dtype=inputs.dtype,
-                device=inputs.device
-            )
-            prev_state = (zeros, zeros)
-        # If prev_state is not None, then preprocess it into one batch.
-        else:
-            assert len(prev_state) == batch_size
-            state = [[v for v in prev.values()] for prev in prev_state]
-            state = list(zip(*state))
-            prev_state = [torch.cat(t, dim=1) for t in state]
-
-        return prev_state
-
-    def _init(self):
-        # Initialize parameters. Each parameter is initialized using a uniform distribution of: $$U(-\sqrt {\frac 1 {HiddenSize}}, -\sqrt {\frac 1 {HiddenSize}})$$
-        gain = math.sqrt(1. / self.hidden_size)
-        for l in range(self.num_layers):
-            torch.nn.init.uniform_(self.wx[l], -gain, gain)
-            torch.nn.init.uniform_(self.wh[l], -gain, gain)
-            if self.bias is not None:
-                torch.nn.init.uniform_(self.bias[l], -gain, gain)
 
     def forward(self,
                 inputs: torch.Tensor,
@@ -86,7 +64,31 @@ class LSTM(nn.Module):
                 ) -> Tuple[torch.Tensor, Union[torch.Tensor, list]]:
         # The shape of input is: [sequence length, batch size, input size]
         seq_len, batch_size = inputs.shape[:2]
-        prev_state = self._before_forward(inputs, prev_state)
+        # Dealing with different types of input and return preprocessed prev_state.
+        # If prev_state is None, it indicates that this is the beginning of a sequence.
+        # In this case, prev_state will be initialized as zero.
+        if prev_state is None:
+            prev_state = (
+                torch.zeros(
+                    self.num_layers,
+                    batch_size,
+                    self.hidden_size,
+                    dtype=inputs.dtype,
+                    device=inputs.device)
+                ,
+                torch.zeros(
+                    self.num_layers,
+                    batch_size,
+                    self.hidden_size,
+                    dtype=inputs.dtype,
+                    device=inputs.device)
+                )
+        # If prev_state is not None, then preprocess it into one batch.
+        else:
+            assert len(prev_state) == batch_size
+            state = [[v for v in prev.values()] for prev in prev_state]
+            state = list(zip(*state))
+            prev_state = [torch.cat(t, dim=1) for t in state]
 
         H, C = prev_state
         x = inputs
@@ -124,7 +126,8 @@ class LSTM(nn.Module):
         # Return list type, split the next_state .
         h, c = next_state
         batch_size = h.shape[1]
-        # Split h with shape [num_layers, batch_size, hidden_size] to a list with length batch_size and each element is a tensor with shape [num_layers, 1, hidden_size]. The same operation is performed on c.
+        # Split h with shape [num_layers, batch_size, hidden_size] to a list with length batch_size 
+        # and each element is a tensor with shape [num_layers, 1, hidden_size]. The same operation is performed on c.
         next_state = [torch.chunk(h, batch_size, dim=1), torch.chunk(c, batch_size, dim=1)]
         next_state = list(zip(*next_state))
         next_state = [{k: v for k, v in zip(['h', 'c'], item)} for item in next_state]
@@ -147,14 +150,19 @@ def test_lstm():
     prev_state = None
     for s in range(seq_len):
         input_step = input[s:s + 1]
-        # The prev_state is None if the input_step is the first step of the sequence. Otherwise, the prev_state contains a list of dictions with key 'h', 'c', and the corresponding values are tensors with shape [num_layers, 1, hidden_size]. The length of the list equuals to the batch_size.
+        # The prev_state is None if the input_step is the first step of the sequence. Otherwise,
+        # the prev_state contains a list of dictions with key 'h', 'c',
+        # and the corresponding values are tensors with shape [num_layers, 1, hidden_size].
+        # The length of the list equuals to the batch_size.
         output, prev_state = lstm(input_step, prev_state)
 
-    # Check whether the output is correct.
+    # Check the shape of output and prev_state.
     assert output.shape == (1, batch_size, hidden_size)
     assert len(prev_state) == batch_size
     assert prev_state[0]['h'].shape == (num_layers, 1, hidden_size)
+    assert prev_state[0]['c'].shape == (num_layers, 1, hidden_size)
     torch.mean(output).backward()
+    # Check the grad of input.
     assert isinstance(input.grad, torch.Tensor)
 
 
