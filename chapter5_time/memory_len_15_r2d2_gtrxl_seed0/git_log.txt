@@ -1,0 +1,48 @@
+9719ad2
+
+commit 9719ad230df9009c5a645b6e398dcbb708616d01
+Merge: f426c30 524242b
+Author: poet-libai <poet-libai@github.com>
+Date:   Sat Apr 8 14:50:36 2023 +0800
+
+    Merge branch 'main' of https://github.com/opendilab/PPOxFamily into ch5
+
+commit 524242bb353887ee949f41ec83ec2b7f94174068
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Thu Apr 6 19:42:12 2023 +0800
+
+    feature(nyz): add chapter6 lecture
+
+ README.md                                  |   3 ++-
+ chapter6_marl/chapter6_application_demo.py |   0
+ chapter6_marl/chapter6_lecture.pdf         | Bin 0 -> 16251042 bytes
+ 3 files changed, 2 insertions(+), 1 deletion(-)
+
+commit 74199abf2139e4eb221cdbabca222d3c5c3f5b86
+Author: Swain <niuyazhe314@outlook.com>
+Date:   Fri Mar 31 18:03:58 2023 +0800
+
+    style(nyz): update ch6 pre info
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1aa2ee52e222ba23575eeb271cb9c00b455bebfa
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Wed Mar 29 22:35:37 2023 +0800
+
+    polish(nyz): polish ch2 hw solution typo error
+
+ chapter2_action/chapter2_hw_solution.pdf | Bin 457107 -> 813553 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 0a873dbe42b3dc12a07e22cdb3ca3bcc6681d742
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Tue Mar 28 21:25:24 2023 +0800
+
+    feature(nyz): add ch4 qa
+
+ README.md                                              |   2 +-
+ .../{chapter4_popart_demo.py => chapter4_popart.py}    |   0
+ chapter4_reward/chapter4_qa.pdf                        | Bin 0 -> 523809 bytes
+ 3 files changed, 1 insertion(+), 1 deletion(-)
