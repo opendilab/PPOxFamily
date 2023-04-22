@@ -18,9 +18,9 @@ def one_hot(val: torch.LongTensor, num: int) -> torch.FloatTensor:
         Convert a ``torch.LongTensor`` to one hot encoding with scatter API.
         This implementation can be slightly faster than ``torch.nn.functional.one_hot`` .
     """
-    # Remember original shape of val.
+    # Remember original shape of ``val`` .
     old_shape = val.shape
-    # Reshape val into 2D tensor.
+    # Reshape ``val`` into 2D tensor.
     val_reshape = val.reshape(-1, 1)
     # Initialize return tensor with float32 dtype and the same device as val.
     ret = torch.zeros(val_reshape.shape[0], num, device=val.device)
