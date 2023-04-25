@@ -71,8 +71,6 @@ def test_global_state():
     # get independent global state, which usually used in decentralized training
     for agent_id in range(ally_agent_num):
         ind_global_state = get_ind_global_state(agent_id, ally_agent_num, enemy_agent_num)
-        print(ind_global_state)
-        exit(0)
         assert isinstance(ind_global_state, torch.Tensor)
     # get environment provide global state, which is the same for all agents, used in centralized training
     for agent_id in range(ally_agent_num):
