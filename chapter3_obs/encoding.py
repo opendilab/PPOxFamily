@@ -18,9 +18,9 @@ def one_hot(val: torch.LongTensor, num: int) -> torch.FloatTensor:
         Convert a ``torch.LongTensor`` to one hot encoding with scatter API.
         This implementation can be slightly faster than ``torch.nn.functional.one_hot`` .
     """
-    # Remember original shape of val.
+    # Remember original shape of ``val`` .
     old_shape = val.shape
-    # Reshape val into 2D tensor.
+    # Reshape ``val`` into 2D tensor.
     val_reshape = val.reshape(-1, 1)
     # Initialize return tensor with float32 dtype and the same device as val.
     ret = torch.zeros(val_reshape.shape[0], num, device=val.device)
@@ -50,7 +50,7 @@ def get_binary_encoding(bit_num: int):
     # Generate a matrix with shape $$2^{B} \times B $$ where B is the bit_num.
     # Each row with index n contains the binary representation of n.
     location_embedding = []
-    for n in range(2**bit_num):
+    for n in range(2 ** bit_num):
         s = '0' * (bit_num - len(bin(n)[2:])) + bin(n)[2:]
         location_embedding.append(list(int(i) for i in s))
     mat = torch.FloatTensor(location_embedding)
@@ -74,12 +74,7 @@ def test_encoding():
     bin_enc = get_binary_encoding(2)
     x = torch.arange(4)
     y = bin_enc(x)
-    ground_truth = torch.LongTensor([
-        [0, 0],
-        [0, 1],
-        [1, 0],
-        [1, 1]
-    ])
+    ground_truth = torch.LongTensor([[0, 0], [0, 1], [1, 0], [1, 1]])
     assert torch.eq(y, ground_truth).all()
 
 

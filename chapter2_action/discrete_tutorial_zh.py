@@ -15,11 +15,13 @@ $$J(\theta) = \min(\frac{\pi_{\theta}(a_{t}|s_{t})}{\pi_{\theta_k}(a_{t}|s_{t})}
   - 主函数（测试函数）
 更多的可视化结果和实际应用样例，可以参考这个链接 <link https://github.com/opendilab/PPOxFamily/issues/4 link>
 """
+from typing import List
 import torch
 import torch.nn as nn
 
 
 class DiscretePolicyNetwork(nn.Module):
+
     def __init__(self, obs_shape: int, action_shape: int) -> None:
         """
         **DiscretePolicyNetwork 定义概述**:
@@ -53,6 +55,42 @@ class DiscretePolicyNetwork(nn.Module):
 
 
 # delimiter
+class MultiDiscretePolicyNetwork(nn.Module):
+
+    def __init__(self, obs_shape: int, action_shape: List[int]) -> None:
+        """
+        **MultiDiscretePolicyNetwork 定义概述**:
+            定义 PPO 中所使用的多维离散动作策略网络，其主要包含两部分：编码器（encoder）和多维决策输出头（head）
+        """
+        # 继承 PyTorch 神经网络类所必需的操作，自定义的神经网络必须是 ``nn.Module`` 的子类
+        super(MultiDiscretePolicyNetwork, self).__init__()
+        # 定义编码器模块，将原始的状态映射为特征向量。对于不同的环境，可能状态信息的模态不同，需要根据情况选择适当的编码器神经网络，例如对于图片状态信息就常常使用卷积神经网络
+        # 这里我们用一个简单的单层 MLP 作为例子，即:
+        # $$y = max(Wx+b, 0)$$
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_shape, 32),
+            nn.ReLU(),
+        )
+        # 定义多维离散动作的决策输出头，即创建多个离散动作的预测器，整体用 ``nn.ModuleList`` 进行管理
+        self.head = nn.ModuleList()
+        for size in action_shape:
+            self.head.append(nn.Linear(32, size))
+
+    # delimiter
+    def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
+        """
+        **Overview**:
+            The computation graph of discrete action policy network used in PPO.
+            ``x -> encoder -> multiple head -> multiple logit`` .
+        """
+        # 将原始的状态信息转换为特征向量，维度变化为: $$(B, *) -> (B, N)$$
+        x = self.encoder(x)
+        # 为每个可能的离散动作选项，计算相应的 logit，维度变化为: $$(B, N) -> [(B, A_1), ..., (B, A_N)]$$
+        logit = [h(x) for h in self.head]
+        return logit
+
+
+# delimiter
 def sample_action(logit: torch.Tensor) -> torch.Tensor:
     """
     **sample_action 函数功能概述**:
@@ -71,9 +109,9 @@ def sample_action(logit: torch.Tensor) -> torch.Tensor:
 
 
 # delimiter
-def test_sample_action():
+def test_sample_discrete_action():
     """
-    **test_sample_action 函数功能概述**:
+    **test_sample_discrete_action 函数功能概述**:
         离散动作空间的主函数，构建一个简单的策略网络，执行前向计算过程，并采样得到一组离散动作
     """
     # 设置相关参数 batch_size = 4, obs_shape = 10, action_shape = 6.
@@ -91,5 +129,29 @@ def test_sample_action():
     assert action.shape == (B, )
 
 
+# delimiter
+def test_sample_multi_discrete_action():
+    """
+    **test_sample_multi_discrete_action 函数功能概述**:
+        多维离散动作空间的主函数，构建一个简单的策略网络，执行前向计算过程，并采样得到一组多维离散动作
+    """
+    # Set batch_size = 4, obs_shape = 10, action_shape = [4, 5, 6].
+    B, obs_shape, action_shape = 4, 10, [4, 5, 6]
+    # 从0-1 的均匀分布中生成状态数据
+    state = torch.rand(B, obs_shape)
+    # 定义策略网络
+    policy_network = MultiDiscretePolicyNetwork(obs_shape, action_shape)
+    # 策略网络执行前向计算，即输入状态输出多个 logit
+    # $$ logit = \pi(a|s)$$
+    logit = policy_network(state)
+    for i in range(len(logit)):
+        assert logit[i].shape == (B, action_shape[i])
+    # 对于多个 logit，依次调用采样函数，根据相应的 logit 采样得到最终的离散动作
+    for i in range(len(logit)):
+        action_i = sample_action(logit[i])
+        assert action_i.shape == (B, )
+
+
 if __name__ == "__main__":
-    test_sample_action()
+    test_sample_discrete_action()
+    test_sample_multi_discrete_action()

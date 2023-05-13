@@ -13,7 +13,6 @@ from collections import namedtuple
 import torch
 import numpy as np
 
-
 ppo_policy_data = namedtuple('ppo_policy_data', ['logit_new', 'logit_old', 'action', 'adv', 'weight'])
 ppo_policy_loss = namedtuple('ppo_policy_loss', ['policy_loss', 'entropy_loss'])
 ppo_info = namedtuple('ppo_info', ['approx_kl', 'clipfrac'])

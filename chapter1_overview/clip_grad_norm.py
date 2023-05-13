@@ -8,8 +8,7 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_norm(
-        parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **Overview**:
         Implementation of clip_grad_norm <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>

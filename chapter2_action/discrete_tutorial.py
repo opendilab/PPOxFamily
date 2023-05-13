@@ -15,11 +15,13 @@ This tutorial is mainly composed of the following three parts, you can learn fro
   - Main (Test) Function
 More visulization results about PPO in discrete action space can be found in <link https://github.com/opendilab/PPOxFamily/issues/4 link>.
 """
+from typing import List
 import torch
 import torch.nn as nn
 
 
 class DiscretePolicyNetwork(nn.Module):
+
     def __init__(self, obs_shape: int, action_shape: int) -> None:
         """
         **Overview**:
@@ -54,6 +56,43 @@ class DiscretePolicyNetwork(nn.Module):
 
 
 # delimiter
+class MultiDiscretePolicyNetwork(nn.Module):
+
+    def __init__(self, obs_shape: int, action_shape: List[int]) -> None:
+        """
+        **Overview**:
+            The definition of multi discrete action policy network used in PPO, which uses multiple discrete head.
+        """
+        # PyTorch necessary requirements for extending ``nn.Module`` . Our network should also subclass this class.
+        super(MultiDiscretePolicyNetwork, self).__init__()
+        # Define encoder module, which maps raw state into embedding vector.
+        # It could be different for various state, such as Convolution Neural Network (CNN) for image state and Multilayer perceptron (MLP) for vector state, respectively.
+        # Here we use one-layer MLP for vector state, i.e.
+        # $$y = max(Wx+b, 0)$$
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_shape, 32),
+            nn.ReLU(),
+        )
+        # Define multiple discrete head according to the concrete sub action size.
+        self.head = nn.ModuleList()
+        for size in action_shape:
+            self.head.append(nn.Linear(32, size))
+
+    # delimiter
+    def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
+        """
+        **Overview**:
+            The computation graph of discrete action policy network used in PPO.
+            ``x -> encoder -> multiple head -> multiple logit`` .
+        """
+        # Transform original state into embedding vector, i.e. $$(B, *) -> (B, N)$$
+        x = self.encoder(x)
+        # Calculate multiple logit for each possible discrete action, i.e. $$(B, N) -> [(B, A_1), ..., (B, A_N)]$$
+        logit = [h(x) for h in self.head]
+        return logit
+
+
+# delimiter
 def sample_action(logit: torch.Tensor) -> torch.Tensor:
     """
     **Overview**:
@@ -72,7 +111,7 @@ def sample_action(logit: torch.Tensor) -> torch.Tensor:
 
 
 # delimiter
-def test_sample_action():
+def test_sample_discrete_action():
     """
     **Overview**:
         The function of testing sampling discrete action. Construct a naive policy and sample a group of action.
@@ -92,5 +131,29 @@ def test_sample_action():
     assert action.shape == (B, )
 
 
+# delimiter
+def test_sample_multi_discrete_action():
+    """
+    **Overview**:
+        The function of testing sampling multi-discrete action. Construct a naive policy and sample a group of multi-discrete action.
+    """
+    # Set batch_size = 4, obs_shape = 10, action_shape = [4, 5, 6].
+    B, obs_shape, action_shape = 4, 10, [4, 5, 6]
+    # Generate state data from uniform distribution in [0, 1].
+    state = torch.rand(B, obs_shape)
+    # Define policy network with encoder and head.
+    policy_network = MultiDiscretePolicyNetwork(obs_shape, action_shape)
+    # Policy network forward procedure, input state and output multiple logit.
+    # $$ logit = \pi(a|s)$$
+    logit = policy_network(state)
+    for i in range(len(logit)):
+        assert logit[i].shape == (B, action_shape[i])
+    # Sample action accoding to corresponding logit one by one.
+    for i in range(len(logit)):
+        action_i = sample_action(logit[i])
+        assert action_i.shape == (B, )
+
+
 if __name__ == "__main__":
-    test_sample_action()
+    test_sample_discrete_action()
+    test_sample_multi_discrete_action()

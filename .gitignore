@@ -1,2 +1,4 @@
 *.pyc
 *wandb
+*demo
+*.DS_Store
