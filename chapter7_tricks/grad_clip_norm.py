@@ -1,5 +1,5 @@
 """
-PyTorch implementation of torch.nn.utils.clip_grad_norm
+PyTorch implementation of ``torch.nn.utils.clip_grad_norm``
 """
 import torch
 from torch._six import inf
@@ -8,10 +8,13 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def clip_grad_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **Overview**:
         Implementation of clip_grad_norm <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>
+        This function is used after the loss backpropagation, clip all the total gradient norm of network parameters.
+        The total norm is computed over all gradients together, as if they were concatenated into a single vector.
+        BTW, This function is a in-place operation, modify the gradient and only return the total norm for logging.
     """
     # Save the non-empty gradient of trainable parameters into a list.
     if isinstance(parameters, torch.Tensor):
@@ -40,23 +43,24 @@ def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: f
 
 
 # delimiter
-def test_clip_grad_norm():
+def test_clip_grad_norm_():
     """
     **Overview**:
-        Test function of grad norm.
+        Test function of grad clip by norm.
     """
-    # batch size=4, action=32
+    # Prepare hyper-parameters, batch size=4, action=32
     B, N = 4, 32
-    # Generate logit and label.
+    # Generate regression logit and label, in practice, logit is the output of the whole network and requires gradient.
     logit = torch.randn(B, N).requires_grad_(True)
     label = torch.randn(B, N)
-    # Compute loss and gradient
-    loss = torch.nn.MSELoss()
-    output = loss(logit, label)
+    # Define criterion, and compute loss.
+    criterion = torch.nn.MSELoss()
+    output = criterion(logit, label)
+    # Loss backward and compute gradient.
     output.backward()
-    # Clip the gradient total_norm
-    clip_grad_norm(logit, 0.5, 2)
-    # Assert the total_norm of the clipped gradient
+    # Clip the total norm of gradients.
+    clip_grad_norm_(logit, 0.5, 2)
+    # Assert the total_norm of the clipped gradient.
     assert isinstance(logit.grad, torch.Tensor)
     grads = logit.grad
     total_norm = torch.norm(torch.stack([torch.norm(g.detach(), 2) for g in grads]), 2)
@@ -64,4 +68,4 @@ def test_clip_grad_norm():
 
 
 if __name__ == '__main__':
-    test_clip_grad_norm()
+    test_clip_grad_norm_()

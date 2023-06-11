@@ -1,5 +1,5 @@
 """
-DI-engine implementation of grad_ignore_norm and grad_ignore_value
+DI-engine implementation of ``grad_ignore_norm_`` and ``grad_ignore_value_``
 """
 import torch
 from torch._six import inf
@@ -8,7 +8,7 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def grad_ignore_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def grad_ignore_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **Overview**:
         Implementation of grad_ignore_norm <link https://github.com/opendilab/DI-engine/blob/2ab7c44a64329fb90fa877e6070bc76bb6fdb31e/ding/torch_utils/optimizer_helper.py#L56 link>
@@ -40,7 +40,7 @@ def grad_ignore_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type:
     return total_norm
 
 
-def grad_ignore_value(parameters: _tensor_or_tensors, clip_value: float) -> None:
+def grad_ignore_value_(parameters: _tensor_or_tensors, clip_value: float) -> None:
     """
     **Overview**:
         Implementation of grad_ignore_value <link https://github.com/opendilab/DI-engine/blob/2ab7c44a64329fb90fa877e6070bc76bb6fdb31e/ding/torch_utils/optimizer_helper.py#L77 link>
@@ -66,7 +66,7 @@ def grad_ignore_value(parameters: _tensor_or_tensors, clip_value: float) -> None
 
 
 # delimiter
-def test_grad_ignore_norm():
+def test_grad_ignore_norm_():
     """
     **Overview**:
         Test function of grad ignore norm.
@@ -76,9 +76,10 @@ def test_grad_ignore_norm():
     # Generate logit and label.
     logit = torch.randn(B, N).requires_grad_(True)
     label = torch.randn(B, N)
-    # Compute loss and gradient.
-    loss = torch.nn.MSELoss()
-    output = loss(logit, label)
+    # Define criterion and compute loss.
+    criterion = torch.nn.MSELoss()
+    output = criterion(logit, label)
+    # Loss backward and compute gradients.
     output.backward()
     # Set a gradient that exceeds the threshold.
     logit.grad[0] = 0.5
@@ -91,7 +92,7 @@ def test_grad_ignore_norm():
 
 
 # delimiter
-def test_grad_ignore_value():
+def test_grad_ignore_value_():
     """
     **Overview**:
         Test function of grad ignore clip.
@@ -103,9 +104,10 @@ def test_grad_ignore_value():
     # Generate logit and label.
     logit = torch.randn(B, N).requires_grad_(True)
     label = torch.randn(B, N)
-    # Compute loss and gradient.
-    loss = torch.nn.MSELoss()
-    output = loss(logit, label)
+    # Define criterion and compute loss.
+    criterion = torch.nn.MSELoss()
+    output = criterion(logit, label)
+    # Loss backward and compute gradients.
     output.backward()
     # Set a gradient that exceeds the threshold.
     logit.grad[0] = 0.6
@@ -118,5 +120,5 @@ def test_grad_ignore_value():
 
 
 if __name__ == '__main__':
-    test_grad_ignore_norm()
-    test_grad_ignore_value()
+    test_grad_ignore_norm_()
+    test_grad_ignore_value_()

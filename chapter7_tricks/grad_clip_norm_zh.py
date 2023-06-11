@@ -1,5 +1,5 @@
 """
-torch.nn.utils.clip_grad_norm 的 PyTorch 版实现。
+``torch.nn.utils.clip_grad_norm`` 的 PyTorch 版实现。
 """
 import torch
 from torch._six import inf
@@ -8,7 +8,7 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def clip_grad_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **概述**:
         torch.nn.utils.clip_grad_norm 的 PyTorch 版实现。<link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>
@@ -40,24 +40,25 @@ def clip_grad_norm(parameters: _tensor_or_tensors, max_norm: float, norm_type: f
 
 
 # delimiter
-def test_clip_grad_norm():
+def test_clip_grad_norm_():
     """
     **概述**:
         梯度正则化的测试函数。
     """
-    # 设置相关参数：batch size=4, action=32
+    # 设置相关超参数：batch size=4, action=32
     B, N = 4, 32
-    # 从随机分布中生成测试数据：logit，label。
+    # 从随机分布中生成测试数据（类似回归任务）：logit，label，实践中，logit 一般是网络的输出，并要求可以会传梯度。
     logit = torch.randn(B, N).requires_grad_(True)
     label = torch.randn(B, N)
-    # 计算损失和梯度
-    loss = torch.nn.MSELoss()
-    output = loss(logit, label)
+    # 定义损失函数并计算具体的数值。
+    criterion = torch.nn.MSELoss()
+    output = criterion(logit, label)
+    # 损失函数数值张量执行反向传播，计算相应的网络参数的梯度。
     output.backward()
     # 根据梯度的 total_norm 对梯度进行裁减：
     # 如果其 total_norm 超过 max_norm，则裁减并使得裁减后的梯度对应的 total_norm 的大小为 max_norm，否则不裁减。
     clip_grad_norm(logit, 0.5, 2)
-    # 测试裁减后的 total_norm 的大小是否在预期范围内
+    # 测试裁减后的 total_norm 的大小是否在预期范围内。
     assert isinstance(logit.grad, torch.Tensor)
     grads = logit.grad
     total_norm = torch.norm(torch.stack([torch.norm(g.detach(), 2) for g in grads]), 2)
@@ -65,4 +66,4 @@ def test_clip_grad_norm():
 
 
 if __name__ == '__main__':
-    test_clip_grad_norm()
+    test_clip_grad_norm_()
