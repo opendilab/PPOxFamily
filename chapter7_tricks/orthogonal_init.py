@@ -22,9 +22,9 @@ def orthogonal_(tensor: torch.Tensor, gain: float = 1) -> torch.Tensor:
     if rows < cols:
         flattened.t_()
 
-    # Compute the qr factorization, Q is an orthogonal matrix and R is an upper triangular matrix.
+    # Compute the QR factorization, Q is an orthogonal matrix and R is an upper triangular matrix.
     q, r = torch.linalg.qr(flattened)
-    # Although q is orthogonal, each value of q is not uniformly distributed. To make Q uniform, we can use the equation below: $$Q^* = Q sign(diag(R))$$. Proof for this equation can be viewed in this paper: <link https://arxiv.org/pdf/math-ph/0609050.pdf link>.
+    # Although Q is orthogonal, each value of Q is not uniformly distributed. To make Q uniform, we can use the equation below: $$Q^* = Q sign(diag(R))$$. Proof for this equation can be viewed in this paper: <link https://arxiv.org/pdf/math-ph/0609050.pdf link>.
     d = torch.diag(r, 0)
     ph = d.sign()
     q *= ph
@@ -33,7 +33,7 @@ def orthogonal_(tensor: torch.Tensor, gain: float = 1) -> torch.Tensor:
     if rows < cols:
         q.t_()
     
-    # Using `torch.no_grad()` there can make sure that these operations won't be added to the computational graph used by PyTorch's autograd system, thus improving efficiency.
+    # Using `torch.no_grad()` here can make sure that these operations won't be added to the computational graph used by PyTorch's autograd system, thus improving efficiency.
     with torch.no_grad():
         # Reshape the result and copy the weight from q.
         tensor.view_as(q).copy_(q)
