@@ -1,6 +1,6 @@
 """
 PyTorch tutorial for neural networks in multi-agent cooperation scenarios, including independent actor-critic network (w or w/o shared parameters)
-and centralized critic network with decentralized execution (CTDE) actor-critic network. All the examples are based on the discrete action space.
+and centralized training critic network with decentralized execution (CTDE) actor-critic network. All the examples are based on the discrete action space.
 
 This tutorial is mainly composed of three parts, you can learn from these parts in order or just jump to the part you are interested in:
   - Shared actor-critic network for independent agents
