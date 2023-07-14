@@ -13,7 +13,7 @@ from marl_network import CTDEActorCriticNetwork
 from pg import pg_data, pg_error
 
 
-def mapg_training_opeator():
+def mapg_training_opeator() -> None:
     """
     **Overview**:
         The main function about the training process of CTDE policy gradient algorithm. Define some hyper-parameters,
@@ -69,7 +69,7 @@ def mapg_training_opeator():
     print('mapg_training_opeator is ok')
 
 
-def maac_training_opeator():
+def maac_training_opeator() -> None:
     """
     **Overview**:
         The main function about the training process of CTDE actor-critic algorithm. Define some hyper-parameters,

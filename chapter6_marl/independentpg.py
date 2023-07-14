@@ -13,7 +13,7 @@ from marl_network import IndependentActorCriticNetwork
 from pg import pg_data, pg_error
 
 
-def independentpg_training_opeator():
+def independentpg_training_opeator() -> None:
     """
     **Overview**:
         The main function about the training process of independent policy gradient algorithm. Define some hyper-parameters,
@@ -69,7 +69,7 @@ def independentpg_training_opeator():
     print('independentpg_training_opeator is ok')
 
 
-def independentac_training_opeator():
+def independentac_training_opeator() -> None:
     """
     **Overview**:
         The main function about the training process of independent actor-critic algorithm. Define some hyper-parameters,

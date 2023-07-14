@@ -11,7 +11,7 @@ from ppo import ppo_policy_data, ppo_policy_error
 from gae import gae
 
 
-def mappo_training_opeator():
+def mappo_training_opeator() -> None:
     """
     **Overview**:
         The main function about the training process of CTDE actor-critic algorithm. Define some hyper-parameters,

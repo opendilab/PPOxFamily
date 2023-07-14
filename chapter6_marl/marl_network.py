@@ -39,7 +39,7 @@ class ActorCriticNetwork(nn.Module):
         self.value_head = nn.Linear(64, 1)
 
     # delimiter
-    def forward(self, local_obs: torch.Tensor) -> torch.Tensor:
+    def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:
         """
         **Overview**:
             The computation graph of actor-critic network in discrete action space.
@@ -74,7 +74,7 @@ class SharedActorCriticNetwork(nn.Module):
         self.actor_critic_network = ActorCriticNetwork(obs_shape, action_shape)
 
     # delimiter
-    def forward(self, local_obs: torch.Tensor) -> torch.Tensor:
+    def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:
         """
         **Overview**:
             The computation graph of shared parameters actor-critic network, processing all agents' ``local_obs`` and output
@@ -102,10 +102,10 @@ class IndependentActorCriticNetwork(nn.Module):
         )
 
     # delimiter
-    def forward(self, local_obs: torch.Tensor) -> torch.Tensor:
+    def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:
         """
         **Overview**:
-            The computation graph of independent actor-critic network, serially processing each agent's ``local_obs`` and output  
+            The computation graph of independent actor-critic network, serially processing each agent's ``local_obs`` and output
             the cooresponding policy logit and value respectively.
         """
         return ttorch.cat([net(local_obs[:, i:i + 1]) for i, net in enumerate(self.actor_critic_networks)], dim=1)
@@ -145,7 +145,7 @@ class CTDEActorCriticNetwork(nn.Module):
         self.value_head = nn.Linear(64, 1)
 
     # delimiter
-    def forward(self, local_obs: torch.Tensor, global_obs: torch.Tensor) -> torch.Tensor:
+    def forward(self, local_obs: torch.Tensor, global_obs: torch.Tensor) -> ttorch.Tensor:
         """
         **Overview**:
             The computation graph of CTDE actor-critic network, processing all agents' ``local_obs`` and ``global_obs`` and output
@@ -162,7 +162,7 @@ class CTDEActorCriticNetwork(nn.Module):
 
 
 # delimiter
-def test_shared_ac_network():
+def test_shared_ac_network() -> None:
     """
     **Overview**:
         The function of testing shared parameters actor-critic network. Construct a network and pass a batch of data to it.
@@ -185,7 +185,7 @@ def test_shared_ac_network():
 
 
 # delimiter
-def test_independent_ac_network():
+def test_independent_ac_network() -> None:
     """
     **Overview**:
         The function of testing independent actor-critic network. Construct a network and pass a batch of data to it.
@@ -208,7 +208,7 @@ def test_independent_ac_network():
 
 
 # delimiter
-def test_ctde_ac_network():
+def test_ctde_ac_network() -> None:
     """
     **Overview**:
         The function of testing CTDE actor-critic network. Construct a network and pass a batch of data to it.
