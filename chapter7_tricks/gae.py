@@ -26,12 +26,11 @@ def gae(data: tuple, gamma: float = 0.99, lambda_: float = 0.97) -> torch.FloatT
     """
     # Unpack the data.
     value, next_value, reward, done, traj_flag = data
-    if done is None:
-        done = torch.zeros_like(reward, device=reward.device)
-    if traj_flag is None:
-        traj_flag = done
     done = done.float()
     traj_flag = traj_flag.float()
+    # Expand ``done`` for possible broadcast operation in multi-agent cases
+    if len(value.shape) == 2:
+        done = done.unsqueeze(1)
     # If `done = 1`, this indicates that next value should be set as `0`.
     next_value *= (1 - done)
     # $$\delta_t=-V_{\phi}(s_t)+r_t+V_{\phi}(s_{t+1})$$
