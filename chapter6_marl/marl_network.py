@@ -69,8 +69,9 @@ class SharedActorCriticNetwork(nn.Module):
         """
         # PyTorch necessary requirements for extending ``nn.Module`` . Our network should also subclass this class.
         super(SharedActorCriticNetwork, self).__init__()
-        # Define a shared actor-critic network used for all the agents.
+        # The shape of forward input is $$(batch_size, agent_num, obs_shape)$$.
         self.agent_num = agent_num
+        # Define a shared actor-critic network used for all the agents.
         self.actor_critic_network = ActorCriticNetwork(obs_shape, action_shape)
 
     # delimiter
@@ -152,6 +153,7 @@ class CTDEActorCriticNetwork(nn.Module):
             corresponding policy logit and value in parallel.
             There are two possible designs for ``global_obs``: The former is a shared global state for all agents, i.e. $$(B, S)$$.
             Tha latter is a kind of agent-specific global state, i.e. $$(B, A, S')$$.
+            For more details, you can refer to <link https://di-engine-docs.readthedocs.io/zh_CN/latest/04_best_practice/marl_zh.html#id10 link>.
         """
         policy = self.policy_head(self.local_encoder(local_obs))
         value = self.value_head(self.global_encoder(global_obs))
