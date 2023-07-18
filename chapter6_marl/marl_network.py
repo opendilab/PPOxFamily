@@ -18,8 +18,8 @@ class ActorCriticNetwork(nn.Module):
     def __init__(self, obs_shape: int, action_shape: int) -> None:
         """
         **Overview**:
-            The definition of basic actor-critic network in policy gradient algorithms (e.g. PG/A2C/PPO), which is mainly composed of
-            three parts: encoder, policy head and value head.
+            The definition of basic actor-critic network in policy gradient algorithms (e.g. PG/A2C/PPO),
+            which is mainly composed of three parts: encoder, policy head and value head.
         """
         # PyTorch necessary requirements for extending ``nn.Module`` . Our network should also subclass this class.
         super(ActorCriticNetwork, self).__init__()
@@ -69,7 +69,7 @@ class SharedActorCriticNetwork(nn.Module):
         """
         # PyTorch necessary requirements for extending ``nn.Module`` . Our network should also subclass this class.
         super(SharedActorCriticNetwork, self).__init__()
-        # The shape of forward input is $$(batch_size, agent_num, obs_shape)$$.
+        # The shape of forward input is $$(B, A, O)$$.
         self.agent_num = agent_num
         # Define a shared actor-critic network used for all the agents.
         self.actor_critic_network = ActorCriticNetwork(obs_shape, action_shape)
@@ -81,6 +81,7 @@ class SharedActorCriticNetwork(nn.Module):
             The computation graph of shared parameters actor-critic network, processing all agents' ``local_obs`` and output
             corresponding policy logit and value respectively.
         """
+        # Call the actor_critic_network in parallel.
         return self.actor_critic_network(local_obs)
 
 
@@ -96,7 +97,7 @@ class IndependentActorCriticNetwork(nn.Module):
         # PyTorch necessary requirements for extending ``nn.Module`` . Our network should also subclass this class.
         super(IndependentActorCriticNetwork, self).__init__()
         # Define ``agent_num`` independent actor-critic networks for each agent.
-        # To reuse some attributes of ``nn.Module``, we use ``nn.ModuleList`` to store these networks instead of Python native list.
+        # To reuse some attributes of ``nn.Module`` , we use ``nn.ModuleList`` to store these networks instead of Python native list.
         self.agent_num = agent_num
         self.actor_critic_networks = nn.ModuleList(
             [ActorCriticNetwork(obs_shape, action_shape) for _ in range(agent_num)]
@@ -106,9 +107,10 @@ class IndependentActorCriticNetwork(nn.Module):
     def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:
         """
         **Overview**:
-            The computation graph of independent actor-critic network, serially processing each agent's ``local_obs`` and output
-            the cooresponding policy logit and value respectively.
+            The computation graph of independent actor-critic network, serially processing each agent's
+            ``local_obs`` and output the cooresponding policy logit and value respectively.
         """
+        # Slice data, call the actor_critic_network serially, then concatenate the output.
         return ttorch.cat([net(local_obs[:, i:i + 1]) for i, net in enumerate(self.actor_critic_networks)], dim=1)
 
 
@@ -120,7 +122,7 @@ class CTDEActorCriticNetwork(nn.Module):
         **Overview**:
             The definition of centralized training decentralized execution (CTDE) actor-critic network in policy gradient algorithms for multi-agent scenarios.
             Each agent shares the same parameters in the network so that they can be processed as a batch in parallel.
-            The input of value network is ``global_obs`` while the input of policy network is ``local_obs``.
+            The input of value network is ``global_obs`` while the input of policy network is ``local_obs`` .
             Global information used in value network can provide more guidance for the training of policy network.
             Local information used in policy network can make the policy network more robust to the decentralized execution.
         """
@@ -151,10 +153,11 @@ class CTDEActorCriticNetwork(nn.Module):
         **Overview**:
             The computation graph of CTDE actor-critic network, processing all agents' ``local_obs`` and ``global_obs`` and output
             corresponding policy logit and value in parallel.
-            There are two possible designs for ``global_obs``: The former is a shared global state for all agents, i.e. $$(B, S)$$.
+            There are two possible designs for ``global_obs`` : The former is a shared global state for all agents, i.e. $$(B, S)$$.
             Tha latter is a kind of agent-specific global state, i.e. $$(B, A, S')$$.
             For more details, you can refer to <link https://di-engine-docs.readthedocs.io/zh_CN/latest/04_best_practice/marl_zh.html#id10 link>.
         """
+        # Call policy network with local obs and critic network with global obs respectively.
         policy = self.policy_head(self.local_encoder(local_obs))
         value = self.value_head(self.global_encoder(global_obs))
         return ttorch.as_tensor({

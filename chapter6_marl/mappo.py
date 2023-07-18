@@ -1,6 +1,6 @@
 """
 PyTorch tutorial for basic centralized training and decentralized execution (CTDE) MAPPO algorithm for multi-agent cooperation scenarios.
-This tutorial utilizes CTDEActorCriticNetwork defined in ``marl_network`` and loss function defined in ``pg``. The main function describes the core part of CTDE MAPPO algorithm with fake data.
+This tutorial utilizes CTDEActorCriticNetwork defined in ``marl_network`` and loss function defined in ``pg`` . The main function describes the core part of CTDE MAPPO algorithm with fake data.
 More details about multi-agent cooperation reinforcement learning can be found in <link https://github.com/opendilab/PPOxFamily/blob/main/chapter6_marl/chapter6_lecture.pdf link>.
 """
 import torch
@@ -11,13 +11,14 @@ from ppo import ppo_policy_data, ppo_policy_error
 from gae import gae
 
 
+# delimiter
 def mappo_training_opeator() -> None:
     """
     **Overview**:
-        The main function about the training process of CTDE actor-critic algorithm. Define some hyper-parameters,
-        the neural network and optimizer, then generate fake data and calculate the actor-critic loss. Finally,
-        update the network parameters with optimizer. In practice, the training data should be replaced by the results
-        getting from the interacting with the environment.
+        The main function about the training process of CTDE PPO algorithm.
+        Define some hyper-parameters, the neural network and optimizer, then generate fake data and calculate the actor-critic loss.
+        Finally, update the network parameters with optimizer. In practice, the training data should be
+        replaced by the results getting from the interacting with the environment.
         BTW, policy network means actor and value network indicates critic in this file.
     """
     # Set necessary hyper-parameters.
@@ -34,15 +35,15 @@ def mappo_training_opeator() -> None:
     # Define the multi-agent neural network and optimizer.
     model = CTDEActorCriticNetwork(agent_num, local_state_shape, agent_specific_global_state_shape, action_shape)
     model.to(device)
-    # Adam is the most commonly used optimizer in deep reinforcement learning. If you want to add weight decay
-    # mechanism, you should use torch.optim.AdamW.
+    # Adam is the most commonly used optimizer in deep reinforcement learning. If you want to add
+    # weight decay mechanism, you should use ``torch.optim.AdamW`` .
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Define the corresponding fake data following the same data format of the interacting with the environment.
     # Note that the data should keep the same device with the network.
     # For simplicity, we regard the whole batch data as a entire episode.
-    # In practice, the training batch is the combination of multiple episodes. We often use ``done`` variable to
-    # distinguish the different episodes.
+    # In practice, the training batch is the combination of multiple episodes. We often use
+    # ``done`` variable to distinguish the different episodes.
     local_state = torch.randn(batch_size, agent_num, local_state_shape).to(device)
     agent_specific_global_state = torch.randn(batch_size, agent_num, agent_specific_global_state_shape).to(device)
     logit_old = torch.randn(batch_size, agent_num, action_shape).to(device)
@@ -59,10 +60,10 @@ def mappo_training_opeator() -> None:
 
     # Actor-critic network forward propagation.
     output = model(local_state, agent_specific_global_state)
-    # ``squeeze`` operation transforms shape from $$(batch_size, agent_num, 1)$$ to $$(batch_size, agent_num)$$.
+    # ``squeeze`` operation transforms shape from $$(B, A, 1)$$ to $$(B, A)$$.
     value = output.value.squeeze(-1)
     # Use generalized advantage estimation (GAE) method to calculate the advantage.
-    # Advantage is a kind of "weight" for policy loss, therefore it is wrapperd in ``torch.no_grad()``.
+    # Advantage is a kind of "weight" for policy loss, therefore it is wrapperd in ``torch.no_grad()`` .
     # ``done`` is the terminal flag of the episode. ``traj_flag`` is the flag of the trajectory.
     # Here we regard the whole batch data as a entire episode, so ``done`` and ``traj_flag`` are the same.
     with torch.no_grad():

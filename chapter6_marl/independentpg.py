@@ -1,6 +1,6 @@
 """
 PyTorch tutorial for independent policy gradient algorithm for multi-agent cooperation scenarios, which is the most simple multi-agent reinforcement learning algorithm.
-This tutorial utilizes two-types networks defined in ``marl_network`` and loss function defined in ``pg``. The main function describes the core part of independent policy gradient algorithm with fake data.
+This tutorial utilizes two-types networks defined in ``marl_network`` and loss function defined in ``pg`` . The main function describes the core part of independent policy gradient algorithm with fake data.
 More details about multi-agent cooperation reinforcement learning can be found in <link https://github.com/opendilab/PPOxFamily/blob/main/chapter6_marl/chapter6_lecture.pdf link>.
 
 This tutorial is mainly composed of two parts, you can learn from these parts in order or just jump to the part you are interested in:
@@ -16,10 +16,10 @@ from pg import pg_data, pg_error
 def independentpg_training_opeator() -> None:
     """
     **Overview**:
-        The main function about the training process of independent policy gradient algorithm. Define some hyper-parameters,
-        the neural network and optimizer, then generate fake data and calculate the policy gradient loss. Finally,
-        update the network parameters with optimizer. In practice, the training data should be replaced by the results
-        getting from the interacting with the environment.
+        The main function about the training process of independent policy gradient algorithm.
+        Define some hyper-parameters, the neural network and optimizer, then generate fake data and calculate the policy gradient loss.
+        Finally, update the network parameters with optimizer. In practice, the training data
+        should be replaced by the results getting from the interacting with the environment.
     """
     # Set necessary hyper-parameters.
     batch_size, agent_num, local_state_dim, global_state_dim, action_dim = 4, 5, 10, 20, 6
@@ -34,15 +34,15 @@ def independentpg_training_opeator() -> None:
     # Here we use the independent actor-critic network as the example, you can also use the shared-parameter network.
     model = IndependentActorCriticNetwork(agent_num, local_state_dim, action_dim)
     model.to(device)
-    # Adam is the most commonly used optimizer in deep reinforcement learning. If you want to add weight decay
-    # mechanism, you should use torch.optim.AdamW.
+    # Adam is the most commonly used optimizer in deep reinforcement learning. If you want to add
+    # weight decay mechanism, you should use ``torch.optim.AdamW`` .
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Define the corresponding fake data following the same data format of the interacting with the environment.
     # Note that the data should keep the same device with the network.
     # For simplicity, we regard the whole batch data as a entire episode.
-    # In practice, the training batch is the combination of multiple episodes. We often use ``done`` variable to
-    # distinguish the different episodes.
+    # In practice, the training batch is the combination of multiple episodes. We often use
+    # ``done`` variable to distinguish the different episodes.
     local_state = torch.randn(batch_size, agent_num, local_state_dim).to(device)
     action = torch.randint(0, action_dim, (batch_size, agent_num)).to(device)
     reward = torch.randn(batch_size, agent_num).to(device)
@@ -69,13 +69,14 @@ def independentpg_training_opeator() -> None:
     print('independentpg_training_opeator is ok')
 
 
+# delimiter
 def independentac_training_opeator() -> None:
     """
     **Overview**:
-        The main function about the training process of independent actor-critic algorithm. Define some hyper-parameters,
-        the neural network and optimizer, then generate fake data and calculate the actor-critic loss. Finally,
-        update the network parameters with optimizer. In practice, the training data should be replaced by the results
-        getting from the interacting with the environment.
+        The main function about the training process of independent actor-critic algorithm.
+        Define some hyper-parameters, the neural network and optimizer, then generate fake data and calculate the actor-critic loss.
+        Finally, update the network parameters with optimizer. In practice, the training data should
+        be replaced by the results getting from the interacting with the environment.
         BTW, policy network means actor and value network indicates critic in this file.
     """
     # Set necessary hyper-parameters.
@@ -93,15 +94,15 @@ def independentac_training_opeator() -> None:
     # Here we use the independent actor-critic network as the example, you can also use the shared-parameter network.
     model = IndependentActorCriticNetwork(agent_num, local_state_dim, action_dim)
     model.to(device)
-    # Adam is the most commonly used optimizer in deep reinforcement learning. If you want to add weight decay
-    # mechanism, you should use torch.optim.AdamW.
+    # Adam is the most commonly used optimizer in deep reinforcement learning. If you want to add
+    # weight decay mechanism, you should use ``torch.optim.AdamW`` .
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Define the corresponding fake data following the same data format of the interacting with the environment.
     # Note that the data should keep the same device with the network.
     # For simplicity, we regard the whole batch data as a entire episode.
-    # In practice, the training batch is the combination of multiple episodes. We often use ``done`` variable to
-    # distinguish the different episodes.
+    # In practice, the training batch is the combination of multiple episodes. We often use
+    # ``done`` variable to distinguish the different episodes.
     local_state = torch.randn(batch_size, agent_num, local_state_dim).to(device)
     action = torch.randint(0, action_dim, (batch_size, agent_num)).to(device)
     reward = torch.randn(batch_size, agent_num).to(device)
@@ -113,7 +114,7 @@ def independentac_training_opeator() -> None:
 
     # Actor-critic network forward propagation.
     output = model(local_state)
-    # ``squeeze`` operation transforms shape from $$(batch_size, agent_num, 1)$$ to $$(batch_size, agent_num)$$.
+    # ``squeeze`` operation transforms shape from $$(B, A, 1)$$ to $$(B, A)$$.
     value = output.value.squeeze(-1)
     # Prepare the data for policy gradient loss calculation.
     # ``detach`` operation means stop gradient for ``value`` in policy gradient loss calculation.
