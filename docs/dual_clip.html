@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter7_tricks/dual_clip.py" target="_blank">View code on GitHub</a><br><br>PPO Dual Clip. These method limit the updates to policy, preventing it from deviating too much from its previous versions and ensuring more stable and reliable training.<br><a href="https://arxiv.org/pdf/1912.09729.pdf">Related Link</a></div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Implementation of Dual Clip.<br>    Arguments:<br>        - logp_new (:obj:`torch.FloatTensor`): log_p calculated by old policy.<br>        - logp_old (:obj:`torch.FloatTensor`): log_p calculated by new policy.<br>        - adv (:obj:`torch.FloatTensor`): The advantage value.<br>        - clip_ratio (:obj:`float`): The clip ratio of policy.<br>        - dual_clip (:obj:`float`): The dual clip ratio of policy.<br>    Returns:<br>        - policy_loss (:obj:`torch.FloatTensor`): the calculated policy loss.</p></div><div class="code"><pre><code id="code_1" name="py_code">import torch
+
+
+def ppo_dual_clip(logp_new: torch.FloatTensor, logp_old: torch.FloatTensor, adv: torch.FloatTensor, clip_ratio: float, dual_clip: float) -> torch.FloatTensor:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    $$r(\theta) = \frac{\pi_{new}(a|s)}{\pi_{old}(a|s)}$$</p></div><div class="code"><pre><code id="code_3" name="py_code">    ratio = torch.exp(logp_new - logp_old)</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    $$clip_1 = min(r(\theta)*A(s,a), clip(r(\theta), 1-clip\_ratio, 1+clip\_ratio)*A(s,a))$$</p></div><div class="code"><pre><code id="code_4" name="py_code">    surr1 = ratio * adv
+    surr2 = ratio.clamp(1 - clip_ratio, 1 + clip_ratio) * adv
+    clip1 = torch.min(surr1, surr2)</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    $$clip_2 = max(clip_1, dual\_clip * A(s,a))$$</p></div><div class="code"><pre><code id="code_5" name="py_code">    clip2 = torch.max(clip1, dual_clip * adv)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    Only use dual_clip when adv < 0.</p></div><div class="code"><pre><code id="code_6" name="py_code">    policy_loss = -(torch.where(adv < 0, clip2, clip1)).mean()
+    return policy_loss
+
+</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Test <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">dual_clip</span> function.</p></div><div class="code"><pre><code id="code_7" name="py_code">def test_ppo_dual_clip() -> None:</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    Generate data, batch size is 6.</p></div><div class="code"><pre><code id="code_9" name="py_code">    B = 6
+    logp_new = torch.randn(B)
+    logp_old = torch.randn(B)
+    adv = torch.randn(B)</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    Calculate policy loss with policy loss.</p></div><div class="code"><pre><code id="code_10" name="py_code">    policy_loss = ppo_dual_clip(logp_new, logp_old, adv, 0.2, 0.2)</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    The returned value is a scalar.</p></div><div class="code"><pre><code id="code_11" name="py_code">    assert policy_loss.shape == torch.Size([])
+
+</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>

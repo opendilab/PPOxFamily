@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter7_tricks/grad_clip_value.py" target="_blank">View code on GitHub</a><br><br>PyTorch implementation of <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.nn.utils.grad_clip_value</span> .</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Implementation of grad_clip_value <a href="https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_value_">Related Link</a><br>        This function is used after the loss backpropagation, clip all the gradient of network parameters<br>        with a fixed range [-clip_value, clip_value].<br>        BTW, This function is a in-place operation, modify the gradient without any return value.</p></div><div class="code"><pre><code id="code_1" name="py_code">from typing import Union, Iterable
+import torch
+
+_tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
+
+
+def grad_clip_value(parameters: _tensor_or_tensors, clip_value: float) -> None:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    Save the non-empty gradient of trainable parameters into a list.</p></div><div class="code"><pre><code id="code_3" name="py_code">    if isinstance(parameters, torch.Tensor):
+        parameters = [parameters]
+    grads = [p.grad for p in parameters if p.grad is not None]</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    Convert the original clip_value to float.</p></div><div class="code"><pre><code id="code_4" name="py_code">    clip_value = float(clip_value)</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    Clip the gradient to [-clip_value, clip_value] in-place.</p></div><div class="code"><pre><code id="code_5" name="py_code">    for grad in grads:
+        grad.data.clamp_(min=-clip_value, max=clip_value)
+
+</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Test function of grad clip with a fixed value.</p></div><div class="code"><pre><code id="code_6" name="py_code">def test_grad_clip_value():</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    Prepare hyper-parameters, batch size=4, action=32</p></div><div class="code"><pre><code id="code_8" name="py_code">    B, N = 4, 32</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    Set clip_value as 1e-3</p></div><div class="code"><pre><code id="code_9" name="py_code">    clip_value = 1e-3</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    Generate regression logit and label, in practice, logit is the output of the whole network and requires gradient.</p></div><div class="code"><pre><code id="code_10" name="py_code">    logit = torch.randn(B, N).requires_grad_(True)
+    label = torch.randn(B, N)</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    Define criterion, and compute loss.</p></div><div class="code"><pre><code id="code_11" name="py_code">    criterion = torch.nn.MSELoss()
+    output = criterion(logit, label)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Loss backward and compute gradient.</p></div><div class="code"><pre><code id="code_12" name="py_code">    output.backward()</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    Clip the gradient with a fixed value.</p></div><div class="code"><pre><code id="code_13" name="py_code">    grad_clip_value(logit, clip_value)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    Assert that the value of the clipped gradient is reasonable after clipping.</p></div><div class="code"><pre><code id="code_14" name="py_code">    assert isinstance(logit.grad, torch.Tensor)
+    for g in logit.grad:
+        assert (g <= clip_value).all()
+        assert (g >= -clip_value).all()
+
+</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter7_tricks/orthogonal_init.py" target="_blank">View code on GitHub</a><br><br>Official implementation of orthogonal initialization using PyTorch.</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Fills the input <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">Tensor</span> with a (semi) orthogonal matrix, as described in this paper <a href="https://arxiv.org/pdf/1312.6120.pdf">Related Link</a>.<br>        The input tensor must have at least 2 dimensions, and for tensors with more than 2 dimensions the trailing dimensions are flattened.</p></div><div class="code"><pre><code id="code_1" name="py_code">import torch
+
+
+def orthogonal_(tensor: torch.Tensor, gain: float = 1) -> torch.Tensor:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>    Initialize a new tensor with normal distribution. The shape is the same as the input tensor.</p></div><div class="code"><pre><code id="code_3" name="py_code">    rows = tensor.size(0)
+    cols = tensor.numel() // rows
+    flattened = tensor.new(rows, cols).normal_(0, 1)
+</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    If rows < cols, transpose the original tensor for computational efficiency.</p></div><div class="code"><pre><code id="code_4" name="py_code">    if rows < cols:
+        flattened.t_()
+</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    Compute the QR factorization, Q is an orthogonal matrix and R is an upper triangular matrix.<br>    <a href="https://en.wikipedia.org/wiki/QR_decomposition">Related Link</a></p></div><div class="code"><pre><code id="code_5" name="py_code">    q, r = torch.linalg.qr(flattened)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    Although Q is orthogonal, each value of Q is not uniformly distributed. To make Q uniform, we can use the equation below: $$Q^* = Q sign(diag(R))$$. Proof for this equation can be viewed in this paper: <a href="https://arxiv.org/pdf/math-ph/0609050.pdf">Related Link</a>.</p></div><div class="code"><pre><code id="code_6" name="py_code">    d = torch.diag(r, 0)
+    ph = d.sign()
+    q *= ph
+</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    If rows < cols, transpose the output tensor to match the shape of original tensor.</p></div><div class="code"><pre><code id="code_7" name="py_code">    if rows < cols:
+        q.t_()
+</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    Using <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.no_grad()</span> here can make sure that these operations won't be added to the computational graph used by PyTorch's autograd system, thus improving efficiency.</p></div><div class="code"><pre><code id="code_8" name="py_code">    with torch.no_grad():</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>        Reshape the result and copy the weight from q.</p></div><div class="code"><pre><code id="code_9" name="py_code">        tensor.view_as(q).copy_(q)</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>        Multiply an optional scaling factor.</p></div><div class="code"><pre><code id="code_10" name="py_code">        tensor.mul_(gain)
+    return tensor
+
+</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Test the <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">orthogonal_</span> function. We use a weight tensor of convolutional layer and a weight tensor of linear layer as test cases, and check whether the results are correctly orthogonalized.</p></div><div class="code"><pre><code id="code_11" name="py_code">def test_orthogonal() -> None:</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    For Conv. weights.</p></div><div class="code"><pre><code id="code_13" name="py_code">    w1 = torch.empty((4, 4, 3, 3))
+    orthogonal_(w1)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    Test whether the result is orthogonal.</p></div><div class="code"><pre><code id="code_14" name="py_code">    w1 = w1.reshape(w1.shape[0], -1).T
+    res = w1.T @ w1
+    gt = torch.eye(w1.shape[1])
+    assert torch.sum((res - gt) ** 2).item() < 1e-9
+</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    For Linear weights.</p></div><div class="code"><pre><code id="code_15" name="py_code">    w2 = torch.empty((4, 4))
+    orthogonal_(w2)</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>    Test whether the result is orthogonal.</p></div><div class="code"><pre><code id="code_16" name="py_code">    res = w2.T @ w2
+    gt = torch.eye(w2.shape[1])
+    assert torch.sum((res - gt) ** 2).item() < 1e-9
+
+</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
