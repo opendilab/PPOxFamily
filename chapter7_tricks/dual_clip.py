@@ -1,5 +1,6 @@
 """
 PPO Dual Clip. These method limit the updates to policy, preventing it from deviating too much from its previous versions and ensuring more stable and reliable training.
+<link https://arxiv.org/pdf/1912.09729.pdf link>
 """
 import torch
 
@@ -34,7 +35,7 @@ def ppo_dual_clip(logp_new: torch.FloatTensor, logp_old: torch.FloatTensor, adv:
 def test_ppo_dual_clip() -> None:
     """
     **Overview**:
-        Test `dual_clip` function.
+        Test ``dual_clip`` function.
     """
     # Generate data, batch size is 6.
     B = 6

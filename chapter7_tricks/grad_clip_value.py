@@ -1,5 +1,5 @@
 """
-PyTorch implementation of ``torch.nn.utils.clip_grad_value``
+PyTorch implementation of ``torch.nn.utils.grad_clip_value`` .
 """
 from typing import Union, Iterable
 import torch
@@ -7,10 +7,10 @@ import torch
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_value(parameters: _tensor_or_tensors, clip_value: float) -> None:
+def grad_clip_value(parameters: _tensor_or_tensors, clip_value: float) -> None:
     """
     **Overview**:
-        Implementation of clip_grad_value <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_value_ link>
+        Implementation of grad_clip_value <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_value_ link>
         This function is used after the loss backpropagation, clip all the gradient of network parameters
         with a fixed range [-clip_value, clip_value].
         BTW, This function is a in-place operation, modify the gradient without any return value.
@@ -27,7 +27,7 @@ def clip_grad_value(parameters: _tensor_or_tensors, clip_value: float) -> None:
 
 
 # delimiter
-def test_clip_grad_value():
+def test_grad_clip_value():
     """
     **Overview**:
         Test function of grad clip with a fixed value.
@@ -45,7 +45,7 @@ def test_clip_grad_value():
     # Loss backward and compute gradient.
     output.backward()
     # Clip the gradient with a fixed value.
-    clip_grad_value(logit, clip_value)
+    grad_clip_value(logit, clip_value)
     # Assert that the value of the clipped gradient is reasonable after clipping.
     assert isinstance(logit.grad, torch.Tensor)
     for g in logit.grad:
@@ -54,4 +54,4 @@ def test_clip_grad_value():
 
 
 if __name__ == '__main__':
-    test_clip_grad_value()
+    test_grad_clip_value()

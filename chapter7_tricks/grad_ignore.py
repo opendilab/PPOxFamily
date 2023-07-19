@@ -1,5 +1,5 @@
 """
-DI-engine implementation of ``grad_ignore_norm_`` and ``grad_ignore_value_``
+PyTorch implementation of ``grad_ignore_norm_`` and ``grad_ignore_value_`` .
 """
 import torch
 from torch._six import inf
@@ -12,7 +12,7 @@ def grad_ignore_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type
     """
     **Overview**:
         Implementation of grad_ignore_norm <link https://github.com/opendilab/DI-engine/blob/2ab7c44a64329fb90fa877e6070bc76bb6fdb31e/ding/torch_utils/optimizer_helper.py#L56 link>
-        Different from clip_grad_norm, grad_ignore_norm **ignore**: those gradients that have a norm exceeds the specified threshold, instead of cliping their norm to the threshold.
+        Different from ``grad_clip_norm`` , ``grad_ignore_norm`` **ignore**: those gradients that have a norm exceeds the specified threshold, instead of cliping their norm to the threshold.
     """
     # Save the parameters with non-empty gradient into a list.
     if isinstance(parameters, torch.Tensor):
@@ -40,11 +40,12 @@ def grad_ignore_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type
     return total_norm
 
 
+# delimiter
 def grad_ignore_value_(parameters: _tensor_or_tensors, clip_value: float) -> None:
     """
     **Overview**:
         Implementation of grad_ignore_value <link https://github.com/opendilab/DI-engine/blob/2ab7c44a64329fb90fa877e6070bc76bb6fdb31e/ding/torch_utils/optimizer_helper.py#L77 link>
-        Different from clip_grad_value, grad_ignore_value **ignore**: all the gradients when any of them exceeds the specified threshold, instead of cliping them to the threshold.
+        Different from ``grad_clip_value`` , ``grad_ignore_value`` **ignore**: all the gradients when any of them exceeds the specified threshold, instead of cliping them to the threshold.
     """
     # Save the parameters with non-empty gradient into a list.
     if isinstance(parameters, torch.Tensor):

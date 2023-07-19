@@ -31,7 +31,7 @@ def ppo_value_clip(value_old: torch.FloatTensor, value_new: torch.FloatTensor, r
 def test_ppo_value_clip() -> None:
     """
     **Overview**:
-        Test `value_clip` function.
+        Test ``value_clip`` function.
     """
     # Generate data, batch size is 6.
     B = 6

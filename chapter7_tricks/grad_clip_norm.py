@@ -1,5 +1,5 @@
 """
-PyTorch implementation of ``torch.nn.utils.clip_grad_norm``
+PyTorch implementation of ``grad_clip_norm``
 """
 import torch
 from torch._six import inf
@@ -8,10 +8,10 @@ from typing import Union, Iterable
 _tensor_or_tensors = Union[torch.Tensor, Iterable[torch.Tensor]]
 
 
-def clip_grad_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
+def grad_clip_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type: float = 2.0) -> torch.Tensor:
     """
     **Overview**:
-        Implementation of clip_grad_norm <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>
+        Implementation of grad_clip_norm <link https://pytorch.org/docs/stable/_modules/torch/nn/utils/clip_grad.html#clip_grad_norm_ link>
         This function is used after the loss backpropagation, clip all the total gradient norm of network parameters.
         The total norm is computed over all gradients together, as if they were concatenated into a single vector.
         BTW, This function is a in-place operation, modify the gradient and only return the total norm for logging.
@@ -43,7 +43,7 @@ def clip_grad_norm_(parameters: _tensor_or_tensors, max_norm: float, norm_type: 
 
 
 # delimiter
-def test_clip_grad_norm_():
+def test_grad_clip_norm_():
     """
     **Overview**:
         Test function of grad clip by norm.
@@ -59,7 +59,7 @@ def test_clip_grad_norm_():
     # Loss backward and compute gradient.
     output.backward()
     # Clip the total norm of gradients.
-    clip_grad_norm_(logit, 0.5, 2)
+    grad_clip_norm_(logit, 0.5, 2)
     # Assert the total_norm of the clipped gradient.
     assert isinstance(logit.grad, torch.Tensor)
     grads = logit.grad
@@ -68,4 +68,4 @@ def test_clip_grad_norm_():
 
 
 if __name__ == '__main__':
-    test_clip_grad_norm_()
+    test_grad_clip_norm_()
