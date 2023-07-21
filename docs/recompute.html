@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter7_tricks/recompute.py" target="_blank">View code on GitHub</a><br><br>PyTorch implementation of PPO training loop with recompute advantage trick, which is beneficial to the training stability and overall performance.</div></div><div class="section" id="section-2"><div class="docs doc-strings"><p>Import necessary packages.</p></div><div class="code"><pre><code id="code_2" name="py_code">import math
+import torch
+import torch.nn as nn
+import treetensor.torch as ttorch
+from gae import gae</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>You need to copy the implementation of ppo in chapter1_overview</p></div><div class="code"><pre><code id="code_3" name="py_code">from ppo import ppo_policy_data, ppo_policy_error
+
+</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>Define naive actor-critic model as example, you can modify it in your own way.</p></div><div class="code"><pre><code id="code_4" name="py_code">class NaiveActorCritic(nn.Module):
+
+    def __init__(self, obs_shape: int, action_shape: int):
+        super().__init__()
+        self.actor = nn.Sequential(
+            nn.Linear(obs_shape, 64),
+            nn.ReLU(),
+            nn.Linear(64, action_shape),
+        )
+        self.critic = nn.Sequential(
+            nn.Linear(obs_shape, 64),
+            nn.ReLU(),
+            nn.Linear(64, 1),
+        )
+
+    def forward(self, obs: torch.Tensor) -> ttorch.Tensor:
+        logit = self.actor(obs)
+        value = self.critic(obs)
+        return ttorch.as_tensor({'logit': logit, 'value': value})
+
+</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>    <b>Overview</b><br>        The training loop function example of PPO algorithm on discrete action space with recompute advantage trick.</p></div><div class="code"><pre><code id="code_5" name="py_code">def ppo_training_loop_with_recompute():</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    The number of training epochs after per data collection.</p></div><div class="code"><pre><code id="code_7" name="py_code">    epoch_per_collect = 10</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    The total number of collected data once.</p></div><div class="code"><pre><code id="code_8" name="py_code">    collected_data_num = 127</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    Entropy bonus weight, which is beneficial to exploration.</p></div><div class="code"><pre><code id="code_9" name="py_code">    entropy_weight = 0.001</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    Value loss weight, which aims to balance the loss scale.</p></div><div class="code"><pre><code id="code_10" name="py_code">    value_weight = 0.5</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    Discount factor for future reward.</p></div><div class="code"><pre><code id="code_11" name="py_code">    discount_factor = 0.99</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Whether to recompute the GAE advantage at the beginning of each epoch.</p></div><div class="code"><pre><code id="code_12" name="py_code">    recompute = True</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    The number of samples in each batch.</p></div><div class="code"><pre><code id="code_13" name="py_code">    batch_size = 16</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    The shape of observation and action, which is different between different environments.</p></div><div class="code"><pre><code id="code_14" name="py_code">    obs_shape, action_shape = 8, 4
+</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    Create the model and optimizer, here we use the naive implementation as example, you can modify it in your own way.</p></div><div class="code"><pre><code id="code_15" name="py_code">    model = NaiveActorCritic(obs_shape, action_shape)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>    The function of generating a random transition for training.<br>    Here we use treetensor to express the structured transition, which is convenient for batch processing.<br>    <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">squeeze</span> is to ensure that the shape of each tensor is $$(B, )$$ instead of $$(B, 1)$$.</p></div><div class="code"><pre><code id="code_16" name="py_code">    def get_ppo_training_transition():
+        return ttorch.as_tensor(
+            {
+                'obs': torch.randn(obs_shape),
+                'action': torch.randint(action_shape, size=(1, )).squeeze(),
+                'reward': torch.rand(1).squeeze(),
+                'next_obs': torch.randn(obs_shape),
+                'done': torch.randint(2, size=(1, )).squeeze(),
+                'logit': torch.randn(action_shape),
+                'value': torch.randn(1).squeeze(),
+                'adv': torch.randn(1).squeeze(),
+            }
+        )
+</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>    Generate <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">collected_data_num</span> random transitions and pack them into a list.</p></div><div class="code"><pre><code id="code_17" name="py_code">    data = [get_ppo_training_transition() for _ in range(collected_data_num)]</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>    Stack the list into a treetensor batch.</p></div><div class="code"><pre><code id="code_18" name="py_code">    data = ttorch.stack(data)</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>    Print the shape of the structured data batch.</p></div><div class="code"><pre><code id="code_19" name="py_code">    print(data.shape)
+</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>    For loop 1: train the latest collected data for <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">epoch_per_collect</span> epochs.</p></div><div class="code"><pre><code id="code_20" name="py_code">    for e in range(epoch_per_collect):</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>        Recompute the GAE advantage at the beginning of each epoch.<br>        Usually, advantage is pre-computed in data collection to save time. However, with the updates of value<br>        network, the advantage will be out of date. So we need to recompute it to ensure the training effect.</p></div><div class="code"><pre><code id="code_21" name="py_code">        if recompute:</code></pre></div></div><div class="section" id="section-22"><div class="docs doc-strings"><p>            Advantage calculation doesn't need gradient back propagation, so we use <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.no_grad()</span> to save memory.</p></div><div class="code"><pre><code id="code_22" name="py_code">            with torch.no_grad():</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>                Use the latest value network to calculate value, then replace the old value with the new one.</p></div><div class="code"><pre><code id="code_23" name="py_code">                latest_value = model(data.obs).value.squeeze(-1)
+                gae_data = (latest_value, data.value, data.reward, data.done, data.done)
+                data.adv = gae(gae_data, discount_factor, 0.95)</code></pre></div></div><div class="section" id="section-24"><div class="docs doc-strings"><p>        Randomly shuffle the collected data, generate the indices for mini-batch.</p></div><div class="code"><pre><code id="code_24" name="py_code">        indices = torch.randperm(collected_data_num)</code></pre></div></div><div class="section" id="section-25"><div class="docs doc-strings"><p>        For loop 2: inside each epoch, divide all the collected data into many mini-batch,<br>        i.e. train the model with <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">batch_size</span> samples per iteration.</p></div><div class="code"><pre><code id="code_25" name="py_code">        for iter_ in range(math.ceil(collected_data_num / batch_size)):</code></pre></div></div><div class="section" id="section-26"><div class="docs doc-strings"><p>            Get the mini-batch data with the cooresponding indices.</p></div><div class="code"><pre><code id="code_26" name="py_code">            batch = data[indices[iter_ * batch_size:(iter_ + 1) * batch_size]]
+</code></pre></div></div><div class="section" id="section-27"><div class="docs doc-strings"><p>            Call model forward procedure.</p></div><div class="code"><pre><code id="code_27" name="py_code">            output = model(batch.obs)
+</code></pre></div></div><div class="section" id="section-28"><div class="docs doc-strings"><p>            <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">squeeze</span> operation transforms shape from $$(B, A, 1)$$ to $$(B, A)$$.</p></div><div class="code"><pre><code id="code_28" name="py_code">            value = output.value.squeeze(-1)</code></pre></div></div><div class="section" id="section-29"><div class="docs doc-strings"><p>            Calculate the return value. Here we use the sum of value and adv for simplicity.<br>            You can also use other methods to calculate return, such as n-step return method.</p></div><div class="code"><pre><code id="code_29" name="py_code">            return_ = value + batch.adv</code></pre></div></div><div class="section" id="section-30"><div class="docs doc-strings"><p>            Prepare the data for PPO policy loss calculation.</p></div><div class="code"><pre><code id="code_30" name="py_code">            ppo_data = ppo_policy_data(output.logit, batch.logit, batch.action, batch.adv, None)</code></pre></div></div><div class="section" id="section-31"><div class="docs doc-strings"><p>            Calculate the PPO policy loss.</p></div><div class="code"><pre><code id="code_31" name="py_code">            loss, info = ppo_policy_error(ppo_data)</code></pre></div></div><div class="section" id="section-32"><div class="docs doc-strings"><p>            Calculate the value loss.</p></div><div class="code"><pre><code id="code_32" name="py_code">            value_loss = torch.nn.functional.mse_loss(value, return_)</code></pre></div></div><div class="section" id="section-33"><div class="docs doc-strings"><p>            Weighted sum of policy loss, value loss and entropy loss.</p></div><div class="code"><pre><code id="code_33" name="py_code">            total_loss = loss.policy_loss + value_weight * value_loss - entropy_weight * loss.entropy_loss
+</code></pre></div></div><div class="section" id="section-34"><div class="docs doc-strings"><p>            PyTorch loss back propagation and optimizer update.</p></div><div class="code"><pre><code id="code_34" name="py_code">            optimizer.zero_grad()
+            total_loss.backward()
+            optimizer.step()
+    print('ppo_training_loop_with_recompute finish')
+
+</code></pre></div></div><div class="section" id="section-34"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
