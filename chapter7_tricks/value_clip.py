@@ -1,5 +1,5 @@
 """
-PPO Value Clip. This method limit the updates to the value function, preventing the value for a certain state changes too fast.
+PPO Value Clip. This method limits the updates to the value function to prevent the value for a certain state from changing too rapidly.
 """
 import torch
 
@@ -7,21 +7,30 @@ import torch
 def ppo_value_clip(value_old: torch.FloatTensor, value_new: torch.FloatTensor, return_: torch.FloatTensor, clip_ratio: float = 0.2) -> torch.FloatTensor:
     """
     **Overview**:
-        Implementation of Value Clip.
+        Implementation of Value Clip method used in PPO. The core idea is to prevent the value function from updating too rapidly for a certain state.
+        This is achieved by clipping the new value within a certain range of the old value.
     Arguments:
-        - value_old (:obj:`torch.FloatTensor`): Value calculated by old policy.
-        - value_new (:obj:`torch.FloatTensor`): Value calculated by new policy.
-        - return_ (:obj:`torch.FloatTensor`): The return value (target).
-        - clip_ratio (:obj:`float`): The clip ratio of value. Default is 0.2.
+        - value_old (:obj:`torch.FloatTensor`): The old value, calculated using the old policy.
+        - value_new (:obj:`torch.FloatTensor`): The new value, calculated using the new policy.
+        - return_ (:obj:`torch.FloatTensor`): The expected return value (target value).
+        - clip_ratio (:obj:`float`): The clipping range for the new value, expressed as a ratio of the old value. Default is 0.2.
     Returns:
-        - value_loss (:obj:`torch.FloatTensor`): the calculated value loss.
+        - value_loss (:obj:`torch.FloatTensor`): The calculated value loss, represents the difference between the new and old value function.
+
+    **Algorithm**:
+        The algorithm calculates the clipped value function and then calculates two types of value losses: one between the return and the new value function,
+        and the other between the return and the clipped value function. The final value loss is the average of the maximum of these two types of value losses.
     """
+    # Calculate the clipped value function, which is the old value plus the difference between the new and old value, clamped within the clip ratio.
     # $$V_{clip} = V_{old} + clip(V_{new} - V_{old}, -clip\_ratio, clip\_ratio)$$
     value_clip = value_old + (value_new - value_old).clamp(-clip_ratio, clip_ratio)
+    # Calculate the first type of value loss: the squared difference between the return and the new value function.
     # $$V_1 = (return - V_{new})^2$$
     v1 = (return_ - value_new).pow(2)
+    # Calculate the second type of value loss: the squared difference between the return and the clipped value function.
     # $$V_2 = (return - V_{clip})^2$$
     v2 = (return_ - value_clip).pow(2)
+    # Calculate the final value loss as the average of the maximum of the two types of value losses.
     # $$loss = 0.5 * weight * max(V_1, V_2)$$
     value_loss = 0.5 * (torch.max(v1, v2)).mean()
     return value_loss
@@ -31,18 +40,20 @@ def ppo_value_clip(value_old: torch.FloatTensor, value_new: torch.FloatTensor, r
 def test_ppo_value_clip() -> None:
     """
     **Overview**:
-        Test ``value_clip`` function.
+        Test function for ppo_value_clip function. The test case generates random data and uses it to calculate the value loss.
+        Then it checks whether the shape of the returned value loss is a scalar, as expected.
     """
-    # Generate data, batch size is 6.
+    # Generate random data for testing. The batch size is 6.
     B = 6
     value_old = torch.randn(B)
     value_new = torch.randn(B)
     return_ = torch.randn(B)
-    # Calculate value loss with value clip.
+    # Calculate the value loss using the ppo_value_clip function.
     value_loss = ppo_value_clip(value_old, value_new, return_)
-    # The returned value is a scalar.
+    # Assert that the returned value loss is a scalar (i.e., its shape is an empty tuple).
     assert value_loss.shape == torch.Size([])
 
 
 if __name__ == "__main__":
+    # Execute the test function.
     test_ppo_value_clip()
