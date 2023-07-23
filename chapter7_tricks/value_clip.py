@@ -1,10 +1,17 @@
 """
-PPO Value Clip. This method limits the updates to the value function to prevent the value for a certain state from changing too rapidly.
+PPO Value Clip.
+
+The Value-Clip Proximal Policy Optimization (PPO) technique is employed to place constraints on updates to the value function,
+averting rapid fluctuations in the estimated value of a given state.
+This method is devised to enhance the stability and reliability of the learning process during the training phase.
+For additional details, please refer to the source paper: Implementation Matters in Deep RL: A Case Study on PPO and
+TRPO. <linkhttps://arxiv.org/abs/2005.12729 link>.
 """
 import torch
 
 
-def ppo_value_clip(value_old: torch.FloatTensor, value_new: torch.FloatTensor, return_: torch.FloatTensor, clip_ratio: float = 0.2) -> torch.FloatTensor:
+def ppo_value_clip(value_old: torch.FloatTensor, value_new: torch.FloatTensor, return_: torch.FloatTensor,
+                   clip_ratio: float = 0.2) -> torch.FloatTensor:
     """
     **Overview**:
         Implementation of Value Clip method used in PPO. The core idea is to prevent the value function from updating too rapidly for a certain state.

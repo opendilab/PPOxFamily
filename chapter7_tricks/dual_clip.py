@@ -1,19 +1,26 @@
 """
-PPO Dual Clip. These method limit the updates to policy, preventing it from deviating too much from its previous versions and ensuring more stable and reliable training.
-<link https://arxiv.org/pdf/1912.09729.pdf link>
+PPO (Policy) Dual Clip.
+
+The Dual-Clip Proximal Policy Optimization (PPO) method is designed to constrain updates to the policy,
+effectively preventing it from diverging excessively from its preceding iterations. This approach thereby ensures a
+more stable and reliable learning process during training. For further details, please refer to the source paper:
+Mastering Complex Control in MOBA Games with Deep Reinforcement Learning. <link https://arxiv.org/pdf/1912.09729.pdf link>.
 """
 import torch
 
 
-def ppo_dual_clip(logp_new: torch.FloatTensor, logp_old: torch.FloatTensor, adv: torch.FloatTensor, clip_ratio: float, dual_clip: float) -> torch.FloatTensor:
+def ppo_dual_clip(logp_new: torch.FloatTensor, logp_old: torch.FloatTensor, adv: torch.FloatTensor, clip_ratio: float,
+                  dual_clip: float) -> torch.FloatTensor:
     """
     **Overview**:
-        This function implements the Proximal Policy Optimization (PPO) policy loss with dual-clip mechanism, which is a variant of PPO that provides more reliable
-        and stable training by limiting the updates to the policy, preventing it from deviating too much from its previous versions.
+        This function implements the Proximal Policy Optimization (PPO) policy loss with dual-clip mechanism, which is
+        a variant of PPO that provides more reliable and stable training by limiting the updates to the policy, preventing
+        it from deviating too much from its previous versions.
     Arguments:
         - logp_new (:obj:`torch.FloatTensor`): The log probability calculated by the new policy.
         - logp_old (:obj:`torch.FloatTensor`): The log probability calculated by the old policy.
-        - adv (:obj:`torch.FloatTensor`): The advantage value, which measures how much better an action is compared to the average action at that state.
+        - adv (:obj:`torch.FloatTensor`): The advantage value, which measures how much better an action is compared to
+            the average action at that state.
         - clip_ratio (:obj:`float`): The clipping ratio used to limit the change of policy during an update.
         - dual_clip (:obj:`float`): The dual clipping ratio used to further limit the change of policy during an update.
     Returns:

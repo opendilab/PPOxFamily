@@ -1,10 +1,11 @@
 """
-The Generalized Advantage Estimator (GAE) is a technique that accurately estimates the advantage function by considering both immediate and future rewards.
-This approach not only improves the efficacy of Proximal Policy Optimization (PPO), but also enhances its stability.
-You can find more detailed information in this paper <link https://arxiv.org/pdf/1506.02438.pdf link>.
+Generalized Advantage Estimator (GAE)
+
+The GAE is a technique that accurately estimates the advantage function by considering
+both immediate and future rewards. This approach not only improves the efficacy of Proximal Policy Optimization (PPO),
+but also enhances its stability. You can find more detailed information in this paper:
+High-dimensional Continuous Control Using Generalized Advantage Estimation <link https://arxiv.org/pdf/1506.02438.pdf link>.
 """
-
-
 import torch
 
 
@@ -15,12 +16,13 @@ def gae(data: tuple, gamma: float = 0.99, lambda_: float = 0.97) -> torch.FloatT
         This function calculates the advantages, which are used to update policy parameters in reinforcement learning.
 
     Arguments:
-        - data (:obj:`namedtuple`): Tuple containing trajectory data including state values, next state values, rewards, done flags, and trajectory flags.
-            Please note that the 'done' flag signals the termination of an episode, whereas the 'traj_flag' indicates the completion of a trajectory,
-            which represents a segment within an episode.
+        - data (:obj:`namedtuple`): Tuple containing trajectory data including state values, next state values, rewards,
+            done flags, and trajectory flags. Please note that the 'done' flag signals the termination of an episode,
+            whereas the 'traj_flag' indicates the completion of a trajectory, which represents a segment within an episode.
         - gamma (:obj:`float`): Discount factor for future rewards, should be in the range [0, 1]. Default is 0.99.
         - lambda_ (:obj:`float`): The decay rate for the GAE, should be in the range [0, 1]. Default is 0.97.
-            As lambda approaches 0, it introduces bias, and as lambda approaches 1, it increases variance due to the cumulative effect of terms.
+            As lambda approaches 0, it introduces bias, and as lambda approaches 1, it increases variance due to
+            the cumulative effect of terms.
     Returns:
         - adv (:obj:`torch.FloatTensor`): The calculated advantage estimates.
     Shapes:
@@ -46,7 +48,7 @@ def gae(data: tuple, gamma: float = 0.99, lambda_: float = 0.97) -> torch.FloatT
     # Set the GAE decay factor. If traj_flag equals 1, the factor will be 0. Otherwise, the factor is gamma * lambda.
     factor = gamma * lambda_ * (1 - traj_flag)
 
-    # Calculate ``adv`` in a reversed sequence.
+    # ***** Calculate ``adv`` in a reversed sequence. *****
     # Consider the definition of GAE: $$A^{GAE}_t = \sum_{i=1}\gamma^{i-1}\lambda^{i-1}\delta_{t+i-1}$$
     # Rewrite the equation above in a recurrent form, we finally have: $$A^{GAE}_t = \delta_t + \gamma\lambda A^{GAE}_{t+1}$$
 
