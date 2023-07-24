@@ -4,8 +4,7 @@ PPO Value Clip.
 The Value-Clip Proximal Policy Optimization (PPO) technique is employed to place constraints on updates to the value function,
 averting rapid fluctuations in the estimated value of a given state.
 This method is devised to enhance the stability and reliability of the learning process during the training phase.
-For additional details, please refer to the source paper: Implementation Matters in Deep RL: A Case Study on PPO and
-TRPO. <linkhttps://arxiv.org/abs/2005.12729 link>.
+For additional details, please refer to the source paper: Implementation Matters in Deep RL: A Case Study on PPO and TRPO. <link https://arxiv.org/abs/2005.12729 link>.
 """
 import torch
 
