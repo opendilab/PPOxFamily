@@ -48,7 +48,7 @@ def independentpg_training_opeator() -> None:
     for i in reversed(range(batch_size)):
         return_[i] = reward[i] + (discount_factor * return_[i + 1] if i + 1 < batch_size else 0)
 
-    # Actor-critic 网络前向计算.
+    # Actor-Critic 网络前向计算.
     output = model(local_state)
     # 准备用于计算策略梯度损失函数的数据。
     data = pg_data(output.logit, action, return_)
@@ -99,13 +99,13 @@ def independentac_training_opeator() -> None:
     local_state = torch.randn(batch_size, agent_num, local_state_dim).to(device)
     action = torch.randint(0, action_dim, (batch_size, agent_num)).to(device)
     reward = torch.randn(batch_size, agent_num).to(device)
-    # Return_ 值可以使用多种不同的方式进行计算，在这里我们使用由带折扣因子的累积奖励。
+    # 累积回报值可以使用多种不同的方式进行计算，在这里我们使用由带折扣因子的累积奖励。
     # 你也可以使用 generalized advantage estimation (GAE), n-step 等其他方式计算该值。
     return_ = torch.zeros_like(reward)
     for i in reversed(range(batch_size)):
         return_[i] = reward[i] + (discount_factor * return_[i + 1] if i + 1 < batch_size else 0)
 
-    # Actor-critic 网络前向计算。
+    # Actor-Critic 网络前向计算。
     output = model(local_state)
     # ``squeeze`` 操作将张量 从 $$(B, A, 1)$$ 变化为 $$(B, A)$$
     value = output.value.squeeze(-1)
