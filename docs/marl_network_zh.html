@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter6_marl/marl_network_zh.py" target="_blank">View code on GitHub</a><br><br>这是一个关于多智能体合作场景中经典神经网络架构的 PyTorch 教程，包括独立 Actor-Critic 网络（又根据是否共享参数分为两种）和集中式训练分布式执行 (centralized training and decentralized execution, CTDE)<br>Actor-Critic 网络。所有示例都基于离散动作空间进行。<br><br>此教程主要由三部分组成，您可以按顺序学习这些部分，或者跳转到您感兴趣的部分：<br>  - 智能体各自独立决策的但共享参数的 Actor-Critic 网络<br>  - 智能体各自独立决策且不共享参数 Actor-Critic 网络<br>  - 智能体协作决策的 CTDE Actor-Critic 网络<br>有关多智能体合作强化学习的更多细节，可以在 <a href="https://github.com/opendilab/PPOxFamily/blob/main/chapter6_marl/chapter6_lecture.pdf">Related Link</a> 中找到。</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>        <b>功能概述</b><br>            在策略梯度中算法 (如: PG/A2C/PPO) 中， 基础 Actor-Critic 网络的定义<br>            主要包括三个部分：编码器、策略分支网络、价值分支网络</p></div><div class="code"><pre><code id="code_1" name="py_code">import torch
+import torch.nn as nn
+import treetensor.torch as ttorch
+
+
+class ActorCriticNetwork(nn.Module):
+
+    def __init__(self, obs_shape: int, action_shape: int) -> None:</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>        PyTorch 在继承 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Module</span> 类的时候，必须执行这个初始化方法。</p></div><div class="code"><pre><code id="code_3" name="py_code">        super(ActorCriticNetwork, self).__init__()</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>        定义编码器模块，将原始的单个智能体的局部状态映射为一个向量。<br>        对于不同形式的状态，这一编码器可以有不同的结构。如对于图像输入状态，可以使用卷积神经网络 (CNN)；对于向量输入状态，可以使用多层感知机 (MLP)。<br>        在这里，我们使用了一个两层的 MLP 用来处理向量输入状态，即：<br>        $$y = max(W_2 max(W_1 x+b_1, 0) + b_2, 0)$$</p></div><div class="code"><pre><code id="code_4" name="py_code">        self.encoder = nn.Sequential(
+            nn.Linear(obs_shape, 32),
+            nn.ReLU(),
+            nn.Linear(32, 64),
+            nn.ReLU(),
+        )</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>        定义离散动作的输出网络，仅包含一个全连接层。</p></div><div class="code"><pre><code id="code_5" name="py_code">        self.policy_head = nn.Linear(64, action_shape)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>        定义一个仅输出单个数值的价值网络。</p></div><div class="code"><pre><code id="code_6" name="py_code">        self.value_head = nn.Linear(64, 1)
+</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>        <b>功能概述</b><br>            在离散动作空间中，Actor-Critic 网络的计算图。</p></div><div class="code"><pre><code id="code_7" name="py_code">    def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>        将原始单个智能体局部的观察状态转化为一个向量，张量形状的变化：$$(B, A, *) -> (B, A, N)$$<br>        在 PyTorch 中，如 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Linear</span> 等网络层，仅对张量的最后一个维度进行处理。因此，我们可以利用这种特性来批量并行处理整个多智能体的输入信息。</p></div><div class="code"><pre><code id="code_9" name="py_code">        x = self.encoder(local_obs)</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>        计算每个可能的离散动作的 logit，张量形状变化：$$(B, A, N) -> (B, A, M)$$</p></div><div class="code"><pre><code id="code_10" name="py_code">        logit = self.policy_head(x)</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>        为每一个样本和数据计算价值，张量形状变化：$$(B, A, N) -> (B, A, 1)$$</p></div><div class="code"><pre><code id="code_11" name="py_code">        value = self.value_head(x)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>        用 treetensor 的格式返回最终的计算结果。</p></div><div class="code"><pre><code id="code_12" name="py_code">        return ttorch.as_tensor({
+            'logit': logit,
+            'value': value,
+        })
+
+</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>        <b>功能概述</b><br>            在多智能体场景下，使用策略梯度算法，各个智能体独立决策但共享参数的 Actor-Critic 网络定义。<br>            由于各个智能体共享一个网络，因此它们的输入状态可以在一个 batch 中并行计算。</p></div><div class="code"><pre><code id="code_13" name="py_code">class SharedActorCriticNetwork(nn.Module):
+
+    def __init__(self, agent_num: int, obs_shape: int, action_shape: int) -> None:</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>        PyTorch 在继承 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Module</span> 类的时候，必须执行这个初始化方法。</p></div><div class="code"><pre><code id="code_15" name="py_code">        super(SharedActorCriticNetwork, self).__init__()</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>        输入的形状是： $$(B, A, O)$$.</p></div><div class="code"><pre><code id="code_16" name="py_code">        self.agent_num = agent_num</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>        定义一个所有智能体共享的 Actor-Critic 网络。</p></div><div class="code"><pre><code id="code_17" name="py_code">        self.actor_critic_network = ActorCriticNetwork(obs_shape, action_shape)
+</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>        <b>功能概述</b><br>            共享参数的 Actor-Critic 网络计算图。<br>            处理所有智能体的 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">local_obs``，并输出对应的策略分布和状态价值。</p></div><div class="code"><pre><code id="code_18" name="py_code">    def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>        并行处理所有智能体的 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">local_obs``。</p></div><div class="code"><pre><code id="code_20" name="py_code">        return self.actor_critic_network(local_obs)
+
+</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>        <b>功能概述</b><br>            在多智能体场景下，使用策略梯度算法，各个智能体独立决策且具有独立参数的 Actor-Critic 网络定义。<br>            各个智能体拥有自己独立的 Actor-Critic 网络，拥有独立的参数。</p></div><div class="code"><pre><code id="code_21" name="py_code">class IndependentActorCriticNetwork(nn.Module):
+
+    def __init__(self, agent_num: int, obs_shape: int, action_shape: int) -> None:</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>        PyTorch 在继承 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Module</span> 类的时候，必须执行这个初始化方法。</p></div><div class="code"><pre><code id="code_23" name="py_code">        super(IndependentActorCriticNetwork, self).__init__()</code></pre></div></div><div class="section" id="section-24"><div class="docs doc-strings"><p>        定义数量为 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">agent_num</span> 的各自独立的 Actor-Critic 网络。记每个智能体对应一个网络。<br>        为了利用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Module</span> 的一些特殊属性，我们使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.ModuleList</span> 作为作为存储这些网络的容器，而非 Python 自带的列表。</p></div><div class="code"><pre><code id="code_24" name="py_code">        self.agent_num = agent_num
+        self.actor_critic_networks = nn.ModuleList(
+            [ActorCriticNetwork(obs_shape, action_shape) for _ in range(agent_num)]
+        )
+</code></pre></div></div><div class="section" id="section-25"><div class="docs doc-strings"><p>        <b>功能概述</b><br>            独立 Actor-Critic 网络的计算图。<br>            串行地处理各个智能体的 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">local_obs``，并输出对应的策略概率分布和状态价值。</p></div><div class="code"><pre><code id="code_25" name="py_code">    def forward(self, local_obs: torch.Tensor) -> ttorch.Tensor:</code></pre></div></div><div class="section" id="section-27"><div class="docs doc-strings"><p>        切分数据，串行地调用网络逐一处理各个智能体的 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">local_obs``。</p></div><div class="code"><pre><code id="code_27" name="py_code">        return ttorch.cat([net(local_obs[:, i:i + 1]) for i, net in enumerate(self.actor_critic_networks)], dim=1)
+
+</code></pre></div></div><div class="section" id="section-28"><div class="docs doc-strings"><p>        <b>Overview</b><br>            在多智能体场景下，集中式训练分布式执行 (centralized training and decentralized execution, CTDE) 网络的定义。<br>            各个智能体共享同样的网络参数，因此它们可以在一个 batch 中并行地进行计算。<br>            价值网络的输入是全局信息 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">global_obs``，而策略网络的输入是单个智能体的局部信息 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">local_obs``。<br>            价值网络提取的全局信息，可以为使用局部信息的策略提供更多的指导；<br>            策略网络提取的局部信息，可以使得网络在分布式执行的时候，更具有高效性和鲁棒性。</p></div><div class="code"><pre><code id="code_28" name="py_code">class CTDEActorCriticNetwork(nn.Module):
+
+    def __init__(self, agent_num: int, local_obs_shape: int, global_obs_shape: int, action_shape: int) -> None:</code></pre></div></div><div class="section" id="section-30"><div class="docs doc-strings"><p>        PyTorch 在继承 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">nn.Module</span> 类的时候，必须执行这个初始化方法。</p></div><div class="code"><pre><code id="code_30" name="py_code">        super(CTDEActorCriticNetwork, self).__init__()</code></pre></div></div><div class="section" id="section-31"><div class="docs doc-strings"><p>        分别定义局部信息编码器和全局信息编码器。</p></div><div class="code"><pre><code id="code_31" name="py_code">        self.agent_num = agent_num
+        self.local_encoder = nn.Sequential(
+            nn.Linear(local_obs_shape, 32),
+            nn.ReLU(),
+            nn.Linear(32, 64),
+            nn.ReLU(),
+        )
+        self.global_encoder = nn.Sequential(
+            nn.Linear(global_obs_shape, 32),
+            nn.ReLU(),
+            nn.Linear(32, 64),
+            nn.ReLU(),
+        )</code></pre></div></div><div class="section" id="section-32"><div class="docs doc-strings"><p>        定义离散动作的输出网络，仅包含一个全连接层。</p></div><div class="code"><pre><code id="code_32" name="py_code">        self.policy_head = nn.Linear(64, action_shape)</code></pre></div></div><div class="section" id="section-33"><div class="docs doc-strings"><p>        定义一个仅输出单个值的价值网络。</p></div><div class="code"><pre><code id="code_33" name="py_code">        self.value_head = nn.Linear(64, 1)
+</code></pre></div></div><div class="section" id="section-34"><div class="docs doc-strings"><p>        <b>Overview</b><br>            CTDE Actor-Critic 网络的计算图。<br>            并行地处理各个智能体的 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">local_obs</span> 和 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">global_obs``，并输出对应的策略分布和状态价值。<br>            针对 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">global_obs</span> 的设计，存在两种不同的方式：1) 对各个智能体采用一个共享的全局状态，即 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">global_obs</span> 的形状为 $$(B, S)$$<br>            2) 对各个智能体设计不同的全局状态，即 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">global_obs</span> 的形状为 $$(B, A, S')$$.<br>            关于这个问题的更多细节，可以参考链接 <a href="https://di-engine-docs.readthedocs.io/zh_CN/latest/04_best_practice/marl_zh.html#id10">Related Link</a></p></div><div class="code"><pre><code id="code_34" name="py_code">    def forward(self, local_obs: torch.Tensor, global_obs: torch.Tensor) -> ttorch.Tensor:</code></pre></div></div><div class="section" id="section-36"><div class="docs doc-strings"><p>        用策略网络 (Actor) 处理局部的状态生成动作，用价值网络 (Critic) 处理全局状态生成价值。</p></div><div class="code"><pre><code id="code_36" name="py_code">        policy = self.policy_head(self.local_encoder(local_obs))
+        value = self.value_head(self.global_encoder(global_obs))
+        return ttorch.as_tensor({
+            'logit': policy,
+            'value': value,
+        })
+
+</code></pre></div></div><div class="section" id="section-37"><div class="docs doc-strings"><p>    <b>test_shared_ac_network 功能概述</b><br>        用于测试共享参数的 Actor-Critic 网络。首先创建一个网络，并输入一个 batch 的数据。随后验证其输出各部分的形状。</p></div><div class="code"><pre><code id="code_37" name="py_code">def test_shared_ac_network() -> None:</code></pre></div></div><div class="section" id="section-39"><div class="docs doc-strings"><p>    设置 batch size，智能体个数，状态的形状和动作空间的维度。</p></div><div class="code"><pre><code id="code_39" name="py_code">    batch_size = 4
+    agent_num = 3
+    obs_shape = 10
+    action_shape = 5</code></pre></div></div><div class="section" id="section-40"><div class="docs doc-strings"><p>    定义一个共享参数的 Actor-Critic 网络。</p></div><div class="code"><pre><code id="code_40" name="py_code">    network = SharedActorCriticNetwork(agent_num, obs_shape, action_shape)</code></pre></div></div><div class="section" id="section-41"><div class="docs doc-strings"><p>    随机生成伪数据，为各个智能体生成随机的状态。</p></div><div class="code"><pre><code id="code_41" name="py_code">    local_obs = torch.randn(batch_size, agent_num, obs_shape)</code></pre></div></div><div class="section" id="section-42"><div class="docs doc-strings"><p>    前向计算过程，将局部状态输入网络，得到输出。</p></div><div class="code"><pre><code id="code_42" name="py_code">    result = network(local_obs)</code></pre></div></div><div class="section" id="section-43"><div class="docs doc-strings"><p>    验证输出的形状。</p></div><div class="code"><pre><code id="code_43" name="py_code">    assert result['logit'].shape == (batch_size, agent_num, action_shape)
+    assert result['value'].shape == (batch_size, agent_num, 1)
+
+</code></pre></div></div><div class="section" id="section-44"><div class="docs doc-strings"><p>    <b>test_independent_ac_network 功能概述</b><br>        用于测试独立参数 Actor-Critic 网络。首先创建一个网络，并输入一个 batch 的数据。随后验证其输出各部分的形状。</p></div><div class="code"><pre><code id="code_44" name="py_code">def test_independent_ac_network() -> None:</code></pre></div></div><div class="section" id="section-46"><div class="docs doc-strings"><p>    设置 batch size，智能体个数，状态的形状和动作空间的维度。</p></div><div class="code"><pre><code id="code_46" name="py_code">    batch_size = 4
+    agent_num = 3
+    obs_shape = 10
+    action_shape = 5</code></pre></div></div><div class="section" id="section-47"><div class="docs doc-strings"><p>    定义一个独立参数的 Actor-Critic 网络。</p></div><div class="code"><pre><code id="code_47" name="py_code">    network = IndependentActorCriticNetwork(agent_num, obs_shape, action_shape)</code></pre></div></div><div class="section" id="section-48"><div class="docs doc-strings"><p>    随机生成伪数据，为各个智能体生成随机的状态。</p></div><div class="code"><pre><code id="code_48" name="py_code">    local_obs = torch.randn(batch_size, agent_num, obs_shape)</code></pre></div></div><div class="section" id="section-49"><div class="docs doc-strings"><p>    前向计算过程，将局部状态输入网络，得到输出。</p></div><div class="code"><pre><code id="code_49" name="py_code">    result = network(local_obs)</code></pre></div></div><div class="section" id="section-50"><div class="docs doc-strings"><p>    验证输出的形状。</p></div><div class="code"><pre><code id="code_50" name="py_code">    assert result['logit'].shape == (batch_size, agent_num, action_shape)
+    assert result['value'].shape == (batch_size, agent_num, 1)
+
+</code></pre></div></div><div class="section" id="section-51"><div class="docs doc-strings"><p>    <b>test_ctde_ac_network 功能概述</b><br>        用于测试 CTDE Actor-Critic 网络。首先创建一个网络，并输入一个 batch 的数据。随后验证其输出各部分的形状。</p></div><div class="code"><pre><code id="code_51" name="py_code">def test_ctde_ac_network() -> None:</code></pre></div></div><div class="section" id="section-53"><div class="docs doc-strings"><p>    设置 batch size，智能体个数，状态的形状和动作空间的维度。</p></div><div class="code"><pre><code id="code_53" name="py_code">    batch_size = 4
+    agent_num = 3
+    local_obs_shape = 10
+    global_obs_shape = 20
+    action_shape = 5
+</code></pre></div></div><div class="section" id="section-54"><div class="docs doc-strings"><p>    测试共享全局状态的情况。</p></div><div class="code"><pre><code id="code_54" name="py_code">    network = CTDEActorCriticNetwork(agent_num, local_obs_shape, global_obs_shape, action_shape)
+    local_obs = torch.randn(batch_size, agent_num, local_obs_shape)
+    global_obs = torch.randn(batch_size, global_obs_shape)
+    result = network(local_obs, global_obs)
+</code></pre></div></div><div class="section" id="section-55"><div class="docs doc-strings"><p>    验证输出的形状。</p></div><div class="code"><pre><code id="code_55" name="py_code">    assert result['logit'].shape == (batch_size, agent_num, action_shape)
+    assert result['value'].shape == (batch_size, 1)
+</code></pre></div></div><div class="section" id="section-56"><div class="docs doc-strings"><p>    测试不共享全局状态的情况。</p></div><div class="code"><pre><code id="code_56" name="py_code">    agent_specific_global_obs_shape = 25
+    network = CTDEActorCriticNetwork(agent_num, local_obs_shape, agent_specific_global_obs_shape, action_shape)
+    local_obs = torch.randn(batch_size, agent_num, local_obs_shape)
+    agent_specific_global_obs = torch.randn(batch_size, agent_num, agent_specific_global_obs_shape)
+    result = network(local_obs, agent_specific_global_obs)
+</code></pre></div></div><div class="section" id="section-57"><div class="docs doc-strings"><p>    验证输出的形状。</p></div><div class="code"><pre><code id="code_57" name="py_code">    assert result['logit'].shape == (batch_size, agent_num, action_shape)
+    assert result['value'].shape == (batch_size, agent_num, 1)
+
+</code></pre></div></div><div class="section" id="section-57"><div class="docs doc-strings"><p><i>如果读者关于本文档有任何问题和建议，可以在 GitHub 提 issue 或是直接发邮件给我们 (opendilab@pjlab.org.cn) 。</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter5_time/lstm.py" target="_blank">View code on GitHub</a><br><br>Long Short Term Memory (LSTM) <a href="https://ieeexplore.ieee.org/abstract/document/6795963">Related Link</a> is a kind of recurrent neural network that can capture long-short term information.<br>This document mainly includes:<br>- Pytorch implementation for LSTM.<br>- An example to test LSTM.</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Implementation of LSTM cell with layer norm. Layer normalization is beneficial to the performance <br>        and stability of LSTM.</p></div><div class="code"><pre><code id="code_1" name="py_code">from typing import Optional, Union, Tuple, List, Dict
+import torch
+import torch.nn as nn
+from ding.torch_utils.network.rnn import is_sequence
+from ding.torch_utils import build_normalization
+
+
+class LSTM(nn.Module):</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>        Initialize arguments.</p></div><div class="code"><pre><code id="code_3" name="py_code">        super(LSTM, self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>        Initialize normalization functions.<br>        Layer normalization normalizes the activations of a layer across the feature dimension.<br>        In general, layer normalization is applied to the inputs to the LSTM gate activations.<br>        Because layer normalization reduces the internal covariate shift of the LSTM gates,<br>        making LSTM more consistent across time steps.</p></div><div class="code"><pre><code id="code_4" name="py_code">        norm_func = build_normalization(norm_type)
+        self.norm = nn.ModuleList([norm_func(hidden_size * 4) for _ in range(2 * num_layers)])</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>        Initialize LSTM parameters with orthogonal initialization.<br>        Orthogonal Initialization can significantly improve the performance of LSTM.</p></div><div class="code"><pre><code id="code_5" name="py_code">        self.wx = nn.ParameterList()
+        self.wh = nn.ParameterList()
+        dims = [input_size] + [hidden_size] * num_layers
+        for l in range(num_layers):</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>            wx is the weights for input, while hx is the weights for the hidden state.<br>            Each LSTM cell has 4 gates (input, forget, output, and candidate gates),<br>            and the weights transform the input and hidden state into concatenated vectors,<br>            of which the shape is [num_layers, hidden_size * 4].</p></div><div class="code"><pre><code id="code_6" name="py_code">            self.wx.append(nn.init.orthogonal_(nn.Parameter(torch.zeros(dims[l], dims[l + 1] * 4))))
+            self.wh.append(nn.init.orthogonal_(nn.Parameter(torch.zeros(hidden_size, hidden_size * 4))))</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>        Similarly, the bias is the bias of concatenated vectors, so the shape is: [num_layers, hidden_size * 4]</p></div><div class="code"><pre><code id="code_7" name="py_code">        self.bias = nn.init.orthogonal_(nn.Parameter(torch.zeros(num_layers, hidden_size * 4)))</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Forward computation of LSTM with layer norm.</p></div><div class="code"><pre><code id="code_8" name="py_code">        self.use_dropout = dropout > 0.
+        if self.use_dropout:
+            self.dropout = nn.Dropout(dropout)
+
+    def forward(self,
+                inputs: torch.Tensor,
+                prev_state: torch.Tensor,
+                ) -> Tuple[torch.Tensor, Union[torch.Tensor, list]]:</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>        The shape of input is: [sequence length, batch size, input size]</p></div><div class="code"><pre><code id="code_10" name="py_code">        seq_len, batch_size = inputs.shape[:2]</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>        Dealing with different types of input and return preprocessed prev_state.<br>        If prev_state is None, it indicates that this is the beginning of a sequence.<br>        In this case, prev_state will be initialized as zero.</p></div><div class="code"><pre><code id="code_11" name="py_code">        if prev_state is None:
+            prev_state = (
+                torch.zeros(
+                    self.num_layers,
+                    batch_size,
+                    self.hidden_size,
+                    dtype=inputs.dtype,
+                    device=inputs.device)
+                ,
+                torch.zeros(
+                    self.num_layers,
+                    batch_size,
+                    self.hidden_size,
+                    dtype=inputs.dtype,
+                    device=inputs.device)
+                )</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>        If prev_state is not None, then preprocess it into one batch.</p></div><div class="code"><pre><code id="code_12" name="py_code">        else:
+            assert len(prev_state) == batch_size
+            state = [[v for v in prev.values()] for prev in prev_state]
+            state = list(zip(*state))
+            prev_state = [torch.cat(t, dim=1) for t in state]
+
+        H, C = prev_state
+        x = inputs
+        next_state = []
+        for l in range(self.num_layers):
+            h, c = H[l], C[l]
+            new_x = []
+            for s in range(seq_len):</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>                Calculate $$z, z^i, z^f, z^o$$ simultaneously.</p></div><div class="code"><pre><code id="code_13" name="py_code">                gate = self.norm[l * 2](torch.matmul(x[s], self.wx[l])
+                                        ) + self.norm[l * 2 + 1](torch.matmul(h, self.wh[l]))
+                if self.bias is not None:
+                    gate += self.bias[l]
+                gate = list(torch.chunk(gate, 4, dim=1))
+                i, f, o, z = gate</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>                $$z^i = \sigma (Wx^ix^t + Wh^ih^{t-1})$$</p></div><div class="code"><pre><code id="code_14" name="py_code">                i = torch.sigmoid(i)</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>                $$z^f = \sigma (Wx^fx^t + Wh^fh^{t-1})$$</p></div><div class="code"><pre><code id="code_15" name="py_code">                f = torch.sigmoid(f)</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>                $$z^o = \sigma (Wx^ox^t + Wh^oh^{t-1})$$</p></div><div class="code"><pre><code id="code_16" name="py_code">                o = torch.sigmoid(o)</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>                $$z = tanh(Wxx^t + Whh^{t-1})$$</p></div><div class="code"><pre><code id="code_17" name="py_code">                z = torch.tanh(z)</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>                $$c^t = z^f \odot c^{t-1}+z^i \odot z$$</p></div><div class="code"><pre><code id="code_18" name="py_code">                c = f * c + i * z</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>                $$h^t = z^o \odot tanh(c^t)$$</p></div><div class="code"><pre><code id="code_19" name="py_code">                h = o * torch.tanh(c)
+                new_x.append(h)
+            next_state.append((h, c))
+            x = torch.stack(new_x, dim=0)</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>            Dropout layer.</p></div><div class="code"><pre><code id="code_20" name="py_code">            if self.use_dropout and l != self.num_layers - 1:
+                x = self.dropout(x)
+        next_state = [torch.stack(t, dim=0) for t in zip(*next_state)]</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>        Return list type, split the next_state .</p></div><div class="code"><pre><code id="code_21" name="py_code">        h, c = next_state
+        batch_size = h.shape[1]</code></pre></div></div><div class="section" id="section-22"><div class="docs doc-strings"><p>        Split h with shape [num_layers, batch_size, hidden_size] to a list with length batch_size<br>        and each element is a tensor with shape [num_layers, 1, hidden_size]. The same operation is performed on c.</p></div><div class="code"><pre><code id="code_22" name="py_code">        next_state = [torch.chunk(h, batch_size, dim=1), torch.chunk(c, batch_size, dim=1)]
+        next_state = list(zip(*next_state))
+        next_state = [{k: v for k, v in zip(['h', 'c'], item)} for item in next_state]
+        return x, next_state
+
+</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Test function of LSTM.</p></div><div class="code"><pre><code id="code_23" name="py_code">def test_lstm():</code></pre></div></div><div class="section" id="section-25"><div class="docs doc-strings"><p>    Randomly generate test data.</p></div><div class="code"><pre><code id="code_25" name="py_code">    seq_len = 2
+    num_layers = 3
+    input_size = 4
+    hidden_size = 5
+    batch_size = 6
+    norm_type = 'LN'
+    dropout = 0.1
+    input = torch.rand(seq_len, batch_size, input_size).requires_grad_(True)
+    lstm = LSTM(input_size, hidden_size, num_layers, norm_type, dropout)
+</code></pre></div></div><div class="section" id="section-26"><div class="docs doc-strings"><p>    Test the LSTM recurrently, using the hidden states of last input as new prev_state.</p></div><div class="code"><pre><code id="code_26" name="py_code">    prev_state = None
+    for s in range(seq_len):
+        input_step = input[s:s + 1]</code></pre></div></div><div class="section" id="section-27"><div class="docs doc-strings"><p>        The prev_state is None if the input_step is the first step of the sequence. Otherwise,<br>        the prev_state contains a list of dictions with key <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">h</span> , <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">c</span> ,<br>        and the corresponding values are tensors with shape [num_layers, 1, hidden_size].<br>        The length of the list equals to the batch_size.</p></div><div class="code"><pre><code id="code_27" name="py_code">        output, prev_state = lstm(input_step, prev_state)
+</code></pre></div></div><div class="section" id="section-28"><div class="docs doc-strings"><p>    Check the shape of output and prev_state.</p></div><div class="code"><pre><code id="code_28" name="py_code">    assert output.shape == (1, batch_size, hidden_size)
+    assert len(prev_state) == batch_size
+    assert prev_state[0]['h'].shape == (num_layers, 1, hidden_size)
+    assert prev_state[0]['c'].shape == (num_layers, 1, hidden_size)
+    torch.mean(output).backward()</code></pre></div></div><div class="section" id="section-29"><div class="docs doc-strings"><p>    Check the grad of input.</p></div><div class="code"><pre><code id="code_29" name="py_code">    assert isinstance(input.grad, torch.Tensor)
+
+</code></pre></div></div><div class="section" id="section-29"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>

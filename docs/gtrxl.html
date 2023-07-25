@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter5_time/gtrxl.py" target="_blank">View code on GitHub</a><br><br>Gated Transformer XL (GTrXL) <a href="https://arxiv.org/abs/1910.06764">Related Link</a> is a stabilized transformer architecture for reinforcement learning.<br>This document mainly includes:<br>- Pytorch implementation for GTrXL.<br>- An example to test GTrXL.</div></div><div class="section" id="section-1"><div class="docs doc-strings"><p>    <b>Overview</b><br>        The basic layer design of Gated Transformer-XL. This module mainly includes AttentionXL,<br>        Feed-Forward-Network, layer normalization, and GRU-gating.</p></div><div class="code"><pre><code id="code_1" name="py_code">from typing import Optional, Dict
+import warnings
+import numpy as np
+import torch
+import torch.nn as nn
+import treetensor
+from ding.torch_utils import GRUGatingUnit, build_normalization
+
+from ding.torch_utils.network.nn_module import fc_block
+from ding.torch_utils.network.gtrxl import PositionalEmbedding, Memory, AttentionXL
+
+
+class GatedTransformerXLLayer(torch.nn.Module):</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>        Decide whether to use GRU-gating.</p></div><div class="code"><pre><code id="code_3" name="py_code">        self.gating = gru_gating
+        if self.gating is True:
+            self.gate1 = GRUGatingUnit(input_dim, gru_bias)
+            self.gate2 = GRUGatingUnit(input_dim, gru_bias)</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>        Build attention block using the AttentionXL class,<br>        a feed-forward network with optional dropout, and two layer normalization layers.</p></div><div class="code"><pre><code id="code_4" name="py_code">        self.attention = AttentionXL(
+            input_dim,
+            head_dim,
+            head_num,
+            dropout,
+        )</code></pre></div></div><div class="section" id="section-5"><div class="docs doc-strings"><p>        Build Feed-Forward-Network.</p></div><div class="code"><pre><code id="code_5" name="py_code">        layers = []
+        dims = [input_dim] + [hidden_dim] * (mlp_num - 1) + [input_dim]
+        for i in range(mlp_num):
+            layers.append(fc_block(dims[i], dims[i + 1], activation=activation))
+            if i != mlp_num - 1:
+                layers.append(self.dropout)
+        layers.append(self.dropout)
+        self.mlp = nn.Sequential(*layers)</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>        Build layer norm.</p></div><div class="code"><pre><code id="code_6" name="py_code">        self.layernorm1 = build_normalization('LN')(input_dim)
+        self.layernorm2 = build_normalization('LN')(input_dim)
+        self.activation = activation
+</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>        <b>Overview</b><br>            The forward computation graph of GTrXL layer.</p></div><div class="code"><pre><code id="code_7" name="py_code">    def forward(
+            self,
+            inputs: torch.Tensor,
+            pos_embedding: torch.Tensor,
+            u: torch.nn.Parameter,
+            v: torch.nn.Parameter,
+            memory: torch.Tensor,
+            mask: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>        Concat memory with input across sequence dimension. The shape is: [full_sequence, batch_size, input_dim]</p></div><div class="code"><pre><code id="code_9" name="py_code">        full_input = torch.cat([memory, inputs], dim=0)</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>        Forward calculation for GTrXL layer.<br>        In GTrXL, the layer normalization is put before the attention layer.</p></div><div class="code"><pre><code id="code_10" name="py_code">        x1 = self.layernorm1(full_input)</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>        Attention module.</p></div><div class="code"><pre><code id="code_11" name="py_code">        a1 = self.dropout(self.attention(inputs, pos_embedding, x1, u, v, mask=mask))
+        a1 = self.activation(a1)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>        In GTrXL, gating layer replace the resnet layer in TrXL.</p></div><div class="code"><pre><code id="code_12" name="py_code">        o1 = self.gate1(inputs, a1) if self.gating else inputs + a1
+
+
+        x2 = self.layernorm2(o1)</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>        Feed Forward Network.</p></div><div class="code"><pre><code id="code_13" name="py_code">        m2 = self.dropout(self.mlp(x2))
+        o2 = self.gate2(o1, m2) if self.gating else o1 + m2
+        return o2
+
+</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    <b>Overview</b><br>        PyTorch implementation for GTrXL, which is used to model the long-term time dependency in reinforcement learning.</p></div><div class="code"><pre><code id="code_14" name="py_code">class GTrXL(nn.Module):</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>        Initialize embedding layer.</p></div><div class="code"><pre><code id="code_16" name="py_code">        self.use_embedding_layer = use_embedding_layer
+        if self.use_embedding_layer:
+            self.embedding = fc_block(input_dim, embedding_dim, activation=activation)</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>        Initialize activate function.</p></div><div class="code"><pre><code id="code_17" name="py_code">        self.activation = activation</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>        Initialize position embedding.</p></div><div class="code"><pre><code id="code_18" name="py_code">        self.pos_embedding = PositionalEmbedding(embedding_dim)</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>        Memory to save hidden states of past segments. It will be initialized in the forward method to get its size dynamically.</p></div><div class="code"><pre><code id="code_19" name="py_code">        self.memory = None
+        self.memory_len = memory_len</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>        Initialize GTrXL layers.</p></div><div class="code"><pre><code id="code_20" name="py_code">        layers = []</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>        Put all the embedding_dims into a list.<br>        For the i-th layer, the input embedding is dims[i], while the output embedding is dims[i+1]</p></div><div class="code"><pre><code id="code_21" name="py_code">        dims = [embedding_dim] + [embedding_dim] * layer_num
+        self.dropout = nn.Dropout(dropout_ratio) if dropout_ratio > 0 else nn.Identity()
+        for i in range(layer_num):
+            layers.append(
+                GatedTransformerXLLayer(
+                    dims[i], head_dim, dims[i+1], head_num, mlp_num, self.dropout, self.activation, gru_gating,
+                    gru_bias
+                )
+            )
+        self.layers = nn.Sequential(*layers)</code></pre></div></div><div class="section" id="section-22"><div class="docs doc-strings"><p>        u and v are the parameters to compute global content bias and global positional bias.</p></div><div class="code"><pre><code id="code_22" name="py_code">        self.u, self.v = (
+            torch.nn.Parameter(torch.zeros(self.head_num, self.head_dim)),
+            torch.nn.Parameter(torch.zeros(self.head_num, self.head_dim)),
+        )</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>        Create an attention mask for each different seq_len. In this way we don't need to create a new one each time we call the forward method.</p></div><div class="code"><pre><code id="code_23" name="py_code">        self.att_mask = {}</code></pre></div></div><div class="section" id="section-24"><div class="docs doc-strings"><p>        Create a pos embedding for each different seq_len. In this way we don't need to create a new one each time we call the forward method.</p></div><div class="code"><pre><code id="code_24" name="py_code">        self.pos_embedding_dict = {}
+</code></pre></div></div><div class="section" id="section-25"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Reset the memory of GTrXL, which is called at the beginning of each episode.<br>            Memory is used to save hidden states of past segments.</p></div><div class="code"><pre><code id="code_25" name="py_code">    def reset_memory(self, batch_size: Optional[int] = None, state: Optional[torch.Tensor] = None):</code></pre></div></div><div class="section" id="section-27"><div class="docs doc-strings"><p>        Reset the memory of GTrXL.</p></div><div class="code"><pre><code id="code_27" name="py_code">        self.memory = Memory(memory_len=self.memory_len, layer_num=self.layer_num, embedding_dim=self.embedding_dim)</code></pre></div></div><div class="section" id="section-28"><div class="docs doc-strings"><p>        If batch_size is not None, specify the batch_size when initializing the memory.</p></div><div class="code"><pre><code id="code_28" name="py_code">        if batch_size is not None:
+            self.memory = Memory(self.memory_len, batch_size, self.embedding_dim, self.layer_num)</code></pre></div></div><div class="section" id="section-29"><div class="docs doc-strings"><p>        If state is not None, add state into the memory.</p></div><div class="code"><pre><code id="code_29" name="py_code">        elif state is not None:
+            self.memory.init(state)
+</code></pre></div></div><div class="section" id="section-30"><div class="docs doc-strings"><p>        <b>Overview</b><br>            Access the memory of GTrXL.</p></div><div class="code"><pre><code id="code_30" name="py_code">    def get_memory(self):</code></pre></div></div><div class="section" id="section-32"><div class="docs doc-strings"><p>        Get the memory of GTrXL.</p></div><div class="code"><pre><code id="code_32" name="py_code">        if self.memory is None:
+            return None
+        else:
+            return self.memory.get()
+</code></pre></div></div><div class="section" id="section-33"><div class="docs doc-strings"><p>        <b>Overview</b><br>            The forward computation graph of GTrXL.</p></div><div class="code"><pre><code id="code_33" name="py_code">    def forward(self, x: torch.Tensor, batch_first: bool = False, return_mem: bool = True) -> Dict[str, torch.Tensor]:</code></pre></div></div><div class="section" id="section-35"><div class="docs doc-strings"><p>        If the first dimension of input x is batch_size,<br>        then reshape x from  [batch_size ,sequence_length ,input_dim] to [sequence_length, batch_size, input_dim]</p></div><div class="code"><pre><code id="code_35" name="py_code">        if batch_first:
+            x = torch.transpose(x, 1, 0)
+        cur_seq, bs = x.shape[:2]</code></pre></div></div><div class="section" id="section-36"><div class="docs doc-strings"><p>        Get back memory.</p></div><div class="code"><pre><code id="code_36" name="py_code">        memory = None if self.memory is None else self.memory.get()</code></pre></div></div><div class="section" id="section-37"><div class="docs doc-strings"><p>        Abnormal case: no memory or memory shape mismatch.</p></div><div class="code"><pre><code id="code_37" name="py_code">        if memory is None:
+            self.reset_memory(bs)
+        elif memory.shape[-2] != bs or memory.shape[-1] != self.embedding_dim:
+            warnings.warn(
+                "Memory {} and Input {} dimensions don't match,"
+                " this will cause the memory to be initialized to fit your input!".format(
+                    list(memory.shape[-2:]), [x.shape[-2]] + [self.embedding_dim]
+                )
+            )
+            self.reset_memory(bs)
+        self.memory.to(x.device)
+        memory = self.memory.get()</code></pre></div></div><div class="section" id="section-38"><div class="docs doc-strings"><p>        Pass through embedding layer.</p></div><div class="code"><pre><code id="code_38" name="py_code">        if self.use_embedding_layer:
+            x = self.dropout(self.embedding(x))</code></pre></div></div><div class="section" id="section-39"><div class="docs doc-strings"><p>        Get full sequence length: memory length + current length</p></div><div class="code"><pre><code id="code_39" name="py_code">        prev_seq = self.memory_len
+        full_seq = cur_seq + prev_seq</code></pre></div></div><div class="section" id="section-40"><div class="docs doc-strings"><p>        If the attention mask for current sequence length is already created, reuse the mask stored in <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">self.att_mask</span> .</p></div><div class="code"><pre><code id="code_40" name="py_code">        if cur_seq in self.att_mask.keys():
+            attn_mask = self.att_mask[cur_seq]</code></pre></div></div><div class="section" id="section-41"><div class="docs doc-strings"><p>        Otherwise, create a new attention mask and store it into <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">self.att_mask</span> .</p></div><div class="code"><pre><code id="code_41" name="py_code">        else:</code></pre></div></div><div class="section" id="section-42"><div class="docs doc-strings"><p>            For example, if cur_seq = 3, full_seq = 7, then the mask is:<br>            $$ \begin{matrix} 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \end{matrix}$$<br>            This forces that the hidden state of current token is only associated with previous tokens.</p></div><div class="code"><pre><code id="code_42" name="py_code">            attn_mask = (
+                torch.triu(
+                    torch.ones((cur_seq, full_seq)),
+                    diagonal=1 + prev_seq,
+                ).bool().unsqueeze(-1).to(x.device)
+            )
+            self.att_mask[cur_seq] = attn_mask</code></pre></div></div><div class="section" id="section-43"><div class="docs doc-strings"><p>        If the position encoding for current sequence length is already created, reuse it stored in <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">self.pos_embedding_dict</span> .</p></div><div class="code"><pre><code id="code_43" name="py_code">        if cur_seq in self.pos_embedding_dict.keys():
+            pos_embedding = self.pos_embedding_dict[cur_seq]</code></pre></div></div><div class="section" id="section-44"><div class="docs doc-strings"><p>        Otherwise, create a new position encoding and store it into <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">self.pos_embedding_dict</span> .</p></div><div class="code"><pre><code id="code_44" name="py_code">        else:
+            pos_ips = torch.arange(full_seq - 1, -1, -1.0, dtype=torch.float)  # full_seq
+            pos_embedding = self.pos_embedding(pos_ips.to(x.device))
+            self.pos_embedding_dict[cur_seq] = pos_embedding
+        pos_embedding = self.dropout(pos_embedding)  # full_seq x 1 x embedding_dim
+
+        hidden_state = [x]
+        out = x</code></pre></div></div><div class="section" id="section-45"><div class="docs doc-strings"><p>        Calculate results for each GTrXL layer.</p></div><div class="code"><pre><code id="code_45" name="py_code">        for i in range(self.layer_num):
+            layer = self.layers[i]
+            out = layer(
+                out,
+                pos_embedding,
+                self.u,
+                self.v,
+                mask=attn_mask,
+                memory=memory[i],
+            )
+            hidden_state.append(out.clone())
+        out = self.dropout(out)</code></pre></div></div><div class="section" id="section-46"><div class="docs doc-strings"><p>        Update the GTrXL memory.</p></div><div class="code"><pre><code id="code_46" name="py_code">        self.memory.update(hidden_state)</code></pre></div></div><div class="section" id="section-47"><div class="docs doc-strings"><p>        If the first dimension of output is required to be batch_size, then reshape x from  [sequence_length, batch_size, input_dim] to [batch_size ,sequence_length ,input_dim].</p></div><div class="code"><pre><code id="code_47" name="py_code">        if batch_first:
+            out = torch.transpose(out, 1, 0)</code></pre></div></div><div class="section" id="section-48"><div class="docs doc-strings"><p>        Return memory is needed.</p></div><div class="code"><pre><code id="code_48" name="py_code">        if return_mem:
+            output = treetensor.Object({"logit": out, "memory": memory})
+        else:
+            output = treetensor.Object({"logit": out})
+        return output
+
+</code></pre></div></div><div class="section" id="section-49"><div class="docs doc-strings"><p>    <b>Overview</b><br>        Test function of GTrXL.</p></div><div class="code"><pre><code id="code_49" name="py_code">def test_gtrxl() -> None:</code></pre></div></div><div class="section" id="section-51"><div class="docs doc-strings"><p>    Generate data for testing.</p></div><div class="code"><pre><code id="code_51" name="py_code">    input_dim = 128
+    seq_len = 64
+    bs = 32
+    embedding_dim = 256
+    layer_num = 5
+    mem_len = 40
+    memory = [None, torch.rand(layer_num + 1, mem_len, bs, embedding_dim)]
+</code></pre></div></div><div class="section" id="section-52"><div class="docs doc-strings"><p>    Test GTrXL under different situations.</p></div><div class="code"><pre><code id="code_52" name="py_code">    for i in range(2):
+        m = memory[i]
+        model = GTrXL(
+            input_dim=input_dim,
+            head_dim=2,
+            embedding_dim=embedding_dim,
+            memory_len=mem_len,
+            head_num=2,
+            mlp_num=2,
+            layer_num=layer_num,
+        )</code></pre></div></div><div class="section" id="section-53"><div class="docs doc-strings"><p>        Input shape: [sequence_length, batch_size, input_dim]</p></div><div class="code"><pre><code id="code_53" name="py_code">        input = torch.rand(seq_len, bs, input_dim, requires_grad=True)</code></pre></div></div><div class="section" id="section-54"><div class="docs doc-strings"><p>        Reset the model memory.</p></div><div class="code"><pre><code id="code_54" name="py_code">        if m is None:
+            model.reset_memory(batch_size=bs)
+        else:
+            model.reset_memory(state=m)
+        output = model(input)</code></pre></div></div><div class="section" id="section-55"><div class="docs doc-strings"><p>        Check the shape of output.</p></div><div class="code"><pre><code id="code_55" name="py_code">        assert output['logit'].shape == (seq_len, bs, embedding_dim)
+        assert output['memory'].shape == (layer_num + 1, mem_len, bs, embedding_dim)
+        torch.sum(output['logit']).backward()</code></pre></div></div><div class="section" id="section-56"><div class="docs doc-strings"><p>        Check the gradient.</p></div><div class="code"><pre><code id="code_56" name="py_code">        assert isinstance(input.grad, torch.Tensor)</code></pre></div></div><div class="section" id="section-57"><div class="docs doc-strings"><p>        Check memory.</p></div><div class="code"><pre><code id="code_57" name="py_code">        memory_out = output['memory']
+        if m is not None:
+            assert torch.all(torch.eq(memory_out, m))
+
+</code></pre></div></div><div class="section" id="section-57"><div class="docs doc-strings"><p><i>If you have any questions or advices about this documation, you can raise issues in GitHub (https://github.com/opendilab/PPOxFamily) or email us (opendilab@pjlab.org.cn).</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
