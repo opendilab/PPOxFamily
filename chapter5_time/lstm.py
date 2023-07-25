@@ -3,10 +3,8 @@ Long Short Term Memory (LSTM) <link https://ieeexplore.ieee.org/abstract/documen
 This document mainly includes:
 - Pytorch implementation for LSTM.
 - An example to test LSTM.
-For beginners, you can refer to <link https://zhuanlan.zhihu.com/p/32085405 link> to learn the basics about how LSTM works.
 """
 from typing import Optional, Union, Tuple, List, Dict
-import math
 import torch
 import torch.nn as nn
 from ding.torch_utils.network.rnn import is_sequence
@@ -15,8 +13,9 @@ from ding.torch_utils import build_normalization
 
 class LSTM(nn.Module):
     """
-    **Overview:**
-        Implementation of LSTM cell with layer norm.
+    **Overview**:
+        Implementation of LSTM cell with layer norm. Layer normalization is beneficial to the performance 
+        and stability of LSTM.
     """
 
     def __init__(
@@ -62,6 +61,10 @@ class LSTM(nn.Module):
                 inputs: torch.Tensor,
                 prev_state: torch.Tensor,
                 ) -> Tuple[torch.Tensor, Union[torch.Tensor, list]]:
+        """
+        **Overview**:
+            Forward computation of LSTM with layer norm.
+        """
         # The shape of input is: [sequence length, batch size, input size]
         seq_len, batch_size = inputs.shape[:2]
         # Dealing with different types of input and return preprocessed prev_state.
@@ -126,7 +129,7 @@ class LSTM(nn.Module):
         # Return list type, split the next_state .
         h, c = next_state
         batch_size = h.shape[1]
-        # Split h with shape [num_layers, batch_size, hidden_size] to a list with length batch_size 
+        # Split h with shape [num_layers, batch_size, hidden_size] to a list with length batch_size
         # and each element is a tensor with shape [num_layers, 1, hidden_size]. The same operation is performed on c.
         next_state = [torch.chunk(h, batch_size, dim=1), torch.chunk(c, batch_size, dim=1)]
         next_state = list(zip(*next_state))
@@ -134,7 +137,12 @@ class LSTM(nn.Module):
         return x, next_state
 
 
+# delimiter
 def test_lstm():
+    """
+    **Overview**:
+        Test function of LSTM.
+    """
     # Randomly generate test data.
     seq_len = 2
     num_layers = 3
@@ -151,9 +159,9 @@ def test_lstm():
     for s in range(seq_len):
         input_step = input[s:s + 1]
         # The prev_state is None if the input_step is the first step of the sequence. Otherwise,
-        # the prev_state contains a list of dictions with key 'h', 'c',
+        # the prev_state contains a list of dictions with key ``h`` , ``c`` ,
         # and the corresponding values are tensors with shape [num_layers, 1, hidden_size].
-        # The length of the list equuals to the batch_size.
+        # The length of the list equals to the batch_size.
         output, prev_state = lstm(input_step, prev_state)
 
     # Check the shape of output and prev_state.

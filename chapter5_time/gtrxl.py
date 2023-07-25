@@ -18,8 +18,9 @@ from ding.torch_utils.network.gtrxl import PositionalEmbedding, Memory, Attentio
 
 class GatedTransformerXLLayer(torch.nn.Module):
     """
-    **Overview:**
-        Attention layer of GTrXL
+    **Overview**:
+        The basic layer design of Gated Transformer-XL. This module mainly includes AttentionXL,
+        Feed-Forward-Network, layer normalization, and GRU-gating.
     """
     def __init__(
             self,
@@ -62,6 +63,7 @@ class GatedTransformerXLLayer(torch.nn.Module):
         self.layernorm2 = build_normalization('LN')(input_dim)
         self.activation = activation
 
+    # delimiter
     def forward(
             self,
             inputs: torch.Tensor,
@@ -71,6 +73,10 @@ class GatedTransformerXLLayer(torch.nn.Module):
             memory: torch.Tensor,
             mask: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
+        """
+        **Overview**:
+            The forward computation graph of GTrXL layer.
+        """
         # Concat memory with input across sequence dimension. The shape is: [full_sequence, batch_size, input_dim]
         full_input = torch.cat([memory, inputs], dim=0)
         # Forward calculation for GTrXL layer.
@@ -90,10 +96,11 @@ class GatedTransformerXLLayer(torch.nn.Module):
         return o2
 
 
+# delimiter
 class GTrXL(nn.Module):
     """
-    **Overview:**
-        PyTorch implementation for GTrXL.
+    **Overview**:
+        PyTorch implementation for GTrXL, which is used to model the long-term time dependency in reinforcement learning.
     """
     def __init__(
         self,
@@ -153,7 +160,13 @@ class GTrXL(nn.Module):
         # Create a pos embedding for each different seq_len. In this way we don't need to create a new one each time we call the forward method.
         self.pos_embedding_dict = {}
 
+    # delimiter
     def reset_memory(self, batch_size: Optional[int] = None, state: Optional[torch.Tensor] = None):
+        """
+        **Overview**:
+            Reset the memory of GTrXL, which is called at the beginning of each episode.
+            Memory is used to save hidden states of past segments.
+        """
         # Reset the memory of GTrXL.
         self.memory = Memory(memory_len=self.memory_len, layer_num=self.layer_num, embedding_dim=self.embedding_dim)
         # If batch_size is not None, specify the batch_size when initializing the memory.
@@ -163,14 +176,24 @@ class GTrXL(nn.Module):
         elif state is not None:
             self.memory.init(state)
 
+    # delimiter
     def get_memory(self):
+        """
+        **Overview**:
+            Access the memory of GTrXL.
+        """
         # Get the memory of GTrXL.
         if self.memory is None:
             return None
         else:
             return self.memory.get()
 
+    # delimiter
     def forward(self, x: torch.Tensor, batch_first: bool = False, return_mem: bool = True) -> Dict[str, torch.Tensor]:
+        """
+        **Overview**:
+            The forward computation graph of GTrXL.
+        """
         # If the first dimension of input x is batch_size,
         # then reshape x from  [batch_size ,sequence_length ,input_dim] to [sequence_length, batch_size, input_dim]
         if batch_first:
@@ -197,10 +220,10 @@ class GTrXL(nn.Module):
         # Get full sequence length: memory length + current length
         prev_seq = self.memory_len
         full_seq = cur_seq + prev_seq
-        # If the attention mask for current sequence length is already created, reuse the mask stored in self.att_mask.
+        # If the attention mask for current sequence length is already created, reuse the mask stored in ``self.att_mask`` .
         if cur_seq in self.att_mask.keys():
             attn_mask = self.att_mask[cur_seq]
-        # Otherwise, create a new attention mask and store it into self.att_mask.
+        # Otherwise, create a new attention mask and store it into ``self.att_mask`` .
         else:
             # For example, if cur_seq = 3, full_seq = 7, then the mask is:
             # $$ \begin{matrix} 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 & 0 \end{matrix}$$
@@ -212,10 +235,10 @@ class GTrXL(nn.Module):
                 ).bool().unsqueeze(-1).to(x.device)
             )
             self.att_mask[cur_seq] = attn_mask
-        # If the position encoding for current sequence length is already created, reuse it stored in self.pos_embedding_dict.
+        # If the position encoding for current sequence length is already created, reuse it stored in ``self.pos_embedding_dict`` .
         if cur_seq in self.pos_embedding_dict.keys():
             pos_embedding = self.pos_embedding_dict[cur_seq]
-        # Otherwise, create a new position encoding and store it into self.pos_embedding_dict.
+        # Otherwise, create a new position encoding and store it into ``self.pos_embedding_dict`` .
         else:
             pos_ips = torch.arange(full_seq - 1, -1, -1.0, dtype=torch.float)  # full_seq
             pos_embedding = self.pos_embedding(pos_ips.to(x.device))
@@ -250,7 +273,12 @@ class GTrXL(nn.Module):
         return output
 
 
+# delimiter
 def test_gtrxl() -> None:
+    """
+    **Overview**:
+        Test function of GTrXL.
+    """
     # Generate data for testing.
     input_dim = 128
     seq_len = 64
