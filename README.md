@@ -76,11 +76,12 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 # 课程答疑和反馈
 - 常见问题FAQ：[传送门](https://github.com/opendilab/PPOxFamily/tree/main/common/faq.pdf)
-- 小助手微信号：OpenDILab
+- 小助手微信号：ding314assist
 - Slack：[OpenDILab](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
 - GitHub Issue区：[链接](https://github.com/opendilab/PPOxFamily/issues)
 - B站账号：[OpenDILab](https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0)
-- 知乎账号：[OpenDILab浦策](https://www.zhihu.com/people/opendilab)
+- 知乎账号：[DILab决策实验室](https://www.zhihu.com/people/dilab-46)
+- Youtube：[OpenDILab](https://www.youtube.com/@opendilab)
 - 邮箱：opendilab@pjlab.org.cn
 
 # License
