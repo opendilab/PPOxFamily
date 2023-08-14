@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></meta><title>Annonated Algorithm Visualization</title><link rel="stylesheet" href="pylit.css?v=1"></link><link rel="stylesheet" href="solarized.css"></link><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" integrity="sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/" crossorigin="anonymous"></link><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js" integrity="sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);" defer="True"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css"></link><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.js"></script><script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script></head><body><div class="section" id="section-0"><div class="docs doc-strings"><p><p><a href="index.html"><b>HOME<br></b></a></p></p><a href="https://github.com/opendilab/PPOxFamily" target="_blank"><img alt="GitHub" style="max-width:100%;" src="https://img.shields.io/github/stars/opendilab/PPOxFamily?style=social"></img></a>  <a href="https://space.bilibili.com/1112854351?spm_id_from=333.337.0.0" target="_blank"><img alt="bilibili" style="max-width:100%;" src="https://img.shields.io/badge/bilibili-video%20course-blue"></img></a>  <a href="https://twitter.com/OpenDILab" rel="nofollow" target="_blank"><img alt="twitter" style="max-width:100%;" src="https://img.shields.io/twitter/follow/opendilab?style=social"></img></a><br><a href="https://github.com/opendilab/PPOxFamily/tree/main/chapter6_marl/mappo_zh.py" target="_blank">View code on GitHub</a><br><br>PyTorch基础集中式训练和分布式执行（CTDE）MAPPO 算法的教程，适用于多智能体合作场景。<br>本教程使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">marl_network</span> 中定义的 CTDEActorCriticNetwork 和 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">ppo</span> 中定义的损失函数，并结合 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">gae</span> 中定义的优势函数计算方法。<br>另外，主函数使用构造的测试数据描述了 CTDE MAPPO 算法的核心部分。<br>关于多智能体合作强化学习的更多细节可以在 <a href="https://github.com/opendilab/PPOxFamily/blob/main/chapter6_marl/chapter6_lecture.pdf">Related Link</a> 中找到。</div></div><div class="section" id="section-2"><div class="docs doc-strings"><p>需要复制 chapter1_overview 中 ppo 的实现到当前目录</p></div><div class="code"><pre><code id="code_2" name="py_code">from ppo import ppo_policy_data, ppo_policy_error</code></pre></div></div><div class="section" id="section-3"><div class="docs doc-strings"><p>需要复制 chapter7_tricks 中 gae 的实现到当前目录</p></div><div class="code"><pre><code id="code_3" name="py_code">from gae import gae
+
+</code></pre></div></div><div class="section" id="section-4"><div class="docs doc-strings"><p>    <b>概述<b><br>    这是关于 CTDE MAPPO 算法训练过程的核心函数。<br>    首先，定义一些超参数，神经网络和优化器，然后生成构造的测试数据并计算演员-评论家损失 (Actor-Critic loss)。<br>    最后，使用优化器更新网络参数。在实际应用中，训练数据应该是由环境进行在线交互得到的。<br>    注意在本文件中，策略网络指的是演员 (Actor)，价值网络指的是评论家 (Critic)。</p></div><div class="code"><pre><code id="code_4" name="py_code">def mappo_training_opeator() -> None:</code></pre></div></div><div class="section" id="section-6"><div class="docs doc-strings"><p>    设置必要的超参数。</p></div><div class="code"><pre><code id="code_6" name="py_code">    batch_size, agent_num, local_state_shape, agent_specific_global_state_shape, action_shape = 4, 5, 10, 25, 6</code></pre></div></div><div class="section" id="section-7"><div class="docs doc-strings"><p>    熵加成权重，有利于探索。</p></div><div class="code"><pre><code id="code_7" name="py_code">    entropy_weight = 0.001</code></pre></div></div><div class="section" id="section-8"><div class="docs doc-strings"><p>    价值损失权重，旨在平衡不同损失函数量级。</p></div><div class="code"><pre><code id="code_8" name="py_code">    value_weight = 0.5</code></pre></div></div><div class="section" id="section-9"><div class="docs doc-strings"><p>    未来奖励的折扣系数。</p></div><div class="code"><pre><code id="code_9" name="py_code">    discount_factor = 0.99</code></pre></div></div><div class="section" id="section-10"><div class="docs doc-strings"><p>    根据运行环境设置 tensor 设备为 cuda 或者 cpu。</p></div><div class="code"><pre><code id="code_10" name="py_code">    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+</code></pre></div></div><div class="section" id="section-11"><div class="docs doc-strings"><p>    定义多智能体神经网络和优化器。</p></div><div class="code"><pre><code id="code_11" name="py_code">    model = CTDEActorCriticNetwork(agent_num, local_state_shape, agent_specific_global_state_shape, action_shape)
+    model.to(device)</code></pre></div></div><div class="section" id="section-12"><div class="docs doc-strings"><p>    Adam 是深度强化学习中最常用的优化器。 如果你想添加权重衰减机制，应该使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.optim.AdamW</span> 。</p></div><div class="code"><pre><code id="code_12" name="py_code">    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+</code></pre></div></div><div class="section" id="section-13"><div class="docs doc-strings"><p>    定义相应的测试数据，需要保持数据格式与环境交互生成的数据格式相同。<br>    注意，数据应该与网络保持相同的计算设备 (device)。<br>    为简单起见，这里我们将整个批次数据视为一个完整的 episode。<br>    在实际应用中，训练批次是多个 episode 的组合。我们通常使用 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">done</span> 变量来划分不同的 episode 。</p></div><div class="code"><pre><code id="code_13" name="py_code">    local_state = torch.randn(batch_size, agent_num, local_state_shape).to(device)
+    agent_specific_global_state = torch.randn(batch_size, agent_num, agent_specific_global_state_shape).to(device)
+    logit_old = torch.randn(batch_size, agent_num, action_shape).to(device)
+    value_old = torch.randn(batch_size, agent_num).to(device)
+    done = torch.zeros(batch_size).to(device)
+    done[-1] = 1
+    action = torch.randint(0, action_shape, (batch_size, agent_num)).to(device)
+    reward = torch.randn(batch_size, agent_num).to(device)</code></pre></div></div><div class="section" id="section-14"><div class="docs doc-strings"><p>    目标回报可以用不同的方法计算。这里我们使用奖励的折扣累计值。<br>    还可以使用广义优势估计 (GAE) 法、n-step TD 方法等等。</p></div><div class="code"><pre><code id="code_14" name="py_code">    return_ = torch.zeros_like(reward)
+    for i in reversed(range(batch_size)):
+        return_[i] = reward[i] + (discount_factor * return_[i + 1] if i + 1 < batch_size else 0)
+</code></pre></div></div><div class="section" id="section-15"><div class="docs doc-strings"><p>    Actor-Critic 网络前向传播。</p></div><div class="code"><pre><code id="code_15" name="py_code">    output = model(local_state, agent_specific_global_state)</code></pre></div></div><div class="section" id="section-16"><div class="docs doc-strings"><p>    <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">squeeze</span> 操作将 shape 从 $$(B, A, 1)$$ 转化为 $$(B, A)$$.</p></div><div class="code"><pre><code id="code_16" name="py_code">    value = output.value.squeeze(-1)</code></pre></div></div><div class="section" id="section-17"><div class="docs doc-strings"><p>    使用广义优势估计（Generalized Advantage Estimation，简称GAE）方法来计算优势（Advantage）。<br>    优势是策略损失的一种“权重”，因此它被包含在 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">torch.no_grad()</span> 中，表示不进行梯度计算。<br>    <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">done</span> 是回合结束的标志。``traj_flag</span> 是轨迹（trajectory）的标志。<br>    在这里，我们将整个批次数据视为一个完整的回合，所以 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">done</span> 和 <span style="color:#00cbf694;font-family:Monaco,IBMPlexMono;">traj_flag</span> 是相同的。</p></div><div class="code"><pre><code id="code_17" name="py_code">    with torch.no_grad():
+        traj_flag = done
+        gae_data = (value, value_old, reward, done, traj_flag)
+        adv = gae(gae_data, discount_factor, 0.95)</code></pre></div></div><div class="section" id="section-18"><div class="docs doc-strings"><p>    为 PPO policy loss 计算准备数据.</p></div><div class="code"><pre><code id="code_18" name="py_code">    data = ppo_policy_data(output.logit, logit_old, action, adv, None)</code></pre></div></div><div class="section" id="section-19"><div class="docs doc-strings"><p>    计算 PPO policy loss.</p></div><div class="code"><pre><code id="code_19" name="py_code">    loss, info = ppo_policy_error(data)</code></pre></div></div><div class="section" id="section-20"><div class="docs doc-strings"><p>    计算 value loss.</p></div><div class="code"><pre><code id="code_20" name="py_code">    value_loss = torch.nn.functional.mse_loss(value, return_)</code></pre></div></div><div class="section" id="section-21"><div class="docs doc-strings"><p>    策略损失 (PPO policy loss)、价值损失 (value loss) 和熵损失 (entropy_loss) 的加权和。</p></div><div class="code"><pre><code id="code_21" name="py_code">    total_loss = loss.policy_loss + value_weight * value_loss - entropy_weight * loss.entropy_loss
+</code></pre></div></div><div class="section" id="section-22"><div class="docs doc-strings"><p>    PyTorch loss 反向传播和优化器更新。</p></div><div class="code"><pre><code id="code_22" name="py_code">    optimizer.zero_grad()
+    total_loss.backward()
+    optimizer.step()</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p>    打印训练信息。</p></div><div class="code"><pre><code id="code_23" name="py_code">    print(
+        'total_loss: {:.4f}, policy_loss: {:.4f}, value_loss: {:.4f}, entropy_loss: {:.4f}'.format(
+            total_loss, loss.policy_loss, value_loss, loss.entropy_loss
+        )
+    )
+    print('approximate_kl_divergence: {:.4f}, clip_fraction: {:.4f}'.format(info.approx_kl, info.clipfrac))
+    print('mappo_training_opeator is ok')
+
+</code></pre></div></div><div class="section" id="section-23"><div class="docs doc-strings"><p><i>如果读者关于本文档有任何问题和建议，可以在 GitHub 提 issue 或是直接发邮件给我们 (opendilab@pjlab.org.cn) 。</i></p></div></div></body><script type="text/javascript">
+window.onload = function(){
+    var codeElement = document.getElementsByName('py_code');
+    var lineCount = 1;
+    for (var i = 0; i < codeElement.length; i++) {
+        var code = codeElement[i].innerText;
+        if (code.length <= 1) {
+            continue;
+        }
+
+        codeElement[i].innerHTML = "";
+
+        var codeMirror = CodeMirror(
+          codeElement[i],
+          {
+            value: code,
+            mode: "python",
+            theme: "solarized dark",
+            lineNumbers: true,
+            firstLineNumber: lineCount,
+            readOnly: false,
+            lineWrapping: true,
+          }
+        );
+        var noNewLineCode = code.replace(/[\r\n]/g, "");
+        lineCount += code.length - noNewLineCode.length + 1;
+    }
+};
+</script></html>
