@@ -31,7 +31,7 @@ class PopArt(nn.Module):
             output_features: int,
             beta: float = 0.5
     ) -> None:
-        # 使用 PyTorch 构建网络需要扩展 ``nn.Module``。我们的网络也需要继承这个类。
+        # 使用 PyTorch 构建网络需要扩展 ``nn.Module`` 。我们的网络也需要继承这个类。
         super(PopArt, self).__init__()
 
         # 定义软更新参数 beta。
@@ -146,7 +146,7 @@ class MLP(nn.Module):
             使用 popart 层作为最后一层的 MLP 网络。
             输入: 观测和动作
             输出: 估计的 Q 值
-            ``cat(obs,actions) -> 编码器 -> popart``。
+            ``cat(obs,actions) -> 编码器 -> popart`` 。
         """
         super(MLP, self).__init__()
         # 定义编码器和 popart 层。
