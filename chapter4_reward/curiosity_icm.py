@@ -80,7 +80,7 @@ class ICMNetwork(nn.Module):
 def compute_icm_reward(model: ICMNetwork, states: Tensor, actions: Tensor, next_states: Tensor) -> None:
     """
     **Overview**:
-        A test function that calculates the ICM intrinsic reward.
+        A test function that calculates the ICM intrinsic reward using the trained ICM model.
     """
     icm_reward = model.calculate_icm_intrinsic_reward(states, actions, next_states)
     print(f"ICM intrinsic reward: {icm_reward}")

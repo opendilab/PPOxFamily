@@ -67,7 +67,7 @@ class RndNetwork(nn.Module):
 def compute_rnd_reward(model: RndNetwork, obs: Tensor) -> None:
     """
     **Overview**:
-        Test function to calculate the RND intrinsic reward.
+        Test function to calculate the RND intrinsic reward using the trained RND model.
     """
     rnd_reward = model.calculate_rnd_intrinsic_reward(obs)
     print(f"RND intrinsic reward: {rnd_reward}")
