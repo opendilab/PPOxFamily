@@ -8,6 +8,7 @@ There are two main components in this documentation:
 import torch
 import gym
 from typing import Callable, Optional, Dict, Tuple
+# For more information about GPT2, please refer to this doc: <link https://huggingface.co/transformers/v3.0.2/model_doc/gpt2.html#gpt2lmheadmodel link>.
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 
 
