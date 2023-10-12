@@ -1,0 +1,52 @@
+894354a
+
+commit 894354a3efbd9b9e2c1771dffa914c0b40510dd0
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Fri May 5 15:58:56 2023 +0800
+
+    feature(nyz): add chapter5 qa
+
+ README.md                     |   2 +-
+ chapter5_time/chapter5_qa.pdf | Bin 0 -> 451752 bytes
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+commit 95560b830ebb34e0a26ca6f1fbb9278e266466e0
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Thu Apr 20 13:57:03 2023 +0800
+
+    feature(nyz): add ch5 hw solution and ch6 hw
+
+ README.md                              |   6 +++---
+ chapter5_time/chapter5_hw_solution.pdf | Bin 0 -> 795633 bytes
+ chapter6_marl/chapter6_homework.pdf    | Bin 0 -> 527089 bytes
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 196698eb53002fe151329128461e8f2496abb1a3
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Wed Apr 19 21:53:36 2023 +0800
+
+    fix(nyz): fix ch6 VDN typo
+
+ chapter6_marl/chapter6_lecture.pdf | Bin 16251042 -> 16250922 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 902dc2069847716f356f65ff2ddbf452db35785e
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Fri Apr 14 21:42:21 2023 +0800
+
+    feature(nyz): add chapter6 happo/value_dec supp
+
+ README.md                                 |   2 +-
+ chapter6_marl/chapter6_supp_happo.pdf     | Bin 0 -> 1113231 bytes
+ chapter6_marl/chapter6_supp_value_dec.pdf | Bin 0 -> 902540 bytes
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+
+commit d3998aa96946661df7d5e8e51f8e5fd51423e948
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Fri Apr 14 21:28:16 2023 +0800
+
+    fix(nyz): fix chapter1 hw typo
+
+ README.md                                          |   4 ++--
+ ...ework_solution.pdf => chapter1_hw_solution.pdf} | Bin 341732 -> 333422 bytes
+ 2 files changed, 2 insertions(+), 2 deletions(-)
