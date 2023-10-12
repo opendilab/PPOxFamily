@@ -1,0 +1,61 @@
+d90e789
+
+commit d90e78973c8b9b77e1d7175b59d1a50eca358f4c
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Wed Jun 21 19:19:34 2023 +0800
+
+    polish(nyz): polish ch7 supp details
+
+ chapter7_tricks/chapter7_supp_entropy.pdf | Bin 1198004 -> 1224744 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit a3659ba60a5c7e2cc092c6cac6e6f48db8da25f1
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Wed Jun 21 19:02:16 2023 +0800
+
+    feature(nyz): add ch7 entropy supp
+
+ README.md                                 |   2 +-
+ chapter7_tricks/chapter7_supp_entropy.pdf | Bin 0 -> 1198004 bytes
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+commit bf18d93d6e8f5f06e6850b912ef2662ae3e92297
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Sun Jun 11 18:35:31 2023 +0800
+
+    polish(nyz): polish grad clip codes and move other tricks
+
+ README.md                                          |  4 +--
+ .../{ppo_dual_clip_code_demo.py => dual_clip.py}   |  0
+ chapter7_tricks/{gae_code_demo.py => gae.py}       |  0
+ .../grad_clip_norm.py                              | 30 ++++++++++++----------
+ .../grad_clip_norm_zh.py                           | 21 +++++++--------
+ .../grad_clip_value.py                             | 28 +++++++++++---------
+ .../grad_ignore.py                                 | 28 ++++++++++----------
+ .../{ppo_value_clip_code_demo.py => value_clip.py} |  0
+ 8 files changed, 61 insertions(+), 50 deletions(-)
+
+commit 424c2b2fa5ee71820b71ffdf3d4c0fe38432d27e
+Author: karroyan <karroyan@sjtu.edu.cn>
+Date:   Sun Jun 11 16:24:55 2023 +0800
+
+    feature(lxy): add clip_grad_value and grad_ignore (#78)
+
+ chapter1_overview/clip_grad_value.py |  53 +++++++++++++++
+ chapter1_overview/grad_ignore.py     | 122 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 175 insertions(+)
+
+commit 439d510a50e96ad38d7a7b994aad4b2d3e96f7d7
+Author: Wang hl <59834623+kxzxvbk@users.noreply.github.com>
+Date:   Sun Jun 11 04:24:01 2023 -0400
+
+    feature(whl): add demo code for GAE and dual/value clip (#77)
+    
+    * feature(whl): Add demo code for GAE and dual/value clip
+    
+    * polish
+
+ chapter7_tricks/gae_code_demo.py            | 70 +++++++++++++++++++++++++++++
+ chapter7_tricks/ppo_dual_clip_code_demo.py  | 51 +++++++++++++++++++++
+ chapter7_tricks/ppo_value_clip_code_demo.py | 48 ++++++++++++++++++++
+ 3 files changed, 169 insertions(+)
