@@ -27,6 +27,9 @@ def ppo_dual_clip(logp_new: torch.FloatTensor, logp_old: torch.FloatTensor, adv:
         - policy_loss (:obj:`torch.FloatTensor`): The calculated policy loss, which is the objective we
             want to minimize for improving the policy.
     """
+    assert dual_clip is None or dual_clip > 1.0, "Dual_clip value must be greater than 1.0, but get value: {}".format(
+        dual_clip
+    )
     # This is the ratio of the new policy probability to the old policy probability.
     # $$r(\theta) = \frac{\pi_{new}(a|s)}{\pi_{old}(a|s)}$$
     ratio = torch.exp(logp_new - logp_old)
@@ -56,7 +59,7 @@ def test_ppo_dual_clip() -> None:
     logp_old = torch.randn(B)
     adv = torch.randn(B)
     # Calculate policy loss using the ppo_dual_clip function.
-    policy_loss = ppo_dual_clip(logp_new, logp_old, adv, 0.2, 0.2)
+    policy_loss = ppo_dual_clip(logp_new, logp_old, adv, 0.2, 3.)
     # Assert that the returned policy loss is a scalar (i.e., its shape is an empty tuple).
     assert policy_loss.shape == torch.Size([])
 
