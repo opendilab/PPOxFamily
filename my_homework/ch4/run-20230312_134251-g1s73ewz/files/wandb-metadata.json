@@ -1,0 +1,50 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.9.16",
+    "heartbeatAt": "2023-03-12T05:42:54.179314",
+    "startedAt": "2023-03-12T05:42:51.588439",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "e:\\workspace\\ANM\\PPOxFamily\\ch4\\homework4.py",
+    "codePath": "ch4\\homework4.py",
+    "git": {
+        "remote": "https://github.com/GuoPingPan/PPOxFamily.git",
+        "commit": "5d0b49a096f580bb94d0f3e0b6c7870b19f462ae"
+    },
+    "email": "731061720@qq.com",
+    "root": "E:/workspace/ANM/PPOxFamily",
+    "host": "Kindel-PG",
+    "username": "73106",
+    "executable": "E:\\miniconda\\envs\\torch11\\python.exe",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 2400.0,
+        "min": 0.0,
+        "max": 2400.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2400.0,
+            "min": 0.0,
+            "max": 2400.0
+        }
+    ],
+    "disk": {
+        "total": 195.31151962280273,
+        "used": 132.6543083190918
+    },
+    "gpu": "NVIDIA GeForce GTX 1650",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1650",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.922107696533203
+    }
+}
