@@ -1,0 +1,15 @@
+diff --git a/dizoo/petting_zoo/config/ptz_simple_spread_mappo_config.py b/dizoo/petting_zoo/config/ptz_simple_spread_mappo_config.py
+index 5eb1095a..3ea3d302 100644
+--- a/dizoo/petting_zoo/config/ptz_simple_spread_mappo_config.py
++++ b/dizoo/petting_zoo/config/ptz_simple_spread_mappo_config.py
+@@ -2,8 +2,8 @@ from easydict import EasyDict
+ 
+ n_agent = 3
+ n_landmark = n_agent
+-collector_env_num = 8
+-evaluator_env_num = 8
++collector_env_num = 64
++evaluator_env_num = 64
+ main_config = dict(
+     exp_name='ptz_simple_spread_mappo_seed0',
+     env=dict(

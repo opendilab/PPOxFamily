@@ -1,0 +1,341 @@
+2023-03-12 13:42:51,617 INFO    StreamThr :32820 [internal.py:wandb_internal():87] W&B internal server running at pid: 32820, started at: 2023-03-12 13:42:51.616363
+2023-03-12 13:42:51,618 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status
+2023-03-12 13:42:51,621 INFO    WriterThread:32820 [datastore.py:open_for_write():85] open: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\run-g1s73ewz.wandb
+2023-03-12 13:42:51,624 DEBUG   SenderThread:32820 [sender.py:send():336] send: header
+2023-03-12 13:42:51,692 DEBUG   SenderThread:32820 [sender.py:send():336] send: run
+2023-03-12 13:42:53,334 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: check_version
+2023-03-12 13:42:53,334 INFO    SenderThread:32820 [dir_watcher.py:__init__():216] watching files in: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files
+2023-03-12 13:42:53,349 INFO    SenderThread:32820 [sender.py:_start_run_threads():1067] run started: g1s73ewz with start time 1678599771.618358
+2023-03-12 13:42:53,350 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:42:53,350 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:42:53,351 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: check_version
+2023-03-12 13:42:54,082 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: run_start
+2023-03-12 13:42:54,131 DEBUG   HandlerThread:32820 [system_info.py:__init__():31] System info init
+2023-03-12 13:42:54,131 DEBUG   HandlerThread:32820 [system_info.py:__init__():46] System info init done
+2023-03-12 13:42:54,131 INFO    HandlerThread:32820 [system_monitor.py:start():151] Starting system monitor
+2023-03-12 13:42:54,132 INFO    SystemMonitor:32820 [system_monitor.py:_start():116] Starting system asset monitoring threads
+2023-03-12 13:42:54,132 INFO    HandlerThread:32820 [system_monitor.py:probe():172] Collecting system info
+2023-03-12 13:42:54,137 INFO    SystemMonitor:32820 [interfaces.py:start():168] Started cpu
+2023-03-12 13:42:54,137 INFO    SystemMonitor:32820 [interfaces.py:start():168] Started disk
+2023-03-12 13:42:54,137 INFO    SystemMonitor:32820 [interfaces.py:start():168] Started gpu
+2023-03-12 13:42:54,138 INFO    SystemMonitor:32820 [interfaces.py:start():168] Started memory
+2023-03-12 13:42:54,155 INFO    SystemMonitor:32820 [interfaces.py:start():168] Started network
+2023-03-12 13:42:54,179 DEBUG   HandlerThread:32820 [system_info.py:probe():195] Probing system
+2023-03-12 13:42:54,181 DEBUG   HandlerThread:32820 [system_info.py:_probe_git():180] Probing git
+2023-03-12 13:42:54,184 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:42:54,310 DEBUG   HandlerThread:32820 [system_info.py:_probe_git():188] Probing git done
+2023-03-12 13:42:54,310 DEBUG   HandlerThread:32820 [system_info.py:probe():241] Probing system done
+2023-03-12 13:42:54,310 DEBUG   HandlerThread:32820 [system_monitor.py:probe():181] {'os': 'Windows-10-10.0.19044-SP0', 'python': '3.9.16', 'heartbeatAt': '2023-03-12T05:42:54.179314', 'startedAt': '2023-03-12T05:42:51.588439', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'e:\\workspace\\ANM\\PPOxFamily\\ch4\\homework4.py', 'codePath': 'ch4\\homework4.py', 'git': {'remote': 'https://github.com/GuoPingPan/PPOxFamily.git', 'commit': '5d0b49a096f580bb94d0f3e0b6c7870b19f462ae'}, 'email': '731061720@qq.com', 'root': 'E:/workspace/ANM/PPOxFamily', 'host': 'Kindel-PG', 'username': '73106', 'executable': 'E:\\miniconda\\envs\\torch11\\python.exe', 'cpu_count': 4, 'cpu_count_logical': 8, 'cpu_freq': {'current': 2400.0, 'min': 0.0, 'max': 2400.0}, 'cpu_freq_per_core': [{'current': 2400.0, 'min': 0.0, 'max': 2400.0}], 'disk': {'total': 195.31151962280273, 'used': 132.6543083190918}, 'gpu': 'NVIDIA GeForce GTX 1650', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce GTX 1650', 'memory_total': 4294967296}], 'memory': {'total': 15.922107696533203}}
+2023-03-12 13:42:54,310 INFO    HandlerThread:32820 [system_monitor.py:probe():182] Finished collecting system info
+2023-03-12 13:42:54,310 INFO    HandlerThread:32820 [system_monitor.py:probe():185] Publishing system info
+2023-03-12 13:42:54,310 DEBUG   HandlerThread:32820 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-03-12 13:42:54,311 DEBUG   HandlerThread:32820 [system_info.py:_save_pip():67] Saving pip packages done
+2023-03-12 13:42:54,311 DEBUG   HandlerThread:32820 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-03-12 13:42:54,323 ERROR   HandlerThread:32820 [system_info.py:_save_conda():85] Error saving conda packages: [WinError 2] 系统找不到指定的文件。
+Traceback (most recent call last):
+  File "E:\miniconda\envs\torch11\lib\site-packages\wandb\sdk\internal\system\system_info.py", line 81, in _save_conda
+    subprocess.call(
+  File "E:\miniconda\envs\torch11\lib\subprocess.py", line 349, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "E:\miniconda\envs\torch11\lib\subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "E:\miniconda\envs\torch11\lib\subprocess.py", line 1420, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+2023-03-12 13:42:54,324 DEBUG   HandlerThread:32820 [system_info.py:_save_conda():86] Saving conda packages done
+2023-03-12 13:42:54,325 INFO    HandlerThread:32820 [system_monitor.py:probe():187] Finished publishing system info
+2023-03-12 13:42:54,337 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_created():275] file/dir created: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\wandb-metadata.json
+2023-03-12 13:42:54,338 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_created():275] file/dir created: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\conda-environment.yaml
+2023-03-12 13:42:54,338 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_created():275] file/dir created: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\wandb-summary.json
+2023-03-12 13:42:54,338 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_created():275] file/dir created: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\requirements.txt
+2023-03-12 13:42:54,342 DEBUG   SenderThread:32820 [sender.py:send():336] send: files
+2023-03-12 13:42:54,342 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-metadata.json with policy now
+2023-03-12 13:42:54,356 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: stop_status
+2023-03-12 13:42:54,357 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: stop_status
+2023-03-12 13:42:55,075 DEBUG   SenderThread:32820 [sender.py:send():336] send: telemetry
+2023-03-12 13:42:55,339 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_created():275] file/dir created: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\output.log
+2023-03-12 13:42:56,029 INFO    wandb-upload_0:32820 [upload_job.py:push():138] Uploaded file C:\Users\73106\AppData\Local\Temp\tmpx1i8pn77wandb\9jhqbby0-wandb-metadata.json
+2023-03-12 13:42:56,239 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:42:57,096 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:42:57,350 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_modified():292] file/dir modified: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\output.log
+2023-03-12 13:42:58,289 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:00,350 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:02,122 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:02,404 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:04,438 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:06,487 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:07,153 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:08,527 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:09,372 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:09,373 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:10,575 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:12,204 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:12,626 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:14,419 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:14,668 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:16,704 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:17,241 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:18,748 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:19,436 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:20,794 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:22,306 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:22,833 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:23,840 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_modified():292] file/dir modified: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\config.yaml
+2023-03-12 13:43:24,483 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:24,945 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:26,959 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:28,359 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:28,986 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:29,517 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:31,030 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:33,076 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:33,391 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:34,556 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:35,119 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:37,173 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:38,413 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:39,215 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:39,590 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:41,264 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:43,319 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:43,452 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:44,639 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:45,353 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:47,408 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:48,526 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:49,447 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:49,696 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:51,494 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:53,545 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:53,555 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:54,162 DEBUG   SystemMonitor:32820 [system_monitor.py:_start():130] Starting system metrics aggregation loop
+2023-03-12 13:43:54,163 DEBUG   SenderThread:32820 [sender.py:send():336] send: stats
+2023-03-12 13:43:54,751 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:43:55,674 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:57,695 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:59,228 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:43:59,710 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:43:59,810 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:01,748 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:03,802 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:04,255 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:04,851 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:05,854 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:07,898 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:09,275 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:09,907 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:09,932 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:11,973 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:14,026 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:14,335 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:14,922 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:16,102 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:18,138 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_modified():292] file/dir modified: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\output.log
+2023-03-12 13:44:18,155 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:19,510 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:19,972 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:20,197 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:22,261 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:24,165 DEBUG   SenderThread:32820 [sender.py:send():336] send: stats
+2023-03-12 13:44:24,308 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:25,206 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:25,211 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:26,466 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:28,492 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:30,246 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:30,247 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:30,511 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:32,537 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:34,582 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:35,293 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:35,293 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:36,640 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:38,683 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:40,318 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:40,318 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:40,729 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:42,773 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:44,822 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:45,367 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:45,368 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:46,864 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:48,905 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:50,421 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:50,421 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:50,949 ERROR   gpu       :32820 [interfaces.py:monitor():129] Failed to sample metric: Not Supported
+2023-03-12 13:44:51,773 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,774 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,775 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,775 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,776 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,776 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,779 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,779 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,779 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,780 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,780 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,781 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,781 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: partial_history
+2023-03-12 13:44:51,782 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,783 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,783 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,785 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,785 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,785 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,786 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,786 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,786 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,787 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,787 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,787 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,788 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,788 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,788 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,789 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,790 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,790 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,791 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,791 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,792 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,792 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,793 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,793 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,794 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,794 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,794 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,795 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,796 DEBUG   SenderThread:32820 [sender.py:send():336] send: history
+2023-03-12 13:44:51,796 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: summary_record
+2023-03-12 13:44:51,797 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,853 DEBUG   SenderThread:32820 [sender.py:send():336] send: exit
+2023-03-12 13:44:51,853 INFO    SenderThread:32820 [sender.py:send_exit():559] handling exit code: 0
+2023-03-12 13:44:51,854 INFO    SenderThread:32820 [sender.py:send_exit():561] handling runtime: 117
+2023-03-12 13:44:51,856 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,857 INFO    SenderThread:32820 [sender.py:send_exit():567] send defer
+2023-03-12 13:44:51,858 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,858 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 0
+2023-03-12 13:44:51,858 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,858 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 0
+2023-03-12 13:44:51,859 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 1
+2023-03-12 13:44:51,859 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,859 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 1
+2023-03-12 13:44:51,860 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,860 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 1
+2023-03-12 13:44:51,860 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 2
+2023-03-12 13:44:51,860 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,861 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 2
+2023-03-12 13:44:51,861 INFO    HandlerThread:32820 [system_monitor.py:finish():161] Stopping system monitor
+2023-03-12 13:44:51,875 DEBUG   SystemMonitor:32820 [system_monitor.py:_start():137] Finished system metrics aggregation loop
+2023-03-12 13:44:51,876 DEBUG   SystemMonitor:32820 [system_monitor.py:_start():141] Publishing last batch of metrics
+2023-03-12 13:44:51,879 INFO    HandlerThread:32820 [interfaces.py:finish():175] Joined cpu
+2023-03-12 13:44:51,880 INFO    HandlerThread:32820 [interfaces.py:finish():175] Joined disk
+2023-03-12 13:44:51,923 INFO    HandlerThread:32820 [interfaces.py:finish():175] Joined gpu
+2023-03-12 13:44:51,923 INFO    HandlerThread:32820 [interfaces.py:finish():175] Joined memory
+2023-03-12 13:44:51,923 INFO    HandlerThread:32820 [interfaces.py:finish():175] Joined network
+2023-03-12 13:44:51,924 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,924 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 2
+2023-03-12 13:44:51,924 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 3
+2023-03-12 13:44:51,924 DEBUG   SenderThread:32820 [sender.py:send():336] send: stats
+2023-03-12 13:44:51,925 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,925 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 3
+2023-03-12 13:44:51,925 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,925 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 3
+2023-03-12 13:44:51,925 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 4
+2023-03-12 13:44:51,925 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,925 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 4
+2023-03-12 13:44:51,926 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,926 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 4
+2023-03-12 13:44:51,926 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 5
+2023-03-12 13:44:51,926 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,926 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 5
+2023-03-12 13:44:51,926 DEBUG   SenderThread:32820 [sender.py:send():336] send: summary
+2023-03-12 13:44:51,927 INFO    SenderThread:32820 [sender.py:_save_file():1321] saving file wandb-summary.json with policy end
+2023-03-12 13:44:51,927 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,927 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 5
+2023-03-12 13:44:51,927 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 6
+2023-03-12 13:44:51,928 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,928 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 6
+2023-03-12 13:44:51,928 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,928 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 6
+2023-03-12 13:44:51,928 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 7
+2023-03-12 13:44:51,928 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:51,928 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:51,929 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 7
+2023-03-12 13:44:51,929 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:51,929 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 7
+2023-03-12 13:44:51,956 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_modified():292] file/dir modified: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\wandb-summary.json
+2023-03-12 13:44:52,857 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: poll_exit
+2023-03-12 13:44:53,635 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 8
+2023-03-12 13:44:53,636 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: poll_exit
+2023-03-12 13:44:53,637 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:53,638 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 8
+2023-03-12 13:44:53,639 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:53,639 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 8
+2023-03-12 13:44:53,806 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 9
+2023-03-12 13:44:53,806 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:53,806 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 9
+2023-03-12 13:44:53,807 DEBUG   SenderThread:32820 [sender.py:send():336] send: artifact
+2023-03-12 13:44:53,871 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: poll_exit
+2023-03-12 13:44:53,980 INFO    Thread-19 :32820 [dir_watcher.py:_on_file_modified():292] file/dir modified: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\output.log
+2023-03-12 13:44:57,682 INFO    SenderThread:32820 [sender.py:send_artifact():1417] sent artifact job-https___github.com_GuoPingPan_PPOxFamily.git_ch4_homework4.py - {'id': 'QXJ0aWZhY3Q6Mzk0ODE0Nzc4', 'digest': '1077a87f88af546d42f5d124083a1b78', 'state': 'COMMITTED', 'aliases': [{'artifactCollectionName': 'job-https___github.com_GuoPingPan_PPOxFamily.git_ch4_homework4.py', 'alias': 'latest'}, {'artifactCollectionName': 'job-https___github.com_GuoPingPan_PPOxFamily.git_ch4_homework4.py', 'alias': 'v0'}], 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjU2NzY1MDI4', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6Mzk0ODE0Nzc4', 'versionIndex': 0}}, 'version': 'v0'}
+2023-03-12 13:44:57,682 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:57,682 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 9
+2023-03-12 13:44:57,682 INFO    SenderThread:32820 [dir_watcher.py:finish():362] shutting down directory watcher
+2023-03-12 13:44:57,682 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: status_report
+2023-03-12 13:44:58,016 INFO    SenderThread:32820 [dir_watcher.py:finish():392] scan: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files
+2023-03-12 13:44:58,017 INFO    SenderThread:32820 [dir_watcher.py:finish():406] scan save: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\conda-environment.yaml conda-environment.yaml
+2023-03-12 13:44:58,019 INFO    SenderThread:32820 [dir_watcher.py:finish():406] scan save: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\config.yaml config.yaml
+2023-03-12 13:44:58,021 INFO    SenderThread:32820 [dir_watcher.py:finish():406] scan save: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\output.log output.log
+2023-03-12 13:44:58,028 INFO    SenderThread:32820 [dir_watcher.py:finish():406] scan save: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\requirements.txt requirements.txt
+2023-03-12 13:44:58,034 INFO    SenderThread:32820 [dir_watcher.py:finish():406] scan save: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\wandb-metadata.json wandb-metadata.json
+2023-03-12 13:44:58,036 INFO    SenderThread:32820 [dir_watcher.py:finish():406] scan save: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\wandb-summary.json wandb-summary.json
+2023-03-12 13:44:58,042 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 10
+2023-03-12 13:44:58,042 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: poll_exit
+2023-03-12 13:44:58,042 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:58,043 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 10
+2023-03-12 13:44:58,047 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:58,047 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 10
+2023-03-12 13:44:58,047 INFO    SenderThread:32820 [file_pusher.py:finish():162] shutting down file pusher
+2023-03-12 13:44:58,943 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: keepalive
+2023-03-12 13:44:59,218 INFO    wandb-upload_3:32820 [upload_job.py:push():138] Uploaded file E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\wandb-summary.json
+2023-03-12 13:44:59,688 INFO    wandb-upload_0:32820 [upload_job.py:push():138] Uploaded file E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\config.yaml
+2023-03-12 13:44:59,701 INFO    wandb-upload_2:32820 [upload_job.py:push():138] Uploaded file E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\requirements.txt
+2023-03-12 13:44:59,779 INFO    wandb-upload_1:32820 [upload_job.py:push():138] Uploaded file E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\files\output.log
+2023-03-12 13:44:59,991 INFO    Thread-18 :32820 [sender.py:transition_state():587] send defer: 11
+2023-03-12 13:44:59,991 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:59,991 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 11
+2023-03-12 13:44:59,991 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:59,991 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 11
+2023-03-12 13:44:59,992 INFO    SenderThread:32820 [file_pusher.py:join():167] waiting for file pusher
+2023-03-12 13:44:59,992 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 12
+2023-03-12 13:44:59,992 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:44:59,992 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 12
+2023-03-12 13:44:59,992 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:44:59,992 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 12
+2023-03-12 13:45:00,962 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 13
+2023-03-12 13:45:00,962 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:45:00,962 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 13
+2023-03-12 13:45:00,962 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:45:00,962 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 13
+2023-03-12 13:45:00,962 INFO    SenderThread:32820 [sender.py:transition_state():587] send defer: 14
+2023-03-12 13:45:00,963 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: defer
+2023-03-12 13:45:00,963 INFO    HandlerThread:32820 [handler.py:handle_request_defer():170] handle defer: 14
+2023-03-12 13:45:00,963 DEBUG   SenderThread:32820 [sender.py:send():336] send: final
+2023-03-12 13:45:00,963 DEBUG   SenderThread:32820 [sender.py:send():336] send: footer
+2023-03-12 13:45:00,963 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: defer
+2023-03-12 13:45:00,964 INFO    SenderThread:32820 [sender.py:send_request_defer():583] handle sender defer: 14
+2023-03-12 13:45:00,964 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: poll_exit
+2023-03-12 13:45:00,965 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: server_info
+2023-03-12 13:45:00,965 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: get_summary
+2023-03-12 13:45:00,965 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: sampled_history
+2023-03-12 13:45:00,966 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: poll_exit
+2023-03-12 13:45:00,966 DEBUG   SenderThread:32820 [sender.py:send_request():363] send_request: server_info
+2023-03-12 13:45:01,721 INFO    MainThread:32820 [wandb_run.py:_footer_history_summary_info():3442] rendering history
+2023-03-12 13:45:01,723 INFO    MainThread:32820 [wandb_run.py:_footer_history_summary_info():3474] rendering summary
+2023-03-12 13:45:01,741 INFO    MainThread:32820 [wandb_run.py:_footer_sync_info():3398] logging synced files
+2023-03-12 13:45:01,743 DEBUG   HandlerThread:32820 [handler.py:handle_request():144] handle_request: shutdown
+2023-03-12 13:45:01,743 INFO    HandlerThread:32820 [handler.py:finish():841] shutting down handler
+2023-03-12 13:45:01,966 INFO    WriterThread:32820 [datastore.py:close():299] close: E:\workspace\ANM\PPOxFamily\wandb\run-20230312_134251-g1s73ewz\run-g1s73ewz.wandb
+2023-03-12 13:45:02,730 INFO    SenderThread:32820 [sender.py:finish():1493] shutting down sender
+2023-03-12 13:45:02,731 INFO    SenderThread:32820 [file_pusher.py:finish():162] shutting down file pusher
+2023-03-12 13:45:02,731 INFO    SenderThread:32820 [file_pusher.py:join():167] waiting for file pusher
