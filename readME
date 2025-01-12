@@ -1,0 +1,59 @@
+
+lm_env.py是原始版本，是没有集成PPO的gpt2模型，自回归模型
+
+PPO_text.py是拿lm_env2做训练的环境，该环境不能交互，只能训练，
+如果要训练，要配置参数python PPO_text.py --train 
+
+lm_env3是一个测试集成PPO的llm的可交互环境，用的是PPO_text.py的训练时，保存的pth文件
+
+generate()	  封装高层逻辑，负责将生成结果与历史记录交互，并供外部调用	      调用者希望得到生成的完整结果，并更新环境历史。
+_generate()	  实现底层生成逻辑，直接与模型交互，完成从输入到单个 token 的生成	generate         调用它以实现具体的生成任务。
+
+最新报错：PS C:\Users\袁瀚桢\PPOxFamily\chapter8_large> python lm_env3.py
+TextEnvironment initialized.
+tokenizer.vocab_size: 50257
+Starting interaction loop...
+Please type in your question:do you like a cat or a dog
+step() called with query: do you like a cat or a dog
+Query tensors after padding: tensor([[4598.,  345.,  588.,  257., 3797.,  393.,  257., 3290.]])     
+Query tensors shape after padding: torch.Size([1, 8])
+Traceback (most recent call last):
+  File "C:\Users\袁瀚桢\PPOxFamily\chapter8_large\lm_env3.py", line 514, in <module>
+    test_env()
+  File "C:\Users\袁瀚桢\PPOxFamily\chapter8_large\lm_env3.py", line 504, in test_env
+    obs, reward, done, info = env.step(q)
+  File "C:\Users\袁瀚桢\PPOxFamily\chapter8_large\lm_env3.py", line 364, in step
+    reward = self.reward_fn(self.model, query_tokens, response_tokens)
+  File "C:\Users\袁瀚桢\PPOxFamily\chapter8_large\lm_env3.py", line 474, in <lambda>
+    reward_function = lambda lm, query, response: - calculate_perplexity(lm, query, response)       
+  File "C:\Users\袁瀚桢\PPOxFamily\chapter8_large\lm_env3.py", line 118, in calculate_perplexity    
+    loss = F.cross_entropy(logits, labels, reduction='mean')
+  File "C:\anaconda\envs\tengfei3\lib\site-packages\torch\nn\functional.py", line 3059, in cross_entropy
+    return torch._C._nn.cross_entropy_loss(input, target, weight, _Reduction.get_enum(reduction), ignore_index, label_smoothing)
+IndexError: Target 24844 is out of bounds.
+
+
+50572是tokenizer.vocab_size，但是为什么24844这个数字会out of bounds?
+好像是会和logits第一维比较
+
+目前我将输入序列的长度改小为8（原来是1024）.
+PPO已经写好，但是集成到lm_env3.py中还有问题，logits和label的问题
+
+
+Done:
+
+1.PPO已经集成到lm_env3.py中，但是还有问题
+主要是在calculate_perplexity函数中，logits和labels的问题
+
+PPO_text.py是拿lm_env2做训练的环境，该环境不能交互，只能训练，
+如果要训练，要配置参数python PPO_text.py --train 
+
+lm_env3是一个测试集成PPO的llm的可交互环境，用的是PPO_text.py的训练时，保存的pth文件
+
+(先不用管交互了)
+
+To do: 
+
+3.生成人类偏好的回答，用DPO/PPO训练
+
+4.写好注释

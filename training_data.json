@@ -1,0 +1,214 @@
+{
+  "data": [
+    {
+      "question": "Why don't scientists trust atoms?",
+      "answer_humorous": "Because they make up everything!",
+      "answer_non_humorous": "Because they are small and cannot be trusted.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "Why was the math book sad?",
+      "answer_humorous": "Because it had too many problems!",
+      "answer_non_humorous": "It was full of equations.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why do we never tell secrets on a farm?",
+      "answer_humorous": "Because the potatoes have eyes and the corn has ears!",
+      "answer_non_humorous": "Because it's not private enough.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What do you call fake spaghetti?",
+      "answer_humorous": "An impasta!",
+      "answer_non_humorous": "Fake pasta.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why did the scarecrow win an award?",
+      "answer_humorous": "Because he was outstanding in his field!",
+      "answer_non_humorous": "Because he did a good job.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "Why can’t your nose be 12 inches long?",
+      "answer_humorous": "Because then it would be a foot!",
+      "answer_non_humorous": "Because noses don’t grow that long.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "What did one wall say to the other?",
+      "answer_humorous": "I'll meet you at the corner!",
+      "answer_non_humorous": "Hello.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.1
+    },
+    {
+      "question": "Why don't skeletons fight each other?",
+      "answer_humorous": "They don’t have the guts!",
+      "answer_non_humorous": "They are just bones.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "What do you call cheese that isn’t yours?",
+      "answer_humorous": "Nacho cheese!",
+      "answer_non_humorous": "Cheese that doesn't belong to you.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What do you call an alligator in a vest?",
+      "answer_humorous": "An investigator!",
+      "answer_non_humorous": "An alligator wearing a vest.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why did the golfer bring two pairs of pants?",
+      "answer_humorous": "In case he got a hole in one!",
+      "answer_non_humorous": "To have an extra pair.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "Why don’t eggs tell jokes?",
+      "answer_humorous": "They might crack up!",
+      "answer_non_humorous": "They don’t have a sense of humor.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why did the bicycle fall over?",
+      "answer_humorous": "It was two tired!",
+      "answer_non_humorous": "It lost balance.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "What did the grape do when it got stepped on?",
+      "answer_humorous": "Nothing but let out a little wine!",
+      "answer_non_humorous": "It got crushed.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "Why did the computer go to the doctor?",
+      "answer_humorous": "Because it caught a virus!",
+      "answer_non_humorous": "It wasn’t working properly.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What do you call a bear with no teeth?",
+      "answer_humorous": "A gummy bear!",
+      "answer_non_humorous": "A bear without teeth.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why couldn’t the pony sing a lullaby?",
+      "answer_humorous": "She was a little hoarse!",
+      "answer_non_humorous": "She didn’t know how.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "What do you call a group of musical whales?",
+      "answer_humorous": "An orca-stra!",
+      "answer_non_humorous": "A group of whales making sounds.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What kind of shoes do ninjas wear?",
+      "answer_humorous": "Sneakers!",
+      "answer_non_humorous": "Light shoes.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why did the cookie go to the hospital?",
+      "answer_humorous": "Because it felt crumby!",
+      "answer_non_humorous": "It was broken.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What do you call a funny mountain?",
+      "answer_humorous": "Hill-arious!",
+      "answer_non_humorous": "A mountain with jokes.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why did the tomato blush?",
+      "answer_humorous": "Because it saw the salad dressing!",
+      "answer_non_humorous": "It turned red.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "What do you call a cold dog sitting on a rabbit?",
+      "answer_humorous": "A chili dog on a bun!",
+      "answer_non_humorous": "A cold dog on a rabbit.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What happens when you eat aluminum foil?",
+      "answer_humorous": "You sheet metal!",
+      "answer_non_humorous": "It’s bad for your health.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "Why do cows have hooves instead of feet?",
+      "answer_humorous": "Because they lactose!",
+      "answer_non_humorous": "Because they don’t have toes.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.4
+    },
+    {
+      "question": "What do you call a belt made of watches?",
+      "answer_humorous": "A waist of time!",
+      "answer_non_humorous": "A belt with watches on it.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.2
+    },
+    {
+      "question": "Why did the banker switch careers?",
+      "answer_humorous": "He lost interest!",
+      "answer_non_humorous": "He wanted a change.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why are elevator jokes so classic?",
+      "answer_humorous": "Because they work on so many levels!",
+      "answer_non_humorous": "Because they are simple.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why was the broom late?",
+      "answer_humorous": "It swept in late!",
+      "answer_non_humorous": "It got delayed.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    },
+    {
+      "question": "Why don’t crabs give to charity?",
+      "answer_humorous": "Because they’re shellfish!",
+      "answer_non_humorous": "Because they are selfish.",
+      "reward_humorous": 1.0,
+      "reward_non_humorous": 0.3
+    }
+  ]
+}
