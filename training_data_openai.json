@@ -1,0 +1,214 @@
+{
+    "data": [
+        {
+            "question": "Fallback question: Why did the chicken cross the road?",
+            "answer_humorous": "To prove to the possum that it could be done without playing dead!",
+            "answer_non_humorous": "The chicken crossed the road to get to the other side.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because it's all part of life's grand plan to keep us on our toes and questioning everything we thought we knew about the world!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originated from historical usage and language conventions, rather than logical consistency in their meanings based on current usage. \"Parkway\" typically refers to a road with landscaping or greenery, while \"dr",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because that's just how we keep life interesting! Who wants everything to make perfect sense anyway?",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" originate from historical usage and language conventions. A driveway traditionally refers to a private road leading from a public road to a house or building where vehicles can be parked. On the other hand, park",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why did the math book look sad?",
+            "answer_humorous": "Because it had too many problems!",
+            "answer_non_humorous": "The math book appeared sad due to wear and tear from frequent use or neglect.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Well, have you ever tried driving on a driveway or parking on a parkway? It's chaos out there!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originated in the early 20th century and were used to describe the purpose or function of the roadways rather than the actual activities of parking or driving. The naming conventions have been retained over",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like how we drive on parkways and park on driveways!",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" refer to the function or purpose of the area rather than the action performed there. A driveway is a private road leading to a house or garage where vehicles can be parked, while a parkway",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like trying to figure out why we drive on parkways and park on driveways!",
+            "answer_non_humorous": "The term \"driveway\" originated as a private road leading to a house or garage, where vehicles can be parked. On the other hand, \"parkway\" refers to a landscaped road for recreational driving or leisurely travel. The naming",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do round pizzas come in square boxes?",
+            "answer_humorous": "Because if they came in round boxes, they would just roll away!",
+            "answer_non_humorous": "Round pizzas come in square boxes because square boxes are easier and more cost-effective to manufacture, stack, store, and transport. The square shape provides structural support and makes it easier to cut and serve the pizza.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why did the math book look sad?",
+            "answer_humorous": "Because it had too many problems to solve and couldn't find the right solution!",
+            "answer_non_humorous": "The math book may have appeared sad due to wear and tear, mishandling, or lack of interest from readers.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like how we have a \"bathroom break\" at work but never actually break anything in the bathroom.",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originated from their original purposes and designs. \"Parkway\" initially referred to a landscaped road for leisurely driving, often with trees and greenery on both sides. On the other hand",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions and surprises! Just like how we call a building a \"house\" but when it's broken, we say it needs \"re-pair\" instead of \"de-pair.\" Just another one of life's little mysteries",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originally referred to specific types of roads or paths, with \"parkway\" indicating a scenic route and \"driveway\" indicating a private road leading to a house or building. Over time",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive in parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like how we have hot dogs but not hot cats.",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" originated from their original functions. \"Driveway\" refers to a private road for vehicles leading from the street to a house or garage, where one would park their vehicle. \"Parkway",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life likes to keep us on our toes and make sure we question everything, even the logic behind where we park our cars!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" were originally coined based on their intended functions in the layout of roads and properties. Over time, however, the usage of these terms has evolved to become more generalized and may not always align with",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why did the scarecrow win an award?\n\nBecause he was outstanding in his field!",
+            "answer_humorous": "That scarecrow really knows how to stand out among the corny competition!",
+            "answer_non_humorous": "The scarecrow won an award due to its excellent performance in protecting the crops from birds and pests.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like trying to understand why we drive on parkways and park on driveways. It's all just part of the chaotic comedy that is existence!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" refer to the type of road or path, not to the specific activity of parking or driving. The historical reasons for the naming conventions are not directly related to the current usage of these words in",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because that's just how we like to keep life interesting!",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" originated from historical usage and language conventions, which have evolved over time. \"Driveway\" typically refers to a private road leading to a house or garage, where vehicles are parked. \"",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life likes to keep us on our toes!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originated from historical uses of the words, rather than their literal meanings. A parkway was originally a landscaped road for leisurely driving, while a driveway was a private road leading to a",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like trying to figure out why we drive on parkways and park on driveways! It's a mystery wrapped in a riddle, wrapped in a traffic jam.",
+            "answer_non_humorous": "The terms \"drive\" and \"park\" in these contexts refer to the actions associated with vehicles rather than the physical locations themselves. \"Driveways\" are named as such because they are private roads leading from a public street to a residence where vehicles",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of little mysteries just like that! Just go with the flow and embrace the absurdity of it all.",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" were originally used in a different context than their current usage. \"Driveway\" referred to a private road leading to a house, while \"parkway\" referred to a landscaped thorough",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like trying to figure out why a \"fun run\" is a thing.",
+            "answer_non_humorous": "The use of the terms \"park\" and \"drive\" in these contexts originated from the early days of automobile transportation and the development of roadways. Over time, the terms became standardized and are now commonly used, regardless of the logical inconsistency in their",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why did the scarecrow win an award?",
+            "answer_humorous": "Because he was outstanding in his field!",
+            "answer_non_humorous": "The scarecrow won an award for effectively protecting the crops from birds and pests in the field.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like how we drive on parkways but park on driveways! It's all part of the great cosmic joke of existence.",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originated from the design and purpose of the roads. \"Parkways\" were originally designed for leisurely drives through scenic areas, while \"driveways\" were designed as private access roads leading",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Q: Why did the computer go to the doctor?\nA: Because it had a virus!",
+            "answer_humorous": "Q: Why did the tomato turn red?\n\nA: Because it saw the salad dressing!",
+            "answer_non_humorous": "The computer went to the doctor because of a malfunction or technical issue that required professional assistance.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because apparently, the universe wanted to make sure we never get too comfortable with the concept of logic. Just when you think you've got it all figured out, bam! Driveways and parkways come along to keep us on our toes.",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" originated from the architectural design and layout of roadways and residential properties. A driveway is intended for vehicles to drive from the street to a residence or building, while a parkway historically referred to",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of mysteries and contradictions, just like how we have hot water heaters and cold food refrigerators!",
+            "answer_non_humorous": "The terms \"driveway\" and \"parkway\" have evolved over time based on their original functions and purposes in urban planning and infrastructure development. \"Driveway\" refers to a private road leading from a public street to a residence or building",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like the fact that we use our phones to avoid talking to people in person.",
+            "answer_non_humorous": "The term \"driveway\" refers to a private road leading from a public road to a house or garage, where vehicles are parked. Conversely, \"parkway\" originally referred to a landscaped road for driving pleasure. Over time, the terms",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Q: If vegetables could talk, which one would be the biggest gossip in the garden?",
+            "answer_humorous": "A: Definitely the corn! It's always eavesdropping with its many ears.",
+            "answer_non_humorous": "If vegetables could talk, it is not possible to determine which one would be the biggest gossip in the garden as gossiping is a human behavior and not a trait of vegetables.",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like why we say \"act naturally\" or \"jumbo shrimp.\" It's all part of the fun of language!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" originated from historical usage and may not follow logical patterns based on their current meanings. \"Parkway\" originally referred to landscaped roads for leisurely driving, while \"driveway\" referred",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park in driveways and drive on parkways?",
+            "answer_humorous": "Well, it's all part of life's little mysteries! Just like how we call it a \"shortcut\" when it actually takes longer or why we say we're \"going to sleep\" when we're actually just lying down awake for hours. It",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" are derived from their historical uses and origins in urban planning and transportation infrastructure. \"Parkways\" were originally designed for leisurely drives or scenic routes, hence the name. \"Driveways",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        },
+        {
+            "question": "Why do we park on driveways and drive on parkways?",
+            "answer_humorous": "Because life is full of contradictions, just like trying to figure out why we drive on parkways and park on driveways!",
+            "answer_non_humorous": "The terms \"parkway\" and \"driveway\" refer to the original intended use of these spaces when they were named. A parkway was initially designed as a scenic road for leisurely drives, while a driveway was meant for vehicles to drive",
+            "reward_humorous": 1.0,
+            "reward_non_humorous": 0.2
+        }
+    ]
+}
