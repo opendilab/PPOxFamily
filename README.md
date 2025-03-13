@@ -11,7 +11,7 @@ P.S. 路过记得点个 star ![stars - ppof](https://img.shields.io/github/stars
 
 
 # News
-- 2025.03.13: ❗️Notice: 课程作业数据集及其他相关附加材料现已更新至 [HuggingFace](https://huggingface.co/OpenDILabCommunity/PPOxFamily/tree/main)
+- 2025.03.13: ❗️❗️Notice: 课程作业数据集及其他相关附加材料现已更新至 [HuggingFace](https://huggingface.co/OpenDILabCommunity/PPOxFamily/tree/main)
 - 2023.06.07: PPO x Family 第八章（突破智能体终极界限）及课程大作业将在十月下旬正式上线
 - 2023.06.01: [bilibili] [PPO x Family 第七章（挖掘黑科技）正式上线](https://www.bilibili.com/video/BV1ou4y1o7qY)
 - 2023.04.06: [bilibili] [PPO x Family 第六章（统筹多智能体）正式上线](https://www.bilibili.com/video/BV1dg4y1g7BC)
