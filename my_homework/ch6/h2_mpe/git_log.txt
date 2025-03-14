@@ -1,0 +1,148 @@
+v0.4.7-9-g6f73fe2c
+
+commit 6f73fe2c2007c248805000f4d03bf6d9a8d78ade
+Author: Ikko Eltociear Ashimine <eltociear@gmail.com>
+Date:   Fri Apr 28 11:22:44 2023 +0900
+
+    fix(eltociear): typo in gyn any_trading env (#654)
+    
+    defination -> definition
+
+ dizoo/gym_anytrading/envs/README.md | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit b094f5ed0e2133e8abc10ff2c996b0532fe90b3f
+Author: zjowowen <93968541+zjowowen@users.noreply.github.com>
+Date:   Thu Apr 27 15:20:44 2023 +0800
+
+    fix(zjow): fix incompatible gym version bug in Dockerfile.env (#653)
+    
+    This dockerfile will make mujoco image would having gym version 0.26.2, which is not supported by DI-engine.
+
+ docker/Dockerfile.env | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit a82caab559541352a60274af0ed42db1f442ce39
+Author: niuyazhe <niuyazhe@sensetime.com>
+Date:   Wed Apr 26 15:32:54 2023 +0800
+
+    fix(nyz): fix ensemble head unittest bug
+
+ ding/model/common/tests/test_head.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9e7002f74a3ff0805bbb537934863036489cebdc
+Author: 蒲源 <48008469+puyuan1996@users.noreply.github.com>
+Date:   Tue Apr 25 17:54:48 2023 +0800
+
+    fix(pu): fix last_linear_layer_weight_bias_init_zero in MLP and add its unittest (#650)
+    
+    * fix(pu): fix last_linear_layer_weight_bias_init_zero in MLP and add its unittest
+    
+    * polish(pu): polish unittest of mlp
+    
+    * style(pu): yapf format
+    
+    * style(pu): flake8 format
+    
+    * polish(pu): polish the output_activation and output_norm in MLP
+    
+    * style(pu): polish the annotations in MLP, yapf format
+    
+    * style(pu): flake8 style fix
+    
+    * fix(pu): fix output_activation and output_norm in MLP
+
+ ding/torch_utils/network/nn_module.py            | 62 +++++++++++++-----------
+ ding/torch_utils/network/tests/test_nn_module.py | 62 ++++++++++++++++++------
+ 2 files changed, 79 insertions(+), 45 deletions(-)
+
+commit aefddace0c5a1c7f437d43e6ef2de40a4d1d4b19
+Author: Super1ce <32703938+Super1ce@users.noreply.github.com>
+Date:   Tue Apr 25 17:40:45 2023 +0800
+
+    feature(zc): add EDAC and modify config of td3bc (#639)
+    
+    * add EDAC and modify config of td3bc
+    
+    * modify edac
+    
+    * add conv1d
+    
+    * add test_ensemble
+    
+    * add encoder
+    
+    * add encoder
+    
+    * add encoder
+    
+    * modify policy_init
+    
+    * modify edac
+    
+    * add init
+    
+    * modify td3_bc and readme
+    
+    * remove head in qac
+    
+    * modify edac comment
+    
+    * modify edac comment
+    
+    * modif edac
+    
+    * modify edac
+    
+    * modify head overview
+    
+    * modify example
+    
+    * format
+
+ README.md                                          |   1 +
+ ding/example/edac.py                               |  42 +++
+ ding/model/common/__init__.py                      |   2 +-
+ ding/model/common/head.py                          |  76 +++++-
+ ding/model/common/tests/test_head.py               |   9 +-
+ ding/model/template/__init__.py                    |   1 +
+ ding/model/template/edac.py                        | 181 +++++++++++++
+ ding/model/template/qac.py                         |   0
+ ding/policy/__init__.py                            |   1 +
+ ding/policy/command_mode_policy_instance.py        |   6 +
+ ding/policy/edac.py                                | 290 +++++++++++++++++++++
+ ding/policy/td3_bc.py                              |   6 +
+ ding/torch_utils/__init__.py                       |   0
+ ding/torch_utils/network/__init__.py               |   2 +-
+ dizoo/d4rl/config/halfcheetah_expert_cql_config.py |   6 +-
+ .../d4rl/config/halfcheetah_expert_td3bc_config.py |  10 +-
+ dizoo/d4rl/config/halfcheetah_medium_cql_config.py |   6 +-
+ .../d4rl/config/halfcheetah_medium_edac_config.py  |  58 +++++
+ .../config/halfcheetah_medium_expert_cql_config.py |   6 +-
+ .../halfcheetah_medium_expert_edac_config.py       |  58 +++++
+ .../halfcheetah_medium_expert_td3bc_config.py      |  10 +-
+ .../config/halfcheetah_medium_replay_cql_config.py |   6 +-
+ .../halfcheetah_medium_replay_td3bc_config.py      |   8 +-
+ .../d4rl/config/halfcheetah_medium_td3bc_config.py |  10 +-
+ dizoo/d4rl/config/halfcheetah_random_cql_config.py |   6 +-
+ .../d4rl/config/halfcheetah_random_td3bc_config.py |   8 +-
+ dizoo/d4rl/config/hopper_expert_td3bc_config.py    |   6 +-
+ dizoo/d4rl/config/hopper_medium_edac_config.py     |  58 +++++
+ .../config/hopper_medium_expert_edac_config.py     |  58 +++++
+ .../config/hopper_medium_expert_td3bc_config.py    |   6 +-
+ .../config/hopper_medium_replay_td3bc_config.py    |   6 +-
+ dizoo/d4rl/config/hopper_medium_td3bc_config.py    |   6 +-
+ dizoo/d4rl/config/hopper_random_td3bc_config.py    |   2 +-
+ dizoo/d4rl/config/walker2d_expert_cql_config.py    |   6 +-
+ dizoo/d4rl/config/walker2d_expert_td3bc_config.py  |   8 +-
+ dizoo/d4rl/config/walker2d_medium_cql_config.py    |   6 +-
+ .../config/walker2d_medium_expert_cql_config.py    |   6 +-
+ .../config/walker2d_medium_expert_td3bc_config.py  |   8 +-
+ .../config/walker2d_medium_replay_cql_config.py    |   6 +-
+ .../config/walker2d_medium_replay_td3bc_config.py  |   8 +-
+ dizoo/d4rl/config/walker2d_medium_td3bc_config.py  |   8 +-
+ dizoo/d4rl/config/walker2d_random_cql_config.py    |   6 +-
+ dizoo/d4rl/config/walker2d_random_td3bc_config.py  |   8 +-
+ dizoo/d4rl/entry/d4rl_edac_main.py                 |  21 ++
+ 44 files changed, 944 insertions(+), 98 deletions(-)
