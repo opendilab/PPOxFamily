@@ -1,0 +1,38 @@
+[2023-04-11 20:39:08][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 1
+[2023-04-11 20:39:09][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 2
+[2023-04-11 20:39:09][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: -1.0000, current episode: 3
+[2023-04-11 20:39:09][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 4
+[2023-04-11 20:39:09][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: -1.0000, current episode: 5
+[2023-04-11 20:39:10][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 6
+[2023-04-11 20:39:10][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 7
+[2023-04-11 20:39:10][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: -1.0000, current episode: 8
+[2023-04-11 20:39:10][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 9
+[2023-04-11 20:39:11][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 10
+[2023-04-11 20:39:11][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 11
+[2023-04-11 20:39:11][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 12
+[2023-04-11 20:39:11][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: -1.0000, current episode: 13
+[2023-04-11 20:39:11][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: -1.0000, current episode: 14
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: -1.0000, current episode: 15
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 16
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 17
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 18
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 19
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:253][INFO] [EVALUATOR]env 0 finish episode, final reward: 1.0000, current episode: 20
+[2023-04-11 20:39:12][interaction_serial_evaluator.py:279][INFO] 
++-------+------------+---------------------+---------------+---------------+
+| Name  | train_iter | ckpt_name           | episode_count | envstep_count |
++-------+------------+---------------------+---------------+---------------+
+| Value | 0.000000   | iteration_0.pth.tar | 20.000000     | 620.000000    |
++-------+------------+---------------------+---------------+---------------+
++-------+-------------------------+---------------+---------------------+----------------------+
+| Name  | avg_envstep_per_episode | evaluate_time | avg_envstep_per_sec | avg_time_per_episode |
++-------+-------------------------+---------------+---------------------+----------------------+
+| Value | 31.000000               | 4.612266      | 134.424160          | 4.336263             |
++-------+-------------------------+---------------+---------------------+----------------------+
++-------+-------------+------------+------------+------------+
+| Name  | reward_mean | reward_std | reward_max | reward_min |
++-------+-------------+------------+------------+------------+
+| Value | 0.400000    | 0.916515   | 1.000000   | -1.000000  |
++-------+-------------+------------+------------+------------+
+
+

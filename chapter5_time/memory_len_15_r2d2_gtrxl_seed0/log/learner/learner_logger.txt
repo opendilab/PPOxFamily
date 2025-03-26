@@ -1,0 +1,194 @@
+[2023-04-11 20:39:05][base_learner.py:338][INFO] [RANK0]: DI-engine DRL Policy
+GTrXLDiscreteHead(
+  (core): GTrXL(
+    (embedding): Sequential(
+      (0): Linear(in_features=3, out_features=64, bias=True)
+      (1): ReLU()
+    )
+    (activation): ReLU()
+    (pos_embedding): PositionalEmbedding()
+    (dropout): Identity()
+    (layers): Sequential(
+      (0): GatedTransformerXLLayer(
+        (dropout): Identity()
+        (gate1): GRUGatingUnit(
+          (Wr): Linear(in_features=64, out_features=64, bias=False)
+          (Ur): Linear(in_features=64, out_features=64, bias=False)
+          (Wz): Linear(in_features=64, out_features=64, bias=False)
+          (Uz): Linear(in_features=64, out_features=64, bias=False)
+          (Wg): Linear(in_features=64, out_features=64, bias=False)
+          (Ug): Linear(in_features=64, out_features=64, bias=False)
+          (sigmoid): Sigmoid()
+          (tanh): Tanh()
+        )
+        (gate2): GRUGatingUnit(
+          (Wr): Linear(in_features=64, out_features=64, bias=False)
+          (Ur): Linear(in_features=64, out_features=64, bias=False)
+          (Wz): Linear(in_features=64, out_features=64, bias=False)
+          (Uz): Linear(in_features=64, out_features=64, bias=False)
+          (Wg): Linear(in_features=64, out_features=64, bias=False)
+          (Ug): Linear(in_features=64, out_features=64, bias=False)
+          (sigmoid): Sigmoid()
+          (tanh): Tanh()
+        )
+        (attention): AttentionXL(
+          (dropout): Identity()
+          (attention_kv): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+          )
+          (attention_q): Sequential(
+            (0): Linear(in_features=64, out_features=32, bias=True)
+          )
+          (project): Sequential(
+            (0): Linear(in_features=32, out_features=64, bias=True)
+          )
+          (project_pos): Sequential(
+            (0): Linear(in_features=64, out_features=32, bias=True)
+          )
+        )
+        (mlp): Sequential(
+          (0): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+            (1): ReLU()
+          )
+          (1): Identity()
+          (2): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+            (1): ReLU()
+          )
+          (3): Identity()
+        )
+        (layernorm1): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+        (layernorm2): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+        (activation): ReLU()
+      )
+      (1): GatedTransformerXLLayer(
+        (dropout): Identity()
+        (gate1): GRUGatingUnit(
+          (Wr): Linear(in_features=64, out_features=64, bias=False)
+          (Ur): Linear(in_features=64, out_features=64, bias=False)
+          (Wz): Linear(in_features=64, out_features=64, bias=False)
+          (Uz): Linear(in_features=64, out_features=64, bias=False)
+          (Wg): Linear(in_features=64, out_features=64, bias=False)
+          (Ug): Linear(in_features=64, out_features=64, bias=False)
+          (sigmoid): Sigmoid()
+          (tanh): Tanh()
+        )
+        (gate2): GRUGatingUnit(
+          (Wr): Linear(in_features=64, out_features=64, bias=False)
+          (Ur): Linear(in_features=64, out_features=64, bias=False)
+          (Wz): Linear(in_features=64, out_features=64, bias=False)
+          (Uz): Linear(in_features=64, out_features=64, bias=False)
+          (Wg): Linear(in_features=64, out_features=64, bias=False)
+          (Ug): Linear(in_features=64, out_features=64, bias=False)
+          (sigmoid): Sigmoid()
+          (tanh): Tanh()
+        )
+        (attention): AttentionXL(
+          (dropout): Identity()
+          (attention_kv): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+          )
+          (attention_q): Sequential(
+            (0): Linear(in_features=64, out_features=32, bias=True)
+          )
+          (project): Sequential(
+            (0): Linear(in_features=32, out_features=64, bias=True)
+          )
+          (project_pos): Sequential(
+            (0): Linear(in_features=64, out_features=32, bias=True)
+          )
+        )
+        (mlp): Sequential(
+          (0): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+            (1): ReLU()
+          )
+          (1): Identity()
+          (2): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+            (1): ReLU()
+          )
+          (3): Identity()
+        )
+        (layernorm1): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+        (layernorm2): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+        (activation): ReLU()
+      )
+      (2): GatedTransformerXLLayer(
+        (dropout): Identity()
+        (gate1): GRUGatingUnit(
+          (Wr): Linear(in_features=64, out_features=64, bias=False)
+          (Ur): Linear(in_features=64, out_features=64, bias=False)
+          (Wz): Linear(in_features=64, out_features=64, bias=False)
+          (Uz): Linear(in_features=64, out_features=64, bias=False)
+          (Wg): Linear(in_features=64, out_features=64, bias=False)
+          (Ug): Linear(in_features=64, out_features=64, bias=False)
+          (sigmoid): Sigmoid()
+          (tanh): Tanh()
+        )
+        (gate2): GRUGatingUnit(
+          (Wr): Linear(in_features=64, out_features=64, bias=False)
+          (Ur): Linear(in_features=64, out_features=64, bias=False)
+          (Wz): Linear(in_features=64, out_features=64, bias=False)
+          (Uz): Linear(in_features=64, out_features=64, bias=False)
+          (Wg): Linear(in_features=64, out_features=64, bias=False)
+          (Ug): Linear(in_features=64, out_features=64, bias=False)
+          (sigmoid): Sigmoid()
+          (tanh): Tanh()
+        )
+        (attention): AttentionXL(
+          (dropout): Identity()
+          (attention_kv): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+          )
+          (attention_q): Sequential(
+            (0): Linear(in_features=64, out_features=32, bias=True)
+          )
+          (project): Sequential(
+            (0): Linear(in_features=32, out_features=64, bias=True)
+          )
+          (project_pos): Sequential(
+            (0): Linear(in_features=64, out_features=32, bias=True)
+          )
+        )
+        (mlp): Sequential(
+          (0): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+            (1): ReLU()
+          )
+          (1): Identity()
+          (2): Sequential(
+            (0): Linear(in_features=64, out_features=64, bias=True)
+            (1): ReLU()
+          )
+          (3): Identity()
+        )
+        (layernorm1): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+        (layernorm2): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+        (activation): ReLU()
+      )
+    )
+  )
+  (head): DuelingHead(
+    (A): Sequential(
+      (0): Sequential(
+        (0): Linear(in_features=64, out_features=64, bias=True)
+        (1): ReLU()
+      )
+      (1): Sequential(
+        (0): Linear(in_features=64, out_features=2, bias=True)
+      )
+    )
+    (V): Sequential(
+      (0): Sequential(
+        (0): Linear(in_features=64, out_features=64, bias=True)
+        (1): ReLU()
+      )
+      (1): Sequential(
+        (0): Linear(in_features=64, out_features=1, bias=True)
+      )
+    )
+  )
+)
+[2023-04-11 20:39:12][base_learner.py:338][INFO] [RANK0]: learner save ckpt in ./memory_len_15_r2d2_gtrxl_seed0/ckpt/ckpt_best.pth.tar
